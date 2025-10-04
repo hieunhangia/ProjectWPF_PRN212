@@ -26,14 +26,6 @@ namespace Data.Data
         public FruitShopContext(DbContextOptions<FruitShopContext> options) : base(options)
         {
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=FruitShopProject;User Id=sa;Password=12345678;TrustServerCertificate=True;");
-            }
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -109,9 +101,6 @@ namespace Data.Data
 
             modelBuilder.Entity<CommuneWard>()
                 .HasIndex(cw => cw.Name);
-        }
-        public FruitShopContext()
-        {
         }
 
     }
