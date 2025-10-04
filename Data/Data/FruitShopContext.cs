@@ -15,6 +15,7 @@ namespace Data.Data
 
         // Product entities
         public DbSet<Product> Products { get; set; }
+
         public DbSet<ProductBatch> ProductBatches { get; set; }
         public DbSet<ProductUnit> ProductUnits { get; set; }
 
