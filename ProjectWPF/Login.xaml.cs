@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Service;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,13 +24,17 @@ namespace ProjectWPF
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
-            if (emailTextBox.Text != "quetoi36" || passwordBox.Password != "suthanhhoa")
+            UserService userService = new();
+
+            var user = userService.Login(emailTextBox.Text, passwordBox.Password);
+
+            if (user != null)
             {
-                MessageBox.Show("Sai cmnr");
+                MessageBox.Show("Chuẩn cmnr", "Chuẩn cmnr", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             else
             {
-                MessageBox.Show("Chuẩn cmnr");
+                MessageBox.Show("Sai cmnr", "Sai cmnr", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

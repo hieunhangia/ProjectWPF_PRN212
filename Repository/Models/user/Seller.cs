@@ -1,8 +1,7 @@
-﻿using Data.Models.address;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Data.Models.user
+namespace Repository
 {
     public class Seller : User 
     {

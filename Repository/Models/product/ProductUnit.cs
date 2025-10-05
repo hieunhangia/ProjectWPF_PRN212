@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Data.Models.product
+namespace Repository
 {
     [Table("product_unit")]
     public class ProductUnit

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Data.Models.product
+namespace Repository
 {
     [Table("product")]
     public class Product

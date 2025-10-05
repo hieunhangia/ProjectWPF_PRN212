@@ -1,11 +1,10 @@
-using Data.Models.address;
-using Data.Models.product;
-using Data.Models.user;
+using Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
-namespace Data.Data
+namespace Repository
 {
-    public class FruitShopContext : DbContext
+    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         // User entities
         public DbSet<User> Users { get; set; }
@@ -23,9 +22,19 @@ namespace Data.Data
         public DbSet<ProvinceCity> ProvinceCities { get; set; }
         public DbSet<CommuneWard> CommuneWards { get; set; }
 
-        public FruitShopContext(DbContextOptions<FruitShopContext> options) : base(options)
+        public DbContext()
         {
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

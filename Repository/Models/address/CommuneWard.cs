@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Data.Models.address
+namespace Repository
 {
     [Table("commune_ward")]
     public class CommuneWard
