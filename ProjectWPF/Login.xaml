@@ -11,7 +11,7 @@
         <Label Content="Email" HorizontalAlignment="Left" Margin="42,266,0,0" VerticalAlignment="Top" FontSize="36"/>
         <TextBox x:Name="emailTextBox" HorizontalAlignment="Left" Margin="233,270,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="676" FontSize="36"/>
         <Label Content="Password" HorizontalAlignment="Left" Margin="42,372,0,0" VerticalAlignment="Top" FontSize="36"/>
-        <Button x:Name="loginButton" Content="Login" HorizontalAlignment="Center" Margin="0,489,0,0" VerticalAlignment="Top" Height="101" Width="228" FontSize="69" BorderBrush="#FFE2EFCB" Click="loginButton_Click"/>
+        <Button x:Name="loginButton" Content="Login" HorizontalAlignment="Center" Margin="0,489,0,0" VerticalAlignment="Top" Height="101" Width="228" FontSize="69" BorderBrush="#FFE2EFCB" Click="LoginButton_Click"/>
         <PasswordBox x:Name="passwordBox" HorizontalAlignment="Left" Margin="233,380,0,0" VerticalAlignment="Top" Width="676" Height="50" PasswordChar="*" FontSize="36"/>
     </Grid>
 </Window>

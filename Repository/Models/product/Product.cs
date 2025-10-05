@@ -12,7 +12,8 @@ namespace Repository
     [Table("product")]
     public class Product
     {
-        [Key] // Add Key attribute
+        [Key]
+        [Column("id")]
         public long Id { get; set; }
         [Column("name",TypeName ="nvarchar(255)")]
         public required string Name { get; set; }

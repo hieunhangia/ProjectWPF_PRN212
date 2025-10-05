@@ -6,9 +6,14 @@ namespace Repository
     [Table("product_batch")]
     public class ProductBatch
     {
-        [Key] // Add Key attribute
+        [Key]
+        [Column("id")]
         public long Id { get; set; }
+
+        [Column("expiry_date")]
         public DateTime ExpiryDate { get; set; }
+
+        [Column("quantity")]
         public int Quantity { get; set; }
 
         // Foreign key for many-to-one relationship with Product

@@ -18,13 +18,5 @@ namespace Repository
 
         [Column("enabled")]
         public bool IsActive { get; set; } = false;
-
-        // Foreign key for one-to-one relationship with Role
-        [Column("role_id")]
-        public long RoleId { get; set; }
-
-        // Navigation property - one-to-one relationship with Role
-        [ForeignKey("RoleId")]
-        public virtual Role Role { get; set; } = null!;
     }
 }
