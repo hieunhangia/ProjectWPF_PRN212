@@ -17,7 +17,6 @@ namespace ProjectWPF
             {
                 using var context = new DbContext();
                 context.Database.EnsureCreated();
-
             }
             catch(Exception ex)
             {

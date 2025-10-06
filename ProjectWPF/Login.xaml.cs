@@ -33,11 +33,20 @@ namespace ProjectWPF
             {
                 if(user is Admin)
                 {
-                    MessageBox.Show("Admin", "Admin", MessageBoxButton.OK, MessageBoxImage.Information);
+                    new AdminWindows.MainWindow().Show();
+                    this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Seller", "Seller", MessageBoxButton.OK, MessageBoxImage.Information);
+                    if (user.IsActive)
+                    {
+                        new SellerWindows.MainWindow().Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Tài khoản của bạn đã bị vô hiệu hóa.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
             else

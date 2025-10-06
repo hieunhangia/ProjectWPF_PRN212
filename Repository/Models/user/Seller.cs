@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository
 {
-    public class Seller : User 
+    public class Seller : User
     {
         [Column("full_name", TypeName = "nvarchar(255)")]
         public required string FullName { get; set; } 
@@ -21,9 +21,10 @@ namespace Repository
         [ForeignKey("CommuneWardCode")]
         public required virtual CommuneWard CommuneWard { get; set; }
 
-        public string GetAddress()
+        [NotMapped]
+        public string Address
         {
-            return $"{SpecificAddress}, {CommuneWard.Name}"; 
+            get => $"{SpecificAddress}, {CommuneWard.Name}, {CommuneWard.ProvinceCity.Name}";
         }
 
     }
