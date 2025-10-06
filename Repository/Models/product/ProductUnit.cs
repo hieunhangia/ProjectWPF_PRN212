@@ -7,6 +7,7 @@ namespace Repository
     public class ProductUnit
     {
         [Key]
+        [Column("id")]
         public long Id { get; set; }
 
         [Column("name", TypeName = "nvarchar(100)")]

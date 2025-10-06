@@ -12,9 +12,10 @@ namespace Repository
         [Column("name",TypeName ="nvarchar(100)")]
         public required string Name { get; set; } 
 
-        [ForeignKey("ProvinceCity")]
-        public required string ProvinceCode { get; set; } 
+        [Column("province_city_code")]
+        public required string ProvinceCityCode { get; set; }
 
+        [ForeignKey("ProvinceCityCode")]
         public virtual ProvinceCity ProvinceCity { get; set; } = null!;
     }
 }

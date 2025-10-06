@@ -7,7 +7,9 @@ namespace Repository
     public class ProvinceCity
     {
         [Key]
+        [Column("code", TypeName = "nvarchar(255)")]
         public required string Code { get; set; }
+
         [Column("name", TypeName = "nvarchar(255)")]
         public required string Name { get; set; } 
 

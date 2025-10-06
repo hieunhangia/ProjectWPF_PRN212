@@ -1,4 +1,5 @@
-﻿using Service;
+﻿using Repository;
+using Service;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +23,7 @@ namespace ProjectWPF
             InitializeComponent();
         }
 
-        private void loginButton_Click(object sender, RoutedEventArgs e)
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             UserService userService = new();
 
@@ -30,11 +31,18 @@ namespace ProjectWPF
 
             if (user != null)
             {
-                MessageBox.Show("Chuẩn cmnr", "Chuẩn cmnr", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                if(user is Admin)
+                {
+                    MessageBox.Show("Admin", "Admin", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Seller", "Seller", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
             else
             {
-                MessageBox.Show("Sai cmnr", "Sai cmnr", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Tên tài khoản hoặc mật khẩu không đúng", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

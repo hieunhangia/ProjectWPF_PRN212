@@ -10,7 +10,6 @@ namespace Repository
         public DbSet<User> Users { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Seller> Sellers { get; set; }
-        public DbSet<Role> Roles { get; set; }
 
         // Product entities
         public DbSet<Product> Products { get; set; }
@@ -37,20 +36,12 @@ namespace Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Table-per-type (TPT) mapping
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<Admin>().ToTable("Admins");
-            modelBuilder.Entity<Seller>().ToTable("Sellers");
-
-
             base.OnModelCreating(modelBuilder);
 
-            // Configure User-Role relationship (one-to-one)
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Role)
-                .WithOne(r => r.User)
-                .HasForeignKey<User>(u => u.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // Configure User inheritance (Table-per-Type)
+            modelBuilder.Entity<User>().ToTable("user");
+            modelBuilder.Entity<Admin>().ToTable("admin");
+            modelBuilder.Entity<Seller>().ToTable("seller");
 
             // Configure Product-ProductUnit relationship (many-to-one)
             modelBuilder.Entity<Product>()
@@ -70,7 +61,7 @@ namespace Repository
             modelBuilder.Entity<CommuneWard>()
                 .HasOne(cw => cw.ProvinceCity)
                 .WithMany(pc => pc.CommuneWards)
-                .HasForeignKey(cw => cw.ProvinceCode)
+                .HasForeignKey(cw => cw.ProvinceCityCode)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Configure Seller-CommuneWard relationship (many-to-one)
@@ -78,7 +69,7 @@ namespace Repository
                 .HasOne(s => s.CommuneWard)
                 .WithMany()
                 .HasForeignKey(s => s.CommuneWardCode)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             // Configure indexes for performance
@@ -97,11 +88,6 @@ namespace Repository
             // Product name index for searching
             modelBuilder.Entity<Product>()
                 .HasIndex(p => p.Name);
-
-            // Role name should be unique
-            modelBuilder.Entity<Role>()
-                .HasIndex(r => r.Name)
-                .IsUnique();
 
             // ProvinceCity and CommuneWard name indexes for searching
             modelBuilder.Entity<ProvinceCity>()
