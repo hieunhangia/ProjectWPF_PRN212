@@ -13,9 +13,15 @@ namespace ProjectWPF
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            using var context = new DbContext();
+            try
             {
-                context.Database.EnsureCreated();
+                using var context = new DbContext();
+
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
             }
             base.OnStartup(e);
         }

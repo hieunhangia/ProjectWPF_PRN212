@@ -37,14 +37,13 @@ namespace Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            // Table-per-type (TPT) mapping
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<Admin>().ToTable("Admins");
+            modelBuilder.Entity<Seller>().ToTable("Sellers");
 
-            // Configure User inheritance (Table Per Hierarchy)
-            modelBuilder.Entity<User>()
-                .HasDiscriminator<string>("user_type")
-                .HasValue<User>("user")
-                .HasValue<Admin>("admin")
-                .HasValue<Seller>("seller");
+
+            base.OnModelCreating(modelBuilder);
 
             // Configure User-Role relationship (one-to-one)
             modelBuilder.Entity<User>()
