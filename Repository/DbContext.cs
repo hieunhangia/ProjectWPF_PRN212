@@ -71,10 +71,6 @@ namespace Repository
                 .HasForeignKey(s => s.CommuneWardCode)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<ProductUnit>()
-                .Property(p => p.Id)
-                .ValueGeneratedNever();
-
             // Configure indexes for performance
             ConfigureIndexes(modelBuilder);
 
