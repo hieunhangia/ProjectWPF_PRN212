@@ -19,12 +19,12 @@ namespace Repository
         public required string CommuneWardCode { get; set; }
 
         [ForeignKey("CommuneWardCode")]
-        public required virtual CommuneWard CommuneWard { get; set; }
+        public virtual CommuneWard? CommuneWard { get; set; }
 
         [NotMapped]
         public string Address
         {
-            get => $"{SpecificAddress}, {CommuneWard.Name}, {CommuneWard.ProvinceCity.Name}";
+            get => $"{SpecificAddress}, {CommuneWard?.Name}, {CommuneWard?.ProvinceCity.Name}";
         }
 
     }

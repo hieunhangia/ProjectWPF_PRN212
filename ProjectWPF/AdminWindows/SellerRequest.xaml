@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.AdminWindows"
         mc:Ignorable="d"
-        Title="SellerRequest" Height="690" Width="960">
+        Title="SellerRequest">
     <Grid>
         
     </Grid>

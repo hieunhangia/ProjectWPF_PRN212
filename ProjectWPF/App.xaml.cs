@@ -24,6 +24,12 @@ namespace ProjectWPF
                 Application.Current.Shutdown();
             }
             base.OnStartup(e);
+
+            FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window),
+                new FrameworkPropertyMetadata
+                {
+                    DefaultValue = FindResource(typeof(Window))
+                });
         }
     }
 

@@ -43,5 +43,12 @@ namespace ProjectWPF.AdminWindows
             var seller = textBlock?.DataContext as Seller;
             new UpdateSeller(seller).ShowDialog();
         }
+
+        private void ViewDetailHandler(object sender, MouseButtonEventArgs e)
+        {
+            var textBlock = sender as TextBlock;
+            var seller = textBlock?.DataContext as Seller;
+            MessageBox.Show("Chức năng đang được phát triển" + seller.Email);
+        }
     }
 }

@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.AdminWindows"
         mc:Ignorable="d"
-        Title="UpdateSeller" Height="690" Width="960" Loaded="Window_Loaded">
+        Title="UpdateSeller"
+        Loaded="Window_Loaded">
     <Grid>
         <TextBlock HorizontalAlignment="Center" Margin="0,49,0,0" TextWrapping="Wrap" Text="Cập Nhật Người Bán" VerticalAlignment="Top" FontSize="69"/>
         <TextBlock x:Name="EmailTextBlock" HorizontalAlignment="Left" Margin="119,230,0,0" TextWrapping="Wrap" Text="Email: seller@example.com" VerticalAlignment="Top" Height="42" Width="500" FontSize="36"/>

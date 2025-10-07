@@ -17,5 +17,20 @@ namespace Service
         {
             return _sellerRepository.GetAll();
         }
+
+        public bool IsEmailExists(string email)
+        {
+            return _sellerRepository.GetByCondition(s => s.Email == email).FirstOrDefault() != null;
+        }
+
+        public bool IsIdentifyExists(string identify)
+        {
+            return _sellerRepository.GetByCondition(s => s.Cid == identify).FirstOrDefault() != null;
+        }
+
+        public void AddSeller(Seller seller)
+        {
+            _sellerRepository.Add(seller);
+        }
     }
 }

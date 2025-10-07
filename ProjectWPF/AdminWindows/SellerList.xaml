@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.AdminWindows"
         mc:Ignorable="d"
-        Title="SellerList" Height="690" Width="960"
+        Title="SellerList"
         Loaded="Window_Loaded">
     <Grid>
         <DataGrid x:Name="SellerDataGrid"
@@ -21,16 +21,24 @@
                 <DataGridTextColumn Header="Họ Và Tên" Binding="{Binding FullName}" Width="1*">
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Header="Ngày Sinh" Binding="{Binding BirthDate}" Width="1*">
+                <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="0.5*">
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Header="Địa Chỉ" Binding="{Binding Address}" Width="3*">
-                </DataGridTextColumn>
-
-                <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="1*">
-                </DataGridTextColumn>
-
-                <DataGridTemplateColumn Header="Hành Động" Width="SizeToHeader">
+                <DataGridTemplateColumn Header="Xem Chi Tiết"
+                                        Width="0.5*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Cursor="Hand"
+                               Text="Xem Chi Tiết"
+                               Foreground="Green"
+                               HorizontalAlignment="Center"
+                               MouseLeftButtonUp="ViewDetailHandler"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTemplateColumn Header="Cập Nhật"
+                                        Width="0.5*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Cursor="Hand"
