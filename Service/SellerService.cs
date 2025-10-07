@@ -13,24 +13,14 @@ namespace Service
     {
         private readonly SellerRepository _sellerRepository = new();
 
-        public List<Seller> GetAllSellers()
-        {
-            return _sellerRepository.GetAll();
-        }
+        public List<Seller> GetAllSellers() => _sellerRepository.GetAll();
 
-        public bool IsEmailExists(string email)
-        {
-            return _sellerRepository.GetByCondition(s => s.Email == email).FirstOrDefault() != null;
-        }
+        public List<Seller> GetSellersByCondition(Func<Seller, bool> condition) => _sellerRepository.GetByCondition(condition);
 
-        public bool IsIdentifyExists(string identify)
-        {
-            return _sellerRepository.GetByCondition(s => s.Cid == identify).FirstOrDefault() != null;
-        }
+        public bool IsEmailExists(string email) => _sellerRepository.GetByCondition(s => s.Email == email).FirstOrDefault() != null;
 
-        public void AddSeller(Seller seller)
-        {
-            _sellerRepository.Add(seller);
-        }
+        public bool IsIdentifyExists(string identify) => _sellerRepository.GetByCondition(s => s.Cid == identify).FirstOrDefault() != null;
+
+        public void AddSeller(Seller seller) => _sellerRepository.Add(seller);
     }
 }

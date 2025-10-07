@@ -21,6 +21,8 @@ namespace ProjectWPF.AdminWindows
     /// </summary>
     public partial class SellerList : Window
     {
+        private readonly SellerService _sellerService = new();
+
         public SellerList()
         {
             InitializeComponent();
@@ -28,13 +30,32 @@ namespace ProjectWPF.AdminWindows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            SellerService sellerService = new();
-            var sellers = sellerService.GetAllSellers();
-            SellerDataGrid.ItemsSource = sellers;
+            SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
+
+            var statuses = new List<Tuple<int, string>>
+            {
+                new (0, "Tất Cả"),
+                new (1, "Đang Mở Khoá"),
+                new (2, "Đã Khoá")
+            };
+            StatusSearchTextBox.ItemsSource = statuses;
+            StatusSearchTextBox.DisplayMemberPath = "Item2";
+            StatusSearchTextBox.SelectedValuePath = "Item1";
+            StatusSearchTextBox.SelectedIndex = 0;
         }
+
         private void AddSellerButton_Click(object sender, RoutedEventArgs e)
         {
             new AddSeller().ShowDialog();
+
+            SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
+        }
+
+        private void ViewDetailHandler(object sender, MouseButtonEventArgs e)
+        {
+            var textBlock = sender as TextBlock;
+            var seller = textBlock?.DataContext as Seller;
+            MessageBox.Show("Chức năng đang được phát triển" + seller?.Email);
         }
 
         private void UpdateSellerHandler(object sender, MouseButtonEventArgs e)
@@ -42,13 +63,21 @@ namespace ProjectWPF.AdminWindows
             var textBlock = sender as TextBlock;
             var seller = textBlock?.DataContext as Seller;
             new UpdateSeller(seller).ShowDialog();
+
+            SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
         }
 
-        private void ViewDetailHandler(object sender, MouseButtonEventArgs e)
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            var textBlock = sender as TextBlock;
-            var seller = textBlock?.DataContext as Seller;
-            MessageBox.Show("Chức năng đang được phát triển" + seller.Email);
+            string email = EmailSearchTextBox.Text.Trim().ToLower();
+            string fullName = FullNameSearchTextBox.Text.Trim().ToLower();
+            int status = (int)StatusSearchTextBox.SelectedValue;
+            var sellers = _sellerService.GetSellersByCondition(s =>
+                (string.IsNullOrEmpty(email) || s.Email.ToLower().Contains(email))
+                && (string.IsNullOrEmpty(fullName) || s.FullName.ToLower().Contains(fullName))
+                && (status == 0 || (status == 1 && s.IsActive) || (status == 2 && !s.IsActive))
+            );
+            SellerDataGrid.ItemsSource = sellers;
         }
     }
 }

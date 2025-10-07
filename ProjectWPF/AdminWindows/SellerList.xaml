@@ -9,10 +9,11 @@
         Loaded="Window_Loaded">
     <Grid>
         <DataGrid x:Name="SellerDataGrid"
-          Margin="0,0,0,155"
-          AutoGenerateColumns="False"
-          IsReadOnly="True"
-          ColumnWidth="*">
+                  Margin="0,181,0,200"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  ColumnWidth="*"
+                  FontSize="16">
             <DataGrid.Columns>
 
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="1*">
@@ -36,7 +37,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
+
                 <DataGridTemplateColumn Header="Cập Nhật"
                                         Width="0.5*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -51,6 +52,15 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Button x:Name="AddSellerButton" Content="Thêm Mới Người Bán" HorizontalAlignment="Center" Margin="0,555,0,0" VerticalAlignment="Top" Height="80" Width="401" FontSize="36" Click="AddSellerButton_Click"/>
+        <Button x:Name="AddSellerButton" Content="Thêm Mới Người Bán" HorizontalAlignment="Left" Margin="692,143,0,0" VerticalAlignment="Top" Height="38" Width="253" FontSize="24
+                " Click="AddSellerButton_Click"/>
+        <TextBlock HorizontalAlignment="Center" Margin="0,26,0,0" TextWrapping="Wrap" Text="Quản Lý Người Bán" VerticalAlignment="Top" FontSize="69"/>
+        <Label Content="Email" HorizontalAlignment="Left" Margin="23,481,0,0" VerticalAlignment="Top" FontSize="24" Height="42" Width="71"/>
+        <TextBox x:Name="EmailSearchTextBox" HorizontalAlignment="Left" Margin="150,481,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="514" Height="42" FontSize="24"/>
+        <Label Content="Họ Và Tên" HorizontalAlignment="Left" Margin="23,533,0,0" VerticalAlignment="Top" FontSize="24" Height="42" Width="122"/>
+        <TextBox x:Name="FullNameSearchTextBox" HorizontalAlignment="Left" Margin="150,533,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="514" Height="42" FontSize="24"/>
+        <Label Content="Trạng Thái" HorizontalAlignment="Left" Margin="23,583,0,0" VerticalAlignment="Top" FontSize="24" Height="42" Width="122"/>
+        <Button x:Name="SearchButton" Content="Tìm Kiếm" HorizontalAlignment="Left" Margin="726,522,0,0" VerticalAlignment="Top" Height="64" Width="203" FontSize="36" Click="SearchButton_Click"/>
+        <ComboBox x:Name="StatusSearchTextBox" HorizontalAlignment="Left" Margin="150,583,0,0" VerticalAlignment="Top" Width="319" Height="42" FontSize="24"/>
     </Grid>
 </Window>

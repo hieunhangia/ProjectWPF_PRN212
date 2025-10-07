@@ -9,29 +9,29 @@
         Loaded="Window_Loaded">
     <Grid>
         <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" Text="Thêm Mới Người Bán" VerticalAlignment="Top" FontSize="69"/>
-        <Label Content="Email" HorizontalAlignment="Left" Margin="52,118,0,0" VerticalAlignment="Top" Height="42" Width="96" FontSize="24"/>
-        <TextBox x:Name="EmailTextBox" HorizontalAlignment="Left" Margin="220,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="694" Height="42" FontSize="24"/>
-        <Label Content="Họ Và Tên" HorizontalAlignment="Left" Margin="52,238,0,0" VerticalAlignment="Top" Height="42" Width="130" FontSize="24"/>
-        <TextBox x:Name="FullNameTextBox" HorizontalAlignment="Left" Margin="220,238,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="694" Height="42" FontSize="24"/>
-        <Label Content="Ngày Sinh" HorizontalAlignment="Left" Margin="52,299,0,0" VerticalAlignment="Top" Height="42" Width="130" FontSize="24"/>
-        <Label Content="CMND/CCCD" HorizontalAlignment="Left" Margin="52,361,0,0" VerticalAlignment="Top" Height="42" Width="158" FontSize="24"/>
-        <TextBox x:Name="IdentifyTextBox" HorizontalAlignment="Left" Margin="220,361,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="694" Height="42" FontSize="24"/>
+        <Label Content="Email" HorizontalAlignment="Left" Margin="45,127,0,0" VerticalAlignment="Top" Height="42" Width="96" FontSize="24"/>
+        <TextBox x:Name="EmailTextBox" HorizontalAlignment="Left" Margin="213,127,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="694" Height="42" FontSize="24"/>
+        <Label Content="Họ Và Tên" HorizontalAlignment="Left" Margin="45,247,0,0" VerticalAlignment="Top" Height="42" Width="130" FontSize="24"/>
+        <TextBox x:Name="FullNameTextBox" HorizontalAlignment="Left" Margin="213,247,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="694" Height="42" FontSize="24"/>
+        <Label Content="Ngày Sinh" HorizontalAlignment="Left" Margin="45,308,0,0" VerticalAlignment="Top" Height="42" Width="130" FontSize="24"/>
+        <Label Content="CMND/CCCD" HorizontalAlignment="Left" Margin="45,370,0,0" VerticalAlignment="Top" Height="42" Width="158" FontSize="24"/>
+        <TextBox x:Name="IdentifyTextBox" HorizontalAlignment="Left" Margin="213,370,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="694" Height="42" FontSize="24"/>
         <DatePicker x:Name="BirthDatePicker"
                     Text="Chọn ngày"
-                    HorizontalAlignment="Left" Margin="220,299,0,0" VerticalAlignment="Top" Height="42" Width="331" FontSize="24"/>
-        <Label Content="Mật Khẩu" HorizontalAlignment="Left" Margin="52,176,0,0" VerticalAlignment="Top" Height="42" Width="130" FontSize="24"/>
-        <TextBox x:Name="PasswordTextBox" HorizontalAlignment="Left" Margin="220,176,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="694" Height="42" FontSize="24"/>
-        <Label Content="Quê Quán" HorizontalAlignment="Left" Margin="52,415,0,0" VerticalAlignment="Top" Height="42" Width="130" FontSize="24"/>
-        <Label Margin="71,462,0,0" Width="177" VerticalAlignment="Top" Height="33" HorizontalAlignment="Left" FontSize="20" Content="Tỉnh/Thành Phố"/>
+                    HorizontalAlignment="Left" Margin="213,308,0,0" VerticalAlignment="Top" Height="42" Width="331" FontSize="24"/>
+        <Label Content="Mật Khẩu" HorizontalAlignment="Left" Margin="45,185,0,0" VerticalAlignment="Top" Height="42" Width="130" FontSize="24"/>
+        <TextBox x:Name="PasswordTextBox" HorizontalAlignment="Left" Margin="213,185,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="694" Height="42" FontSize="24"/>
+        <Label Content="Quê Quán" HorizontalAlignment="Left" Margin="45,424,0,0" VerticalAlignment="Top" Height="42" Width="130" FontSize="24"/>
+        <Label Margin="64,471,0,0" Width="177" VerticalAlignment="Top" Height="33" HorizontalAlignment="Left" FontSize="20" Content="Tỉnh/Thành Phố"/>
         <ComboBox x:Name="ProvinceCityComboBox"
                   DisplayMemberPath="Name" SelectedValuePath="Code"
-                  HorizontalAlignment="Left" Margin="232,462,0,0" VerticalAlignment="Top" Width="297" Height="33" SelectionChanged="ProvinceCityComboBox_SelectionChanged" FontSize="20"/>
-        <Label Margin="555,462,0,0" Width="111" VerticalAlignment="Top" Height="42" HorizontalAlignment="Left" FontSize="20" Content="Xã/Phường" RenderTransformOrigin="0.492,0.059"/>
+                  HorizontalAlignment="Left" Margin="225,471,0,0" VerticalAlignment="Top" Width="297" Height="33" SelectionChanged="ProvinceCityComboBox_SelectionChanged" FontSize="20"/>
+        <Label Margin="548,471,0,0" Width="111" VerticalAlignment="Top" Height="42" HorizontalAlignment="Left" FontSize="20" Content="Xã/Phường" RenderTransformOrigin="0.492,0.059"/>
         <ComboBox x:Name="CommuneWardComboBox"
                   DisplayMemberPath="Name" SelectedValuePath="Code"
-                  HorizontalAlignment="Left" Margin="666,462,0,0" VerticalAlignment="Top" Width="248" Height="33" FontSize="20"/>
-        <Label Width="163" VerticalAlignment="Top" Margin="71,509,0,0" Height="34" HorizontalAlignment="Left" FontSize="20" Content="Địa chỉ chi tiết"/>
-        <TextBox x:Name="SpecificAddressTextBox" Width="682" VerticalAlignment="Top" TextWrapping="Wrap" Margin="232,509,0,0" Height="34" HorizontalAlignment="Left" FontSize="20"/>
+                  HorizontalAlignment="Left" Margin="659,471,0,0" VerticalAlignment="Top" Width="248" Height="33" FontSize="20"/>
+        <Label Width="163" VerticalAlignment="Top" Margin="64,518,0,0" Height="34" HorizontalAlignment="Left" FontSize="20" Content="Địa chỉ chi tiết"/>
+        <TextBox x:Name="SpecificAddressTextBox" Width="682" VerticalAlignment="Top" TextWrapping="Wrap" Margin="225,518,0,0" Height="34" HorizontalAlignment="Left" FontSize="20"/>
         <Button x:Name="AddSellerButton" Content="Thêm Mới Người Bán" HorizontalAlignment="Center" Margin="0,575,0,0" VerticalAlignment="Top" Height="69" Width="398" FontSize="36" Click="AddSellerButton_Click"/>
     </Grid>
 
