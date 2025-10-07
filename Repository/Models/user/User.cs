@@ -18,5 +18,11 @@ namespace Repository
 
         [Column("enabled")]
         public bool IsActive { get; set; } = false;
+
+        [NotMapped]
+        public string Status
+        { 
+            get => IsActive ? "Đang Mở Khoá" : "Đã Khoá";
+        }
     }
 }

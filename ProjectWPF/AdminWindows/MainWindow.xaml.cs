@@ -26,13 +26,6 @@ namespace ProjectWPF.AdminWindows
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            SellerService sellerService = new();
-            var sellers = sellerService.GetAllSellers();
-            SellerDataGrid.ItemsSource = sellers;
-        }
-
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -43,13 +36,9 @@ namespace ProjectWPF.AdminWindows
             }
         }
 
-        private void UpdateSellerHandler(object sender, MouseButtonEventArgs e)
+        private void SellerManagerButton_Click(object sender, RoutedEventArgs e)
         {
-            var textBlock = sender as TextBlock;
-            if (textBlock?.DataContext is Seller seller)
-            {
-                MessageBox.Show($"Fake update : {seller.Email}", "Fake update", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            new SellerList().ShowDialog();
         }
     }
 }

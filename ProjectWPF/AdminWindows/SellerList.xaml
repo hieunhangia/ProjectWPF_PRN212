@@ -1,0 +1,48 @@
+﻿<Window x:Class="ProjectWPF.AdminWindows.SellerList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectWPF.AdminWindows"
+        mc:Ignorable="d"
+        Title="SellerList" Height="690" Width="960"
+        Loaded="Window_Loaded">
+    <Grid>
+        <DataGrid x:Name="SellerDataGrid"
+          Margin="0,0,0,155"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          ColumnWidth="*">
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="1*">
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Họ Và Tên" Binding="{Binding FullName}" Width="1*">
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Ngày Sinh" Binding="{Binding BirthDate}" Width="1*">
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Địa Chỉ" Binding="{Binding Address}" Width="3*">
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="1*">
+                </DataGridTextColumn>
+
+                <DataGridTemplateColumn Header="Hành Động" Width="SizeToHeader">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Cursor="Hand"
+                               Text="Cập Nhật"
+                               Foreground="Blue"
+                               HorizontalAlignment="Center"
+                               MouseLeftButtonUp="UpdateSellerHandler"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Name="AddSellerButton" Content="Thêm Mới Người Bán" HorizontalAlignment="Center" Margin="0,555,0,0" VerticalAlignment="Top" Height="80" Width="401" FontSize="36" Click="AddSellerButton_Click"/>
+    </Grid>
+</Window>
