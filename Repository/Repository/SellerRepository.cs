@@ -12,13 +12,13 @@ namespace Repository.Repository
         public new List<Seller> GetAll()
         {
             using var context = new DbContext();
-            return [.. context.Set<Seller>().Include(s => s.CommuneWard).ThenInclude(c => c.ProvinceCity)];
+            return [.. context.Set<Seller>().Include(s => s.CommuneWard).ThenInclude(c => c!.ProvinceCity)];
         }
 
         public new Seller? GetById(long id)
         {
             using var context = new DbContext();
-            return context.Set<Seller>().Include(s => s.CommuneWard).ThenInclude(c => c.ProvinceCity).FirstOrDefault(s => s.Id == id);
+            return context.Set<Seller>().Include(s => s.CommuneWard).ThenInclude(c => c!.ProvinceCity).FirstOrDefault(s => s.Id == id);
         }
 
         public new List<Seller> GetByCondition(Func<Seller, bool> predicate)

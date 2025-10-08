@@ -30,5 +30,7 @@ namespace Service
         public void AddSeller(Seller seller) => _sellerRepository.Add(seller);
 
         public void UpdateSeller(Seller seller) => _sellerRepository.Update(seller);
+
+        public void DeleteSeller(long sellerId) => _sellerRepository.Delete(sellerId);
     }
 }

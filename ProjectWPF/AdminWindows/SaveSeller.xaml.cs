@@ -48,6 +48,7 @@ namespace ProjectWPF.AdminWindows
             {
                 SaveSellerTitleTextBlock.Text = "Thêm Mới Người Bán";
                 SaveSellerButton.Content = "Thêm Mới Người Bán";
+                DeleteSellerButton.Visibility = Visibility.Hidden;
                 CommuneWardComboBox.ItemsSource = new List<CommuneWard> { new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" } };
                 ProvinceCityComboBox.SelectedIndex = 0;
                 CommuneWardComboBox.SelectedIndex = 0;
@@ -58,21 +59,7 @@ namespace ProjectWPF.AdminWindows
                 SaveSellerTitleTextBlock.Text = "Cập Nhật Người Bán";
                 SaveSellerButton.Content = "Cập Nhật Người Bán";
 
-                string? sellerProvinceCityCode = _sellerToUpdate.CommuneWard?.ProvinceCityCode;
-                ProvinceCityComboBox.SelectedValue = sellerProvinceCityCode;
-                var communeWards = _addressService.GetCommuneWardsByProvinceCityCode(sellerProvinceCityCode);
-                communeWards.Insert(0, new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" });
-                CommuneWardComboBox.ItemsSource = communeWards;
-                CommuneWardComboBox.SelectedValue = _sellerToUpdate.CommuneWardCode;
-
-                EmailTextBox.Text = _sellerToUpdate.Email;
-                EmailTextBox.IsEnabled = false;
-                PasswordTextBox.Text = _sellerToUpdate.Password;
-                FullNameTextBox.Text = _sellerToUpdate.FullName;
-                BirthDatePicker.SelectedDate = _sellerToUpdate.BirthDate.ToDateTime(TimeOnly.MinValue);
-                IdentifyTextBox.Text = _sellerToUpdate.Cid;
-                SpecificAddressTextBox.Text = _sellerToUpdate.SpecificAddress;
-                StatusCheckBox.IsChecked = _sellerToUpdate.IsActive;
+                AutoFillSellerToUpdate();
             }
         }
 
@@ -196,6 +183,10 @@ namespace ProjectWPF.AdminWindows
                         MessageBox.Show("CMND/CCCD đã tồn tại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
+
+                    MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn cập nhật người bán?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result != MessageBoxResult.Yes) return;
+
                     _sellerToUpdate.Password = password;
                     _sellerToUpdate.FullName = fullName;
                     _sellerToUpdate.BirthDate = birthDate.Value;
@@ -213,7 +204,56 @@ namespace ProjectWPF.AdminWindows
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đặt lại tất cả thay đổi?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result != MessageBoxResult.Yes) return;
 
+            if (_sellerToUpdate == null)
+            {
+                EmailTextBox.Text = "";
+                EmailTextBox.IsEnabled = true;
+                PasswordTextBox.Text = "";
+                FullNameTextBox.Text = "";
+                BirthDatePicker.SelectedDate = null;
+                IdentifyTextBox.Text = "";
+                ProvinceCityComboBox.SelectedIndex = 0;
+                CommuneWardComboBox.ItemsSource = new List<CommuneWard> { new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" } };
+                CommuneWardComboBox.SelectedIndex = 0;
+                SpecificAddressTextBox.Text = "";
+                StatusCheckBox.IsChecked = true;
+            }
+            else
+            {
+                AutoFillSellerToUpdate();
+            }
+        }
+
+        private void DeleteSellerButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn xoá người bán?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result != MessageBoxResult.Yes) return;
+
+            _sellerService.DeleteSeller(_sellerToUpdate!.Id);
+            MessageBox.Show("Xoá người bán thành công.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+            this.Close();
+        }
+
+        private void AutoFillSellerToUpdate()
+        {
+            string? sellerProvinceCityCode = _sellerToUpdate!.CommuneWard?.ProvinceCityCode;
+            ProvinceCityComboBox.SelectedValue = sellerProvinceCityCode;
+            var communeWards = _addressService.GetCommuneWardsByProvinceCityCode(sellerProvinceCityCode!);
+            communeWards.Insert(0, new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" });
+            CommuneWardComboBox.ItemsSource = communeWards;
+            CommuneWardComboBox.SelectedValue = _sellerToUpdate.CommuneWardCode;
+
+            EmailTextBox.Text = _sellerToUpdate.Email;
+            EmailTextBox.IsEnabled = false;
+            PasswordTextBox.Text = _sellerToUpdate.Password;
+            FullNameTextBox.Text = _sellerToUpdate.FullName;
+            BirthDatePicker.SelectedDate = _sellerToUpdate.BirthDate.ToDateTime(TimeOnly.MinValue);
+            IdentifyTextBox.Text = _sellerToUpdate.Cid;
+            SpecificAddressTextBox.Text = _sellerToUpdate.SpecificAddress;
+            StatusCheckBox.IsChecked = _sellerToUpdate.IsActive;
         }
     }
 }
