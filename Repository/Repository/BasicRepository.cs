@@ -27,21 +27,21 @@ namespace Repository.Repository
         public void Add(TEntity entity)
         {
             using var context = new DbContext();
-            context.Set<TEntity>().Add(entity);
+            context.Add(entity);
             context.SaveChanges();
         }
 
         public void AddRange(IEnumerable<TEntity> entities)
         {
             using var context = new DbContext();
-            context.Set<TEntity>().AddRange(entities);
+            context.AddRange(entities);
             context.SaveChanges();
         }
 
         public void Update(TEntity entity)
         {
             using var context = new DbContext();
-            context.Set<TEntity>().Update(entity);
+            context.Update(entity);
             context.SaveChanges();
         }
 
@@ -51,7 +51,7 @@ namespace Repository.Repository
             var entity = context.Set<TEntity>().Find(id);
             if (entity != null)
             {
-                context.Set<TEntity>().Remove(entity);
+                context.Remove(entity);
                 context.SaveChanges();
             }
         }

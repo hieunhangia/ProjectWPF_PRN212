@@ -21,14 +21,21 @@ namespace ProjectWPF.AdminWindows
     /// <summary>
     /// Interaction logic for AddSeller.xaml
     /// </summary>
-    public partial class AddSeller : Window
+    public partial class SaveSeller : Window
     {
 
+        private readonly Seller? _sellerToUpdate;
+        private readonly SellerService _sellerService = new();
         private readonly AddressService _addressService = new();
 
-        public AddSeller()
+        public SaveSeller()
         {
             InitializeComponent();
+        }
+
+        public SaveSeller(Seller? seller) : this()
+        {
+            _sellerToUpdate = seller;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -36,10 +43,37 @@ namespace ProjectWPF.AdminWindows
             var provinceCities = _addressService.GetAllProvinceCities();
             provinceCities.Insert(0, new() { Code = "default", Name = "Chọn Tỉnh/Thành Phố" });
             ProvinceCityComboBox.ItemsSource = provinceCities;
-            ProvinceCityComboBox.SelectedIndex = 0;
 
-            CommuneWardComboBox.ItemsSource = new List<CommuneWard> { new() { Code = "default", Name = "Chọn Xã/Phường" , ProvinceCityCode = "0"} };
-            CommuneWardComboBox.SelectedIndex = 0;
+            if (_sellerToUpdate == null)
+            {
+                SaveSellerTitleTextBlock.Text = "Thêm Mới Người Bán";
+                SaveSellerButton.Content = "Thêm Mới Người Bán";
+                CommuneWardComboBox.ItemsSource = new List<CommuneWard> { new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" } };
+                ProvinceCityComboBox.SelectedIndex = 0;
+                CommuneWardComboBox.SelectedIndex = 0;
+                StatusCheckBox.IsChecked = true;
+            }
+            else
+            {
+                SaveSellerTitleTextBlock.Text = "Cập Nhật Người Bán";
+                SaveSellerButton.Content = "Cập Nhật Người Bán";
+
+                string? sellerProvinceCityCode = _sellerToUpdate.CommuneWard?.ProvinceCityCode;
+                ProvinceCityComboBox.SelectedValue = sellerProvinceCityCode;
+                var communeWards = _addressService.GetCommuneWardsByProvinceCityCode(sellerProvinceCityCode);
+                communeWards.Insert(0, new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" });
+                CommuneWardComboBox.ItemsSource = communeWards;
+                CommuneWardComboBox.SelectedValue = _sellerToUpdate.CommuneWardCode;
+
+                EmailTextBox.Text = _sellerToUpdate.Email;
+                EmailTextBox.IsEnabled = false;
+                PasswordTextBox.Text = _sellerToUpdate.Password;
+                FullNameTextBox.Text = _sellerToUpdate.FullName;
+                BirthDatePicker.SelectedDate = _sellerToUpdate.BirthDate.ToDateTime(TimeOnly.MinValue);
+                IdentifyTextBox.Text = _sellerToUpdate.Cid;
+                SpecificAddressTextBox.Text = _sellerToUpdate.SpecificAddress;
+                StatusCheckBox.IsChecked = _sellerToUpdate.IsActive;
+            }
         }
 
         private void ProvinceCityComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -57,7 +91,7 @@ namespace ProjectWPF.AdminWindows
             CommuneWardComboBox.SelectedIndex = 0;
         }
 
-        private void AddSellerButton_Click(object sender, RoutedEventArgs e)
+        private void SaveSellerButton_Click(object sender, RoutedEventArgs e)
         {
             string email = EmailTextBox.Text;
             string password = PasswordTextBox.Text;
@@ -67,6 +101,7 @@ namespace ProjectWPF.AdminWindows
             string provinceCity = (string)ProvinceCityComboBox.SelectedValue;
             string communneWard = (string)CommuneWardComboBox.SelectedValue;
             string specificAddress = SpecificAddressTextBox.Text;
+            bool isActive = StatusCheckBox.IsChecked == true;
 
             if (string.IsNullOrWhiteSpace(email) ||
                 string.IsNullOrWhiteSpace(password) ||
@@ -126,32 +161,59 @@ namespace ProjectWPF.AdminWindows
                     return;
                 }
 
-                SellerService sellerService = new();
-                if (sellerService.IsEmailExists(email))
+                if (_sellerToUpdate == null)
                 {
-                    MessageBox.Show("Email đã tồn tại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (_sellerService.IsEmailExists(email))
+                    {
+                        MessageBox.Show("Email đã tồn tại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    if (_sellerService.IsIdentifyExists(identify))
+                    {
+                        MessageBox.Show("CMND/CCCD đã tồn tại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    Seller seller = new()
+                    {
+                        Email = email,
+                        Password = password,
+                        IsActive = isActive,
+                        FullName = fullName,
+                        BirthDate = birthDate.Value,
+                        Cid = identify,
+                        SpecificAddress = specificAddress,
+                        CommuneWardCode = communneWard
+                    };
+
+                    _sellerService.AddSeller(seller);
+                    MessageBox.Show("Thêm người bán thành công.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                if (sellerService.IsIdentifyExists(identify))
+                else
                 {
-                    MessageBox.Show("CMND/CCCD đã tồn tại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (_sellerService.IsIdentifyExists(identify, _sellerToUpdate.Id))
+                    {
+                        MessageBox.Show("CMND/CCCD đã tồn tại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    _sellerToUpdate.Password = password;
+                    _sellerToUpdate.FullName = fullName;
+                    _sellerToUpdate.BirthDate = birthDate.Value;
+                    _sellerToUpdate.Cid = identify;
+                    _sellerToUpdate.SpecificAddress = specificAddress;
+                    _sellerToUpdate.CommuneWardCode = communneWard;
+                    _sellerToUpdate.CommuneWard = null;
+                    _sellerToUpdate.IsActive = isActive;
+                    _sellerService.UpdateSeller(_sellerToUpdate);
+                    MessageBox.Show("Cập nhật người bán thành công.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                Seller seller = new()
-                {
-                    Email = email,
-                    Password = password,
-                    IsActive = true,
-                    FullName = fullName,
-                    BirthDate = birthDate.Value,
-                    Cid = identify,
-                    SpecificAddress = specificAddress,
-                    CommuneWardCode = communneWard
-                };
-                sellerService.AddSeller(seller);
-                MessageBox.Show("Thêm người bán thành công.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Close();
             }
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

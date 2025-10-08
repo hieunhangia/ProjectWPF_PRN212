@@ -46,7 +46,7 @@ namespace ProjectWPF.AdminWindows
 
         private void AddSellerButton_Click(object sender, RoutedEventArgs e)
         {
-            new AddSeller().ShowDialog();
+            new SaveSeller().ShowDialog();
 
             SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
         }
@@ -62,8 +62,7 @@ namespace ProjectWPF.AdminWindows
         {
             var textBlock = sender as TextBlock;
             var seller = textBlock?.DataContext as Seller;
-            new UpdateSeller(seller).ShowDialog();
-
+            new SaveSeller(seller).ShowDialog();
             SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
         }
 
