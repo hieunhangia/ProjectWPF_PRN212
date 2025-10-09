@@ -9,7 +9,8 @@
     <Grid>
         <TextBlock HorizontalAlignment="Center" Margin="0,42,0,0" TextWrapping="Wrap" Text="Admin" VerticalAlignment="Top" FontSize="69"/>
         <Button x:Name="LogoutButton" Content="Đăng xuất" HorizontalAlignment="Left" Margin="723,55,0,0" VerticalAlignment="Top" Height="65" Width="175" FontSize="36" Click="LogoutButton_Click"/>
-        <Button x:Name="SellerManagerButton" Content="Quản Lý Người Bán" HorizontalAlignment="Left" Margin="96,304,0,0" VerticalAlignment="Top" Height="96" Width="345" FontSize="36" Click="SellerManagerButton_Click"/>
+        <Button x:Name="SellerManagerButton" Content="Quản Lý Người Bán" HorizontalAlignment="Center" Margin="0,274,0,0" VerticalAlignment="Top" Height="96" Width="344" FontSize="36" Click="SellerManagerButton_Click"/>
+        <Button x:Name="SellerRequestButton" Content="Quản Lý Yêu Cầu Của Người Bán" HorizontalAlignment="Center" Margin="0,428,0,0" VerticalAlignment="Top" Height="96" Width="624" FontSize="36" Click="SellerRequestButton_Click"/>
 
     </Grid>
 </Window>

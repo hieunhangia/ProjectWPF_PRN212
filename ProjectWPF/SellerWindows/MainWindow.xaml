@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.SellerWindows"
         mc:Ignorable="d"
-        Title="MainWindow" Height="690" Width="960">
+        Title="MainWindow" Height="690" Width="960" Closed="Window_Closed">
     <Grid>
         <TextBlock HorizontalAlignment="Center" Margin="0,42,0,0" TextWrapping="Wrap" Text="Seller" VerticalAlignment="Top" FontSize="69"/>
         <Button x:Name="LogoutButton" Content="Logout" HorizontalAlignment="Left" Margin="723,55,0,0" VerticalAlignment="Top" Height="65" Width="175" FontSize="36" Click="LogoutButton_Click"/>

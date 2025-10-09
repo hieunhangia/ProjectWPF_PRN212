@@ -44,5 +44,10 @@ namespace ProjectWPF.AdminWindows
         {
             new SellerList().ShowDialog();
         }
+
+        private void SellerRequestButton_Click(object sender, RoutedEventArgs e)
+        {
+            new SellerRequest().ShowDialog();
+        }
     }
 }

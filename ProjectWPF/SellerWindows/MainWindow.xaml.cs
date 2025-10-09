@@ -30,7 +30,9 @@ namespace ProjectWPF.SellerWindows
         public MainWindow(Seller seller)
         {
             _loggedInSeller = seller;
+
             _userChangeListener.StartListening(OnUserStatusChanged);
+
             InitializeComponent();
         }
 
@@ -52,10 +54,6 @@ namespace ProjectWPF.SellerWindows
                 var changedUser = e.Entity;
                 if (oldUser.IsActive && !changedUser.IsActive && oldUser.Id == _loggedInSeller.Id)
                 {
-                    _userChangeListener.StopListening();
-
-                    // Gửi công việc xử lý UI về luồng UI để thực thi
-                    // TOÀN BỘ CODE UI TRONG NÀY SẼ CHẠY AN TOÀN TRÊN LUỒNG UI
                     Dispatcher.Invoke(() =>
                     {
                         new Login().Show();
@@ -64,6 +62,11 @@ namespace ProjectWPF.SellerWindows
                     });
                 }
             }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            _userChangeListener.StopListening();
         }
     }
 }

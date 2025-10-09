@@ -10,11 +10,14 @@ namespace Repository
     {
         private SqlTableDependency<User>? _dependency;
 
-        public void StartListening(ChangedEventHandler<User> changedEventHandler)
+        public void StartListening(params ChangedEventHandler<User>[] changedEventHandlers)
         {
             using var context = new DbContext();
             _dependency = new(context.Database.GetConnectionString(), "user", includeOldValues: true);
-            _dependency.OnChanged += changedEventHandler;
+            foreach (var handler in changedEventHandlers)
+            {
+                _dependency.OnChanged += handler;
+            }
             _dependency.Start();
         }
 
