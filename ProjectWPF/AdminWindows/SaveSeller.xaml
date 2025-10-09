@@ -46,7 +46,7 @@
         <Label Content="Mở Khoá?" HorizontalAlignment="Left" Margin="735,510,0,0" VerticalAlignment="Top" Height="42" Width="122" FontSize="24"/>
         <Button x:Name="SaveSellerButton" Content="SaveSellerButton" HorizontalAlignment="Center" Margin="0,573,0,0" VerticalAlignment="Top" Height="65" Width="398" FontSize="36" Click="SaveSellerButton_Click"/>
         <Button x:Name="ResetButton" Content="Đặt Lại" HorizontalAlignment="Left" Margin="59,585,0,0" VerticalAlignment="Top" Height="41" Width="167" FontSize="24" Click="ResetButton_Click"/>
-        <Button x:Name="DeleteSellerButton" Content="Xoá Người Bán" HorizontalAlignment="Left" Margin="735,585,0,0" VerticalAlignment="Top" FontSize="24" Height="41" Width="167" Background="#FFFF5555" Foreground="White" Click="DeleteSellerButton_Click"/>
+        <Button x:Name="DeleteSellerButton" Content="Xoá Người Bán" HorizontalAlignment="Left" Margin="735,585,0,0" VerticalAlignment="Top" FontSize="24" Height="41" Width="167" Background="#FFFD9B9B" Foreground="Black" Click="DeleteSellerButton_Click"/>
     </Grid>
 
 </Window>

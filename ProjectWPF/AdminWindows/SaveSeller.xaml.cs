@@ -46,6 +46,7 @@ namespace ProjectWPF.AdminWindows
 
             if (_sellerToUpdate == null)
             {
+                Title = "Thêm Mới Người Bán";
                 SaveSellerTitleTextBlock.Text = "Thêm Mới Người Bán";
                 SaveSellerButton.Content = "Thêm Mới Người Bán";
                 DeleteSellerButton.Visibility = Visibility.Hidden;
@@ -56,6 +57,7 @@ namespace ProjectWPF.AdminWindows
             }
             else
             {
+                Title = "Cập Nhật Người Bán";
                 SaveSellerTitleTextBlock.Text = "Cập Nhật Người Bán";
                 SaveSellerButton.Content = "Cập Nhật Người Bán";
 

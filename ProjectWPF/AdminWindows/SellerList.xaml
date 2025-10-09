@@ -25,20 +25,7 @@
                 <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="0.5*">
                 </DataGridTextColumn>
 
-                <DataGridTemplateColumn Header="Xem Chi Tiết"
-                                        Width="0.5*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Cursor="Hand"
-                               Text="Xem Chi Tiết"
-                               Foreground="Green"
-                               HorizontalAlignment="Center"
-                               MouseLeftButtonUp="ViewDetailHandler"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Header="Cập Nhật"
+                <DataGridTemplateColumn Header="Hành Động"
                                         Width="0.5*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
