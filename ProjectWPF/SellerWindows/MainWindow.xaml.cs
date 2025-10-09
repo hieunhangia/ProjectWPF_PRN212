@@ -1,4 +1,5 @@
-﻿using Repository.Models.user;
+﻿using Repository;
+using Repository.Models.user;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TableDependency.SqlClient.Base.Enums;
+using TableDependency.SqlClient.Base.EventArgs;
 
 namespace ProjectWPF.SellerWindows
 {
@@ -22,10 +25,12 @@ namespace ProjectWPF.SellerWindows
     {
 
         private readonly Seller _loggedInSeller;
+        private readonly UserChangeListener _userChangeListener = new();
 
         public MainWindow(Seller seller)
         {
             _loggedInSeller = seller;
+            _userChangeListener.StartListening(OnUserStatusChanged);
             InitializeComponent();
         }
 
@@ -36,6 +41,28 @@ namespace ProjectWPF.SellerWindows
             {
                 new Login().Show();
                 this.Close();
+            }
+        }
+
+        private void OnUserStatusChanged(object sender, RecordChangedEventArgs<User> e)
+        {
+            if (e.ChangeType == ChangeType.Update)
+            {
+                var oldUser = e.EntityOldValues;
+                var changedUser = e.Entity;
+                if (oldUser.IsActive && !changedUser.IsActive && oldUser.Id == _loggedInSeller.Id)
+                {
+                    _userChangeListener.StopListening();
+
+                    // Gửi công việc xử lý UI về luồng UI để thực thi
+                    // TOÀN BỘ CODE UI TRONG NÀY SẼ CHẠY AN TOÀN TRÊN LUỒNG UI
+                    Dispatcher.Invoke(() =>
+                    {
+                        new Login().Show();
+                        this.Close();
+                        MessageBox.Show("Tài khoản của bạn đã bị khoá.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Error);
+                    });
+                }
             }
         }
     }

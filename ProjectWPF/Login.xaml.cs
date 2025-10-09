@@ -50,7 +50,7 @@ namespace ProjectWPF
                 }
                 else
                 {
-                    MessageBox.Show("Tài khoản của bạn đã bị vô hiệu hóa.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Tài khoản của bạn đã bị khoá.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 
             }

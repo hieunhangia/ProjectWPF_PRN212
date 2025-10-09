@@ -1,7 +1,4 @@
 ﻿using Repository;
-using System;
-using System.Configuration;
-using System.Data;
 using System.Windows;
 
 namespace ProjectWPF
@@ -13,16 +10,10 @@ namespace ProjectWPF
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            try
-            {
-                using var context = new DbContext();
-                context.Database.EnsureCreated();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
-            }
+            
+            using var context = new DbContext();
+            context.Database.EnsureCreated();
+
             base.OnStartup(e);
 
             FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window),
@@ -31,6 +22,7 @@ namespace ProjectWPF
                     DefaultValue = FindResource(typeof(Window))
                 });
         }
+
     }
 
 }

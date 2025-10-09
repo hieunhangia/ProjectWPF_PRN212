@@ -39,7 +39,7 @@ namespace Repository
             base.OnModelCreating(modelBuilder);
 
             // Configure User inheritance (Table-per-Type)
-            modelBuilder.Entity<User>().ToTable("user");
+            modelBuilder.Entity<User>().ToTable("user", u => u.HasTrigger("AnyTriggerNameWillWork"));
             modelBuilder.Entity<Admin>().ToTable("admin");
             modelBuilder.Entity<Seller>().ToTable("seller");
 
