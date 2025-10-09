@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Repository
+namespace Repository.Models.user
 {
     [Table("users")]
     public class User
@@ -11,7 +11,7 @@ namespace Repository
         public long Id { get; set; }
 
         [Column("email", TypeName = "nvarchar(255)")]
-        public required string Email { get; set; }
+        public string? Email { get; set; }
 
         [Column("password", TypeName = "nvarchar(255)")]
         public string? Password { get; set; }

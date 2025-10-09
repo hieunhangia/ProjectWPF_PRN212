@@ -1,6 +1,6 @@
-using Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Repository.Models.user;
 
 namespace Repository
 {

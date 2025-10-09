@@ -1,5 +1,4 @@
-﻿
-using Repository;
+﻿using Repository.Models.user;
 using Repository.Repository;
 
 namespace Service
