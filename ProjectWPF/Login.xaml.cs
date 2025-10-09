@@ -31,23 +31,28 @@ namespace ProjectWPF
 
             if (user != null)
             {
-                if(user is Admin)
+                if (user.IsActive)
                 {
-                    new AdminWindows.MainWindow().Show();
-                    this.Close();
-                }
-                else
-                {
-                    if (user.IsActive)
+                    if (user is Admin admin)
                     {
-                        new SellerWindows.MainWindow().Show();
+                        new AdminWindows.MainWindow(admin).Show();
+                        this.Close();
+                    }
+                    else if (user is Seller seller)
+                    {
+                        new SellerWindows.MainWindow(seller).Show();
                         this.Close();
                     }
                     else
                     {
-                        MessageBox.Show("Tài khoản của bạn đã bị vô hiệu hóa.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Loại tài khoản không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
+                else
+                {
+                    MessageBox.Show("Tài khoản của bạn đã bị vô hiệu hóa.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
             }
             else
             {

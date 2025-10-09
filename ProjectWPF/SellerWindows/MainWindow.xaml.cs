@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,8 +20,12 @@ namespace ProjectWPF.SellerWindows
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+
+        private readonly Seller _loggedInSeller;
+
+        public MainWindow(Seller seller)
         {
+            _loggedInSeller = seller;
             InitializeComponent();
         }
 

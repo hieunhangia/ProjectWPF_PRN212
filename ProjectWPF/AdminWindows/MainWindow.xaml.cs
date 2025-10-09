@@ -21,8 +21,12 @@ namespace ProjectWPF.AdminWindows
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+
+        private readonly Admin _loggedInAdmin;
+
+        public MainWindow(Admin admin)
         {
+            _loggedInAdmin = admin;
             InitializeComponent();
         }
 

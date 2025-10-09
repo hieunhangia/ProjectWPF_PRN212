@@ -51,13 +51,6 @@ namespace ProjectWPF.AdminWindows
             SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
         }
 
-        private void ViewDetailHandler(object sender, MouseButtonEventArgs e)
-        {
-            var textBlock = sender as TextBlock;
-            var seller = textBlock?.DataContext as Seller;
-            MessageBox.Show("Chức năng đang được phát triển" + seller?.Email);
-        }
-
         private void UpdateSellerHandler(object sender, MouseButtonEventArgs e)
         {
             var textBlock = sender as TextBlock;
