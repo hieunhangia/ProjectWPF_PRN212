@@ -46,16 +46,16 @@ namespace ProjectWPF.AdminWindows
 
         private void AddSellerButton_Click(object sender, RoutedEventArgs e)
         {
-            new SaveSeller().ShowDialog();
+            new SellerForm().ShowDialog();
 
             SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
         }
 
-        private void UpdateSellerHandler(object sender, MouseButtonEventArgs e)
+        private void ShowDetailsSellerHandler(object sender, MouseButtonEventArgs e)
         {
             var textBlock = sender as TextBlock;
             var seller = textBlock?.DataContext as Seller;
-            new SaveSeller(seller).ShowDialog();
+            new SellerForm(seller).ShowDialog();
             SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
         }
 

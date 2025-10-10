@@ -30,10 +30,10 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Cursor="Hand"
-                               Text="Cập Nhật"
+                               Text="Xem Chi Tiết"
                                Foreground="Blue"
                                HorizontalAlignment="Center"
-                               MouseLeftButtonUp="UpdateSellerHandler"/>
+                               MouseLeftButtonUp="ShowDetailsSellerHandler"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

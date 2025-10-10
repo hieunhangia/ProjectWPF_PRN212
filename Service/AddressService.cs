@@ -23,5 +23,10 @@ namespace Service
         {
             return _communeWardRepository.GetByCondition(cw => cw.ProvinceCityCode == provinceCityCode);
         }
+
+        public CommuneWard? GetCommuneWardByCode(string code)
+        {
+            return _communeWardRepository.GetById(code);
+        }
     }
 }

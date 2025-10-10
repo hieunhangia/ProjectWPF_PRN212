@@ -22,19 +22,20 @@ namespace ProjectWPF.AdminWindows
     /// <summary>
     /// Interaction logic for AddSeller.xaml
     /// </summary>
-    public partial class SaveSeller : Window
+    public partial class SellerForm : Window
     {
 
         private readonly Seller? _sellerToUpdate;
         private readonly SellerService _sellerService = new();
         private readonly AddressService _addressService = new();
+        private bool _isInUpdateMode;
 
-        public SaveSeller()
+        public SellerForm()
         {
             InitializeComponent();
         }
 
-        public SaveSeller(Seller? seller) : this()
+        public SellerForm(Seller? seller) : this()
         {
             _sellerToUpdate = seller;
         }
@@ -45,12 +46,14 @@ namespace ProjectWPF.AdminWindows
             provinceCities.Insert(0, new() { Code = "default", Name = "Chọn Tỉnh/Thành Phố" });
             ProvinceCityComboBox.ItemsSource = provinceCities;
 
+            DeleteSellerButton.Visibility = Visibility.Collapsed;
+
             if (_sellerToUpdate == null)
             {
                 Title = "Thêm Mới Người Bán";
                 SaveSellerTitleTextBlock.Text = "Thêm Mới Người Bán";
                 SaveSellerButton.Content = "Thêm Mới Người Bán";
-                DeleteSellerButton.Visibility = Visibility.Hidden;
+                UpdateSellerAskButton.Visibility = Visibility.Collapsed;
                 CommuneWardComboBox.ItemsSource = new List<CommuneWard> { new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" } };
                 ProvinceCityComboBox.SelectedIndex = 0;
                 CommuneWardComboBox.SelectedIndex = 0;
@@ -58,11 +61,24 @@ namespace ProjectWPF.AdminWindows
             }
             else
             {
-                Title = "Cập Nhật Người Bán";
-                SaveSellerTitleTextBlock.Text = "Cập Nhật Người Bán";
-                SaveSellerButton.Content = "Cập Nhật Người Bán";
+                Title = "Thông Tin Người Bán";
+                SaveSellerTitleTextBlock.Text = "Thông Tin Người Bán";
+                SaveSellerButton.Content = "Lưu Thay Đổi";
+                InitShowDetailMode();
+            }
+        }
 
-                AutoFillSellerToUpdate();
+        private void UpdateSellerAskButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_isInUpdateMode)
+            {
+                InitUpdateMode();
+            }
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn huỷ cập nhật người bán?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result != MessageBoxResult.Yes) return;
+                InitShowDetailMode();
             }
         }
 
@@ -178,6 +194,7 @@ namespace ProjectWPF.AdminWindows
 
                     _sellerService.AddSeller(seller);
                     MessageBox.Show("Thêm người bán thành công.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    this.Close();
                 }
                 else
                 {
@@ -195,13 +212,12 @@ namespace ProjectWPF.AdminWindows
                     _sellerToUpdate.BirthDate = birthDate.Value;
                     _sellerToUpdate.Cid = identify;
                     _sellerToUpdate.SpecificAddress = specificAddress;
-                    _sellerToUpdate.CommuneWardCode = communneWard;
-                    _sellerToUpdate.CommuneWard = null;
+                    _sellerToUpdate.CommuneWard = _addressService.GetCommuneWardByCode(communneWard);
                     _sellerToUpdate.IsActive = isActive;
                     _sellerService.UpdateSeller(_sellerToUpdate);
+                    InitShowDetailMode();
                     MessageBox.Show("Cập nhật người bán thành công.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                this.Close();
             }
         }
 
@@ -213,7 +229,7 @@ namespace ProjectWPF.AdminWindows
             if (_sellerToUpdate == null)
             {
                 EmailTextBox.Text = "";
-                EmailTextBox.IsEnabled = true;
+                EmailTextBox.IsHitTestVisible = true;
                 PasswordTextBox.Text = "";
                 FullNameTextBox.Text = "";
                 BirthDatePicker.SelectedDate = null;
@@ -226,7 +242,7 @@ namespace ProjectWPF.AdminWindows
             }
             else
             {
-                AutoFillSellerToUpdate();
+                AutoFillSellerInfo();
             }
         }
 
@@ -240,7 +256,45 @@ namespace ProjectWPF.AdminWindows
             this.Close();
         }
 
-        private void AutoFillSellerToUpdate()
+        private void InitShowDetailMode()
+        {
+            _isInUpdateMode = false;
+
+            EmailTextBox.IsHitTestVisible = false;
+            PasswordTextBox.IsHitTestVisible = false;
+            FullNameTextBox.IsHitTestVisible = false;
+            BirthDatePicker.IsHitTestVisible = false;
+            IdentifyTextBox.IsHitTestVisible = false;
+            ProvinceCityComboBox.IsHitTestVisible = false;
+            CommuneWardComboBox.IsHitTestVisible = false;
+            SpecificAddressTextBox.IsHitTestVisible = false;
+            StatusCheckBox.IsHitTestVisible = false;
+            UpdateSellerAskButton.Content = "Cập Nhật Người Bán";
+            SaveSellerButton.Visibility = Visibility.Collapsed;
+            ResetButton.Visibility = Visibility.Collapsed;
+            DeleteSellerButton.Visibility = Visibility.Collapsed;
+            AutoFillSellerInfo();
+        }
+
+        private void InitUpdateMode()
+        {
+            _isInUpdateMode = true;
+
+            PasswordTextBox.IsHitTestVisible = true;
+            FullNameTextBox.IsHitTestVisible = true;
+            BirthDatePicker.IsHitTestVisible = true;
+            IdentifyTextBox.IsHitTestVisible = true;
+            ProvinceCityComboBox.IsHitTestVisible = true;
+            CommuneWardComboBox.IsHitTestVisible = true;
+            SpecificAddressTextBox.IsHitTestVisible = true;
+            StatusCheckBox.IsHitTestVisible = true;
+            UpdateSellerAskButton.Content = "Huỷ Cập Nhật";
+            SaveSellerButton.Visibility = Visibility.Visible;
+            ResetButton.Visibility = Visibility.Visible;
+            DeleteSellerButton.Visibility = Visibility.Visible;
+        }
+
+        private void AutoFillSellerInfo()
         {
             string? sellerProvinceCityCode = _sellerToUpdate!.CommuneWard?.ProvinceCityCode;
             ProvinceCityComboBox.SelectedValue = sellerProvinceCityCode;
@@ -250,7 +304,6 @@ namespace ProjectWPF.AdminWindows
             CommuneWardComboBox.SelectedValue = _sellerToUpdate.CommuneWardCode;
 
             EmailTextBox.Text = _sellerToUpdate.Email;
-            EmailTextBox.IsEnabled = false;
             PasswordTextBox.Text = _sellerToUpdate.Password;
             FullNameTextBox.Text = _sellerToUpdate.FullName;
             BirthDatePicker.SelectedDate = _sellerToUpdate.BirthDate.ToDateTime(TimeOnly.MinValue);
@@ -258,5 +311,6 @@ namespace ProjectWPF.AdminWindows
             SpecificAddressTextBox.Text = _sellerToUpdate.SpecificAddress;
             StatusCheckBox.IsChecked = _sellerToUpdate.IsActive;
         }
+
     }
 }
