@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Repository
+namespace Repository.Repository.user
 {
     public class UserRepository : BasicRepository<User, long>
     {

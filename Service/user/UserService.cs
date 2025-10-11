@@ -1,7 +1,7 @@
 ﻿using Repository.Models.user;
-using Repository.Repository;
+using Repository.Repository.user;
 
-namespace Service
+namespace Service.user
 {
     public class UserService
     {
