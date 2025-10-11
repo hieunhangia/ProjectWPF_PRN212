@@ -27,7 +27,7 @@ namespace ProjectWPF
                 .ConfigureAppConfiguration((_, configBuilder) =>
                 {
                     configBuilder.AddJsonFile("appsettings.json");
-                    //configBuilder.AddJsonFile("appsettings_secret.json");
+                    configBuilder.AddJsonFile("appsettings_secret.json");
                 })
                 .ConfigureServices(ConfigureServices).Build();
 
@@ -35,10 +35,10 @@ namespace ProjectWPF
 
             using (var scope = _host.Services.CreateScope())
             {
-                var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<Repository.DbContext>>();
-                using var dbContext = dbContextFactory.CreateDbContext();
+                var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<Repository.DbContext>>();
+                using var context = contextFactory.CreateDbContext();
 
-                dbContext.Database.EnsureCreated();
+                context.Database.EnsureCreated();
 
             }
 

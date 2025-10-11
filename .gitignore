@@ -361,5 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-DatabaseImport/appsettings.json
+
 ProjectWPF/appsettings.json
+ProjectWPF/appsettings_secret.json
