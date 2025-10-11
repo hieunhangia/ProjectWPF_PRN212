@@ -1,4 +1,5 @@
-﻿using Repository.Models.user;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Repository.Models.user;
 using Service;
 using System;
 using System.Collections.Generic;
@@ -21,13 +22,20 @@ namespace ProjectWPF.AdminWindows
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly IServiceProvider _serviceProvider;
 
-        private readonly Admin _loggedInAdmin;
+        private Admin? _loggedInAdmin;
 
-        public MainWindow(Admin admin)
+        public MainWindow(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+
+            InitializeComponent();
+        }
+
+        public void SetLoggedInAdmin(Admin admin)
         {
             _loggedInAdmin = admin;
-            InitializeComponent();
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -35,19 +43,19 @@ namespace ProjectWPF.AdminWindows
             MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                new Login().Show();
+                _serviceProvider.GetRequiredService<Login>().Show();
                 this.Close();
             }
         }
 
         private void SellerManagerButton_Click(object sender, RoutedEventArgs e)
         {
-            new SellerList().ShowDialog();
+            _serviceProvider.GetRequiredService<SellerList>().ShowDialog();
         }
 
         private void SellerRequestButton_Click(object sender, RoutedEventArgs e)
         {
-            new SellerRequest().ShowDialog();
+            _serviceProvider.GetRequiredService<SellerRequest>().ShowDialog();
         }
     }
 }

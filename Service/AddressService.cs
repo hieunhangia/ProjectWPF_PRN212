@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-    public class AddressService
+    public class AddressService(ProvinceCityRepository provinceCityRepository,
+        CommuneWardRepository communeWardRepository)
     {
-        private readonly ProvinceCityRepository _provinceCityRepository = new();
-        private readonly CommuneWardRepository _communeWardRepository = new();
+        private readonly ProvinceCityRepository _provinceCityRepository = provinceCityRepository;
+        private readonly CommuneWardRepository _communeWardRepository = communeWardRepository;
 
         public List<ProvinceCity> GetAllProvinceCities()
         {

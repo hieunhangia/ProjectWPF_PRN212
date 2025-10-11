@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace Service.user
 {
-    public class SellerService
+    public class SellerService(SellerRepository sellerRepository)
     {
-        private readonly SellerRepository _sellerRepository = new();
+        private readonly SellerRepository _sellerRepository = sellerRepository;
 
         public List<Seller> GetAllSellers() => _sellerRepository.GetAll();
 
         public Seller? GetSellerById(long id) => _sellerRepository.GetById(id);
 
-        public List<Seller> GetSellersByCondition(Func<Seller, bool> condition) => _sellerRepository.GetByCondition(condition);
+        public List<Seller> GetSellersByCondition(Expression<Func<Seller, bool>> condition) => _sellerRepository.GetByCondition(condition);
 
         public bool IsEmailExists(string email) => _sellerRepository.GetByCondition(s => s.Email == email).FirstOrDefault() != null;
 

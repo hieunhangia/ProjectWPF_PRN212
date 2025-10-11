@@ -6,14 +6,14 @@ using TableDependency.SqlClient.Base.Delegates;
 
 namespace Repository
 {
-    public class UserChangeListener
+    public class UserChangeListener(IDbContextFactory<DbContext> dbContextFactory)
     {
+        private readonly IDbContextFactory<DbContext> _dbContextFactory = dbContextFactory;
         private SqlTableDependency<User>? _dependency;
 
         public void StartListening(params ChangedEventHandler<User>[] changedEventHandlers)
         {
-            using var context = new DbContext();
-            _dependency = new(context.Database.GetConnectionString(), "user", includeOldValues: true);
+            _dependency = new(_dbContextFactory.CreateDbContext().Database.GetConnectionString(), "user", includeOldValues: true);
             foreach (var handler in changedEventHandlers)
             {
                 _dependency.OnChanged += handler;

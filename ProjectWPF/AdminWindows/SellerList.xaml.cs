@@ -1,4 +1,5 @@
-﻿using Repository.Models.user;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Repository.Models.user;
 using Service.user;
 using System;
 using System.Collections.Generic;
@@ -21,16 +22,47 @@ namespace ProjectWPF.AdminWindows
     /// </summary>
     public partial class SellerList : Window
     {
-        private readonly SellerService _sellerService = new();
+        private readonly IServiceProvider _serviceProvider;
+        private readonly SellerService _sellerService;
 
-        public SellerList()
+        public SellerList(IServiceProvider serviceProvider,
+            SellerService sellerService)
         {
+            _serviceProvider = serviceProvider;
+            _sellerService = sellerService;
+
             InitializeComponent();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            InitWindow();
+        }
+
+        private void AddSellerButton_Click(object sender, RoutedEventArgs e)
+        {
+            _serviceProvider.GetRequiredService<SellerForm>().ShowDialog();
+
+            InitWindow();
+        }
+
+        private void ShowDetailsSellerHandler(object sender, MouseButtonEventArgs e)
+        {
+            var textBlock = sender as TextBlock;
+            var seller = textBlock?.DataContext as Seller;
+
+            var _sellerForm = _serviceProvider.GetRequiredService<SellerForm>();
+            _sellerForm.SetSellerToUpdate(seller!);
+            _sellerForm.ShowDialog();
+
+            InitWindow();
+        }
+
+        private void InitWindow()
+        {
             SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
+            EmailSearchTextBox.Text = "";
+            FullNameSearchTextBox.Text = "";
 
             var statuses = new List<Tuple<int, string>>
             {
@@ -44,29 +76,18 @@ namespace ProjectWPF.AdminWindows
             StatusSearchTextBox.SelectedIndex = 0;
         }
 
-        private void AddSellerButton_Click(object sender, RoutedEventArgs e)
-        {
-            new SellerForm().ShowDialog();
+        private void SearchButton_Click(object sender, RoutedEventArgs e) => DoSearching();
 
-            SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
-        }
+        private void StatusSearchTextBox_SelectionChanged(object sender, SelectionChangedEventArgs e) => DoSearching();
 
-        private void ShowDetailsSellerHandler(object sender, MouseButtonEventArgs e)
-        {
-            var textBlock = sender as TextBlock;
-            var seller = textBlock?.DataContext as Seller;
-            new SellerForm(seller).ShowDialog();
-            SellerDataGrid.ItemsSource = _sellerService.GetAllSellers();
-        }
-
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        private void DoSearching()
         {
             string email = EmailSearchTextBox.Text.Trim().ToLower();
             string fullName = FullNameSearchTextBox.Text.Trim().ToLower();
             int status = (int)StatusSearchTextBox.SelectedValue;
             var sellers = _sellerService.GetSellersByCondition(s =>
-                (string.IsNullOrEmpty(email) || s.Email.ToLower().Contains(email))
-                && (string.IsNullOrEmpty(fullName) || s.FullName.ToLower().Contains(fullName))
+                (string.IsNullOrEmpty(email) || s.Email!.ToLower().Contains(email.ToLower()))
+                && (string.IsNullOrEmpty(fullName) || s.FullName!.ToLower().Contains(fullName.ToLower()))
                 && (status == 0 || (status == 1 && s.IsActive) || (status == 2 && !s.IsActive))
             );
             SellerDataGrid.ItemsSource = sellers;

@@ -3,9 +3,9 @@ using Repository.Repository.user;
 
 namespace Service.user
 {
-    public class UserService
+    public class UserService(UserRepository userRepository)
     {
-        private readonly UserRepository _userRepository = new();
+        private readonly UserRepository _userRepository = userRepository;
 
         public User? Login(string email, string password)
         {

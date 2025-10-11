@@ -4,7 +4,7 @@ using Repository.Models.user;
 
 namespace Repository
 {
-    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+    public class DbContext(DbContextOptions<DbContext> options) : Microsoft.EntityFrameworkCore.DbContext(options)
     {
         // User entities
         public DbSet<User> Users { get; set; }
@@ -20,19 +20,6 @@ namespace Repository
         // Address entities
         public DbSet<ProvinceCity> ProvinceCities { get; set; }
         public DbSet<CommuneWard> CommuneWards { get; set; }
-
-        public DbContext()
-        {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,5 @@
-﻿using Repository.Models.user;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Repository.Models.user;
 using Service.user;
 using System.Text;
 using System.Windows;
@@ -18,16 +19,21 @@ namespace ProjectWPF
     /// </summary>
     public partial class Login : Window
     {
-        public Login()
+        private readonly IServiceProvider _serviceProvider;
+        private readonly UserService _userService;
+
+        public Login(IServiceProvider serviceProvider,
+            UserService userService)
         {
+            _serviceProvider = serviceProvider;
+            _userService = userService;
+
             InitializeComponent();
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            UserService userService = new();
-
-            var user = userService.Login(emailTextBox.Text, passwordBox.Password);
+            var user = _userService.Login(emailTextBox.Text, passwordBox.Password);
 
             if (user != null)
             {
@@ -35,12 +41,16 @@ namespace ProjectWPF
                 {
                     if (user is Admin admin)
                     {
-                        new AdminWindows.MainWindow(admin).Show();
+                        var adminWindow = _serviceProvider.GetRequiredService<AdminWindows.MainWindow>();
+                        adminWindow.SetLoggedInAdmin(admin);
+                        adminWindow.Show();
                         this.Close();
                     }
                     else if (user is Seller seller)
                     {
-                        new SellerWindows.MainWindow(seller).Show();
+                        var sellerWindow = _serviceProvider.GetRequiredService<SellerWindows.MainWindow>();
+                        sellerWindow.SetLoggedInSeller(seller);
+                        sellerWindow.Show();
                         this.Close();
                     }
                     else

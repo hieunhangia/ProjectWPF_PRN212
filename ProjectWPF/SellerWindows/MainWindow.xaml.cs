@@ -1,4 +1,5 @@
-﻿using Repository;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Repository;
 using Repository.Models.user;
 using System;
 using System.Collections.Generic;
@@ -23,17 +24,26 @@ namespace ProjectWPF.SellerWindows
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly IServiceProvider _serviceProvider;
 
-        private readonly Seller _loggedInSeller;
-        private readonly UserChangeListener _userChangeListener = new();
+        private Seller? _loggedInSeller;
 
-        public MainWindow(Seller seller)
+        private readonly UserChangeListener _userChangeListener;
+
+        public MainWindow(IServiceProvider serviceProvider,
+            UserChangeListener userChangeListener)
         {
-            _loggedInSeller = seller;
+            _serviceProvider = serviceProvider;
 
+            _userChangeListener = userChangeListener;
             _userChangeListener.StartListening(OnUserStatusChanged);
 
             InitializeComponent();
+        }
+
+        public void SetLoggedInSeller(Seller seller)
+        {
+            _loggedInSeller = seller;
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -41,7 +51,7 @@ namespace ProjectWPF.SellerWindows
             MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                new Login().Show();
+                _serviceProvider.GetRequiredService<Login>().Show();
                 this.Close();
             }
         }
@@ -52,11 +62,11 @@ namespace ProjectWPF.SellerWindows
             {
                 var oldUser = e.EntityOldValues;
                 var changedUser = e.Entity;
-                if (oldUser.IsActive && !changedUser.IsActive && oldUser.Id == _loggedInSeller.Id)
+                if (oldUser.IsActive && !changedUser.IsActive && oldUser.Id == _loggedInSeller!.Id)
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        new Login().Show();
+                        _serviceProvider.GetRequiredService<Login>().Show();
                         this.Close();
                         MessageBox.Show("Tài khoản của bạn đã bị khoá.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Error);
                     });

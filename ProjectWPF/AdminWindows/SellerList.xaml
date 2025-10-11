@@ -149,7 +149,7 @@
                 <TextBox x:Name="FullNameSearchTextBox" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10"/>
 
                 <Label Content="Trạng Thái" Grid.Row="2" Grid.Column="0" Margin="0,0,10,0"/>
-                <ComboBox x:Name="StatusSearchTextBox" Grid.Row="2" Grid.Column="1" />
+                <ComboBox x:Name="StatusSearchTextBox" Grid.Row="2" Grid.Column="1" SelectionChanged="StatusSearchTextBox_SelectionChanged" />
 
                 <Button x:Name="SearchButton" Content="Tìm Kiếm" Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" Margin="20,0,0,0" Click="SearchButton_Click"/>
             </Grid>
