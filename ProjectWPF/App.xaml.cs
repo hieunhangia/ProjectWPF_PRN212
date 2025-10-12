@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Controller;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -61,13 +62,6 @@ namespace ProjectWPF
                 options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddTransient<Login>();
-            services.AddTransient<AdminWindows.MainWindow>();
-            services.AddTransient<AdminWindows.SellerList>();
-            services.AddTransient<AdminWindows.SellerForm>();
-            services.AddTransient<AdminWindows.SellerRequest>();
-            services.AddTransient<SellerWindows.MainWindow>();
-
             services.AddSingleton<CommuneWardRepository>();
             services.AddSingleton<ProvinceCityRepository>();
             services.AddSingleton<UserRepository>();
@@ -80,6 +74,15 @@ namespace ProjectWPF
             services.AddSingleton<UserService>();
             services.AddSingleton<SellerService>();
             services.AddSingleton<ProductService>();
+
+            services.AddSingleton<UserController>();
+
+            services.AddTransient<Login>();
+            services.AddTransient<AdminWindows.MainWindow>();
+            services.AddTransient<AdminWindows.SellerList>();
+            services.AddTransient<AdminWindows.SellerForm>();
+            services.AddTransient<AdminWindows.SellerRequest>();
+            services.AddTransient<SellerWindows.MainWindow>();
         }
 
         protected override async void OnExit(ExitEventArgs e)

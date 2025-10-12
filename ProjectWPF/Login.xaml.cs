@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Controller;
+using Microsoft.Extensions.DependencyInjection;
 using Repository.Models.user;
 using Service.user;
 using System.Text;
@@ -20,53 +21,45 @@ namespace ProjectWPF
     public partial class Login : Window
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly UserService _userService;
+        private readonly UserController _userController;
 
         public Login(IServiceProvider serviceProvider,
-            UserService userService)
+            UserController userController)
         {
             _serviceProvider = serviceProvider;
-            _userService = userService;
+            _userController = userController;
 
             InitializeComponent();
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            var user = _userService.Login(emailTextBox.Text, passwordBox.Password);
-
-            if (user != null)
+            try
             {
-                if (user.IsActive)
+                User user = _userController.Login(EmailTextBox.Text, PasswordBox.Password);
+                if (user is Admin admin)
                 {
-                    if (user is Admin admin)
-                    {
-                        var adminWindow = _serviceProvider.GetRequiredService<AdminWindows.MainWindow>();
-                        adminWindow.SetLoggedInAdmin(admin);
-                        adminWindow.Show();
-                        this.Close();
-                    }
-                    else if (user is Seller seller)
-                    {
-                        var sellerWindow = _serviceProvider.GetRequiredService<SellerWindows.MainWindow>();
-                        sellerWindow.SetLoggedInSeller(seller);
-                        sellerWindow.Show();
-                        this.Close();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Loại tài khoản không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    var adminWindow = _serviceProvider.GetRequiredService<AdminWindows.MainWindow>();
+                    adminWindow.SetLoggedInAdmin(admin);
+                    adminWindow.Show();
+                    this.Close();
+                }
+                else if (user is Seller seller)
+                {
+                    var sellerWindow = _serviceProvider.GetRequiredService<SellerWindows.MainWindow>();
+                    sellerWindow.SetLoggedInSeller(seller);
+                    sellerWindow.Show();
+                    this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Tài khoản của bạn đã bị khoá.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Loại người dùng không xác định.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Tên tài khoản hoặc mật khẩu không đúng", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
         }
     }
