@@ -1,4 +1,5 @@
 ﻿using Controller;
+using HandlebarsDotNet;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
@@ -6,8 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Google;
-using Microsoft.SemanticKernel.Connectors.Pinecone;
+using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Data;
 using Repository;
 using Repository.Repository.address;
@@ -17,7 +17,9 @@ using Service;
 using Service.product;
 using Service.user;
 using System.Windows;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
+#pragma warning disable SKEXP0001
 namespace ProjectWPF
 {
     /// <summary>
@@ -67,6 +69,8 @@ namespace ProjectWPF
                 options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddSingleton(BuildKernel(context));
+
             services.AddSingleton<CommuneWardRepository>();
             services.AddSingleton<ProvinceCityRepository>();
             services.AddSingleton<UserRepository>();
@@ -77,6 +81,7 @@ namespace ProjectWPF
             services.AddSingleton<UserService>();
             services.AddSingleton<SellerService>();
             services.AddSingleton<ProductService>();
+            services.AddSingleton<AiService>();
 
             services.AddSingleton<UserController>();
             services.AddSingleton<AdminController>();
@@ -88,31 +93,33 @@ namespace ProjectWPF
             services.AddTransient<AdminWindows.SellerForm>();
             services.AddTransient<AdminWindows.SellerRequest>();
             services.AddTransient<SellerWindows.MainWindow>();
+            services.AddTransient<SellerWindows.AiSupporter>();
 
             services.AddSingleton<UserChangeListener>();
+        }
 
-            var collection = new PineconeVectorStore(new(context.Configuration["PineconeApiKey"])).GetCollection<string, VectorDataModel>("project-wpf");
-            collection.EnsureCollectionExistsAsync().ConfigureAwait(false);
-            var textEmbeddingGenerator = new GoogleAIEmbeddingGenerator(
-                modelId: "gemini-embedding-001",
-                apiKey: context.Configuration["GoogleVertexAiApiKey"]!
-            );
+        private static Kernel BuildKernel(HostBuilderContext context)
+        {
             var kernelBuilder = Kernel.CreateBuilder();
             kernelBuilder.Services.AddGoogleAIGeminiChatCompletion(
-                modelId: "gemini-2.5-pro",
+                modelId: context.Configuration["GoogleVertexAiChatModel"]!,
                 apiKey: context.Configuration["GoogleVertexAiApiKey"]!
             );
-#pragma warning disable SKEXP0001
-            kernelBuilder.Plugins.Add(new VectorStoreTextSearch<VectorDataModel>(collection, textEmbeddingGenerator)
-                .CreateWithGetTextSearchResults("SearchPlugin"));
-#pragma warning restore SKEXP0001
-            var kernel = kernelBuilder.Build();
-
-            services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(textEmbeddingGenerator);
-            services.AddSingleton<VectorStoreCollection<string, VectorDataModel>>(collection);
-            services.AddSingleton(kernel);
-            services.AddSingleton<AiService>();
-            services.AddTransient<SellerWindows.AiSupporter>();
+            kernelBuilder.Services.AddGoogleAIEmbeddingGenerator(
+                modelId: context.Configuration["GoogleVertexAiEmbeddingModel"]!,
+                apiKey: context.Configuration["GoogleVertexAiApiKey"]!
+            );
+            kernelBuilder.Services.AddPineconeCollection<VectorDataModel>(context.Configuration["PineconeIndexName"]!, context.Configuration["PineconeApiKey"]!);
+            Kernel kernel = kernelBuilder.Build();
+            var connection = kernel.Services.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>();
+            connection.EnsureCollectionExistsAsync().Wait();
+            var textSearch = new VectorStoreTextSearch<VectorDataModel>(
+                connection,
+                kernel.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>()
+            );
+            var searchPlugin = textSearch.CreateWithGetTextSearchResults("SearchPlugin");
+            kernel.Plugins.Add(searchPlugin);
+            return kernel;
         }
 
         protected override async void OnExit(ExitEventArgs e)

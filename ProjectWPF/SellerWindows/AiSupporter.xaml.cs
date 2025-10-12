@@ -30,9 +30,9 @@ namespace ProjectWPF.SellerWindows
             InitializeComponent();
         }
 
-        private void SendQuestionButton_Click(object sender, RoutedEventArgs e)
+        private async void SendQuestionButton_Click(object sender, RoutedEventArgs e)
         {
-            AnswerTextBlock.Text = _aiService.AskQuestion(QuestionTextBox.Text);
+            AnswerTextBlock.Text = await _aiService.AskQuestion(QuestionTextBox.Text);
         }
     }
 }

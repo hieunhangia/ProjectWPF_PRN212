@@ -6,17 +6,14 @@ using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Repository;
 using Service.product;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Service
 {
     public class AiService(ProductService productService,
-        IEmbeddingGenerator<string, Embedding<float>> textEmbeddingService,
-        VectorStoreCollection<string, VectorDataModel> vectorStoreCollection,
         Kernel kernel)
     {
         private readonly ProductService _productService = productService;
-        private readonly IEmbeddingGenerator<string, Embedding<float>> _textEmbeddingService = textEmbeddingService;
-        private readonly VectorStoreCollection<string, VectorDataModel> _vectorStoreCollection = vectorStoreCollection;
         private readonly Kernel _kernel = kernel;
 
         public async Task SaveAllProductsExistedToVectorStore()
@@ -31,12 +28,12 @@ namespace Service
         {
 
             string content = GetProductContent(product);
-
-            await _vectorStoreCollection.UpsertAsync(new VectorDataModel
+            
+            await _kernel.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>().UpsertAsync(new VectorDataModel
             {
                 Id = product.Id.ToString(),
                 Content = content,
-                EmbeddingContent = (await _textEmbeddingService.GenerateAsync(content)).Vector
+                EmbeddingContent = (await _kernel.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>().GenerateAsync(content)).Vector
             });
         }
 
@@ -81,7 +78,7 @@ namespace Service
             return sb.ToString();
         }
 
-        public string AskQuestion(string query)
+        public async Task<string> AskQuestion(string query)
         {
 
             string promptTemplate = """
@@ -100,12 +97,12 @@ namespace Service
 
             KernelArguments arguments = new() { { "query", query } };
             HandlebarsPromptTemplateFactory promptTemplateFactory = new();
-            return (_kernel.InvokePromptAsync(
+            return (await _kernel.InvokePromptAsync(
                 promptTemplate,
                 arguments,
                 templateFormat: HandlebarsPromptTemplateFactory.HandlebarsTemplateFormat,
                 promptTemplateFactory: promptTemplateFactory
-            )).Result.GetValue<string>()!;
+            )).GetValue<string>()!;
         }
 
     }

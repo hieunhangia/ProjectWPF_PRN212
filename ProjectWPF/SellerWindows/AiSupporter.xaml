@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.SellerWindows"
         mc:Ignorable="d"
-        Title="AiSupporter" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="AiSupporter">
     <Grid>
         <TextBox x:Name="QuestionTextBox" HorizontalAlignment="Left" Margin="158,97,0,0" TextWrapping="Wrap" Text="Question" VerticalAlignment="Top" Width="328" Height="87"/>
         <Button x:Name="SendQuestionButton" Content="Gửi Câu Hỏi" HorizontalAlignment="Left" Margin="578,126,0,0" VerticalAlignment="Top" Height="20" Width="69" Click="SendQuestionButton_Click"/>
