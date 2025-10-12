@@ -1,8 +1,14 @@
 ﻿using Controller;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.VectorData;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Google;
+using Microsoft.SemanticKernel.Connectors.Pinecone;
+using Microsoft.SemanticKernel.Data;
 using Repository;
 using Repository.Repository.address;
 using Repository.Repository.product;
@@ -22,7 +28,7 @@ namespace ProjectWPF
 
         private IHost? _host;
 
-        protected override async void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
             _host = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration((_, configBuilder) =>
@@ -32,7 +38,7 @@ namespace ProjectWPF
                 })
                 .ConfigureServices(ConfigureServices).Build();
 
-            await _host.StartAsync();
+            _host.Start();
 
             using (var scope = _host.Services.CreateScope())
             {
@@ -51,15 +57,14 @@ namespace ProjectWPF
                     DefaultValue = FindResource(typeof(Window))
                 });
 
-            _host.Services.GetRequiredService<Login>().Show();
+            _host.Services.GetRequiredService<SellerWindows.AiSupporter>().Show();
         }
 
         private void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
-            var config = context.Configuration;
             services.AddDbContextFactory<Repository.DbContext>(options =>
             {
-                options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddSingleton<CommuneWardRepository>();
@@ -68,14 +73,14 @@ namespace ProjectWPF
             services.AddSingleton<SellerRepository>();
             services.AddSingleton<ProductRepository>();
 
-            services.AddSingleton<UserChangeListener>();
-
             services.AddSingleton<AddressService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<SellerService>();
             services.AddSingleton<ProductService>();
 
             services.AddSingleton<UserController>();
+            services.AddSingleton<AdminController>();
+            services.AddSingleton<SellerController>();
 
             services.AddTransient<Login>();
             services.AddTransient<AdminWindows.MainWindow>();
@@ -83,6 +88,31 @@ namespace ProjectWPF
             services.AddTransient<AdminWindows.SellerForm>();
             services.AddTransient<AdminWindows.SellerRequest>();
             services.AddTransient<SellerWindows.MainWindow>();
+
+            services.AddSingleton<UserChangeListener>();
+
+            var collection = new PineconeVectorStore(new(context.Configuration["PineconeApiKey"])).GetCollection<string, VectorDataModel>("project-wpf");
+            collection.EnsureCollectionExistsAsync().ConfigureAwait(false);
+            var textEmbeddingGenerator = new GoogleAIEmbeddingGenerator(
+                modelId: "gemini-embedding-001",
+                apiKey: context.Configuration["GoogleVertexAiApiKey"]!
+            );
+            var kernelBuilder = Kernel.CreateBuilder();
+            kernelBuilder.Services.AddGoogleAIGeminiChatCompletion(
+                modelId: "gemini-2.5-pro",
+                apiKey: context.Configuration["GoogleVertexAiApiKey"]!
+            );
+#pragma warning disable SKEXP0001
+            kernelBuilder.Plugins.Add(new VectorStoreTextSearch<VectorDataModel>(collection, textEmbeddingGenerator)
+                .CreateWithGetTextSearchResults("SearchPlugin"));
+#pragma warning restore SKEXP0001
+            var kernel = kernelBuilder.Build();
+
+            services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(textEmbeddingGenerator);
+            services.AddSingleton<VectorStoreCollection<string, VectorDataModel>>(collection);
+            services.AddSingleton(kernel);
+            services.AddSingleton<AiService>();
+            services.AddTransient<SellerWindows.AiSupporter>();
         }
 
         protected override async void OnExit(ExitEventArgs e)
