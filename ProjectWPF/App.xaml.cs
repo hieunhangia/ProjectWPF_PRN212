@@ -87,6 +87,7 @@ namespace ProjectWPF
             services.AddSingleton<AdminController>();
             services.AddSingleton<SellerController>();
 
+            services.AddSingleton<NavigationWindow>();
             services.AddTransient<Login>();
             services.AddTransient<AdminWindows.MainWindow>();
             services.AddTransient<AdminWindows.SellerList>();
