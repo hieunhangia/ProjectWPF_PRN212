@@ -1,14 +1,15 @@
 ﻿using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Repository;
-using Service.product;
 using System.Text;
 using System.Threading.Tasks;
+using Service.product;
 
-namespace Service
+namespace AiSupporter
 {
     public class AiService(ProductService productService,
         Kernel kernel)

@@ -1,5 +1,4 @@
-﻿using Service;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using AiSupporter;
 
 namespace ProjectWPF.SellerWindows
 {
@@ -32,7 +32,32 @@ namespace ProjectWPF.SellerWindows
 
         private async void SendQuestionButton_Click(object sender, RoutedEventArgs e)
         {
-            AnswerTextBlock.Text = await _aiService.AskQuestion(QuestionTextBox.Text);
+            string question = QuestionTextBox.Text;
+            if (string.IsNullOrWhiteSpace(question))
+            {
+                MessageBox.Show("Vui lòng nhập câu hỏi!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            AskAiNotiTextBlock.Text = "Đang chờ phản hồi của AI...";
+            this.IsEnabled = false;
+
+            AnswerTextBlock.Text = await _aiService.AskQuestion(question);
+            
+            AskAiNotiTextBlock.Text = "";
+            this.IsEnabled = true;
+        }
+
+        private async void UpdateVectorDatabaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateVectorStoreNotiTextBlock.Text = "Đang cập nhật cơ sở dữ liệu AI, vui lòng chờ...";
+            this.IsEnabled = false;
+
+            await _aiService.SaveAllProductsExistedToVectorStore();
+
+            this.IsEnabled = true;
+            UpdateVectorStoreNotiTextBlock.Text = "";
+            MessageBox.Show("Cập nhật cơ sở dữ liệu AI thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

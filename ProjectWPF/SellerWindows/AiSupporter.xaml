@@ -7,9 +7,12 @@
         mc:Ignorable="d"
         Title="AiSupporter">
     <Grid>
-        <TextBox x:Name="QuestionTextBox" HorizontalAlignment="Left" Margin="158,97,0,0" TextWrapping="Wrap" Text="Question" VerticalAlignment="Top" Width="328" Height="87"/>
-        <Button x:Name="SendQuestionButton" Content="Gửi Câu Hỏi" HorizontalAlignment="Left" Margin="578,126,0,0" VerticalAlignment="Top" Height="20" Width="69" Click="SendQuestionButton_Click"/>
-        <TextBlock x:Name="AnswerTextBlock" HorizontalAlignment="Left" Margin="158,248,0,0" TextWrapping="Wrap" Text="Answer" VerticalAlignment="Top" Height="94" Width="328"/>
+        <TextBox x:Name="QuestionTextBox" HorizontalAlignment="Left" Margin="12,197,0,0" TextWrapping="Wrap" Text="Question" VerticalAlignment="Top" Width="600" Height="102" FontSize="24"/>
+        <Button x:Name="SendQuestionButton" Content="Gửi Câu Hỏi" HorizontalAlignment="Left" Margin="636,219,0,0" VerticalAlignment="Top" Height="58" Width="233" Click="SendQuestionButton_Click" FontSize="36"/>
+        <TextBlock x:Name="AnswerTextBlock" HorizontalAlignment="Left" Margin="12,371,0,0" TextWrapping="Wrap" Text="Answer" VerticalAlignment="Top" Height="251" Width="842" FontSize="24"/>
+        <Button x:Name="UpdateVectorDatabaseButton" Content="Cập nhật Cơ Sở Dữ Liệu AI" HorizontalAlignment="Center" Margin="0,86,0,0" VerticalAlignment="Top" Height="35" Width="304" FontSize="24" Click="UpdateVectorDatabaseButton_Click"/>
+        <TextBlock x:Name="UpdateVectorStoreNotiTextBlock" HorizontalAlignment="Center" Margin="0,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20"/>
+        <TextBlock x:Name="AskAiNotiTextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="206,311,0,0" Height="27" FontSize="20"/>
 
     </Grid>
 </Window>

@@ -1,5 +1,5 @@
-﻿using Controller;
-using HandlebarsDotNet;
+﻿using Service;
+using Controller;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
@@ -7,17 +7,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Data;
 using Repository;
 using Repository.Repository.address;
 using Repository.Repository.product;
 using Repository.Repository.user;
-using Service;
-using Service.product;
 using Service.user;
 using System.Windows;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Service.product;
+using AiSupporter;
 
 #pragma warning disable SKEXP0001
 namespace ProjectWPF
@@ -53,12 +51,6 @@ namespace ProjectWPF
 
             base.OnStartup(e);
 
-            FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window),
-                new FrameworkPropertyMetadata
-                {
-                    DefaultValue = FindResource(typeof(Window))
-                });
-
             _host.Services.GetRequiredService<Login>().Show();
         }
 
@@ -70,6 +62,7 @@ namespace ProjectWPF
             });
 
             services.AddSingleton(BuildKernel(context));
+            services.AddSingleton<AiService>();
 
             services.AddSingleton<CommuneWardRepository>();
             services.AddSingleton<ProvinceCityRepository>();
@@ -81,7 +74,6 @@ namespace ProjectWPF
             services.AddSingleton<UserService>();
             services.AddSingleton<SellerService>();
             services.AddSingleton<ProductService>();
-            services.AddSingleton<AiService>();
 
             services.AddSingleton<UserController>();
             services.AddSingleton<AdminController>();

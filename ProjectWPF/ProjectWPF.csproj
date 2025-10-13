@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AiSupporter\AiSupporter.csproj" />
     <ProjectReference Include="..\Controller\Controller.csproj" />
   </ItemGroup>
 
