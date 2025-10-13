@@ -25,10 +25,10 @@ namespace ProjectWPF.AdminWindows
     /// </summary>
     public partial class SellerForm : Window
     {
-
-        private Seller? _sellerToUpdate;
         private readonly SellerService _sellerService;
         private readonly AddressService _addressService;
+
+        private Seller? _sellerToUpdate;
         private bool _isInUpdateMode;
 
         public SellerForm(SellerService sellerService,
@@ -36,6 +36,7 @@ namespace ProjectWPF.AdminWindows
         {
             _sellerService = sellerService;
             _addressService = addressService;
+
             InitializeComponent();
         }
 

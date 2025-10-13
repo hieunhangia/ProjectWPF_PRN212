@@ -22,13 +22,13 @@ namespace ProjectWPF.AdminWindows
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IServiceProvider _serviceProvider;
 
+        private readonly NavigationWindow _navigationWindow;
         private Admin? _loggedInAdmin;
 
-        public MainWindow(IServiceProvider serviceProvider)
+        public MainWindow(NavigationWindow navigationWindow)
         {
-            _serviceProvider = serviceProvider;
+            _navigationWindow = navigationWindow;
 
             InitializeComponent();
         }
@@ -43,19 +43,18 @@ namespace ProjectWPF.AdminWindows
             MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                _serviceProvider.GetRequiredService<Login>().Show();
-                this.Close();
+                _navigationWindow.ShowWindowAndCloseCurrent<Login>(this);
             }
         }
 
         private void SellerManagerButton_Click(object sender, RoutedEventArgs e)
         {
-            _serviceProvider.GetRequiredService<SellerList>().ShowDialog();
+            _navigationWindow.ShowDialog<SellerList>();
         }
 
         private void SellerRequestButton_Click(object sender, RoutedEventArgs e)
         {
-            _serviceProvider.GetRequiredService<SellerRequest>().ShowDialog();
+            _navigationWindow.ShowDialog<SellerRequest>();
         }
     }
 }

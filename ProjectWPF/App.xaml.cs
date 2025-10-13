@@ -59,7 +59,7 @@ namespace ProjectWPF
                     DefaultValue = FindResource(typeof(Window))
                 });
 
-            _host.Services.GetRequiredService<SellerWindows.AiSupporter>().Show();
+            _host.Services.GetRequiredService<Login>().Show();
         }
 
         private void ConfigureServices(HostBuilderContext context, IServiceCollection services)

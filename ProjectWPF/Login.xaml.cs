@@ -20,13 +20,13 @@ namespace ProjectWPF
     /// </summary>
     public partial class Login : Window
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly NavigationWindow _navigationWindow;
         private readonly UserController _userController;
 
-        public Login(IServiceProvider serviceProvider,
+        public Login(NavigationWindow navigationWindow,
             UserController userController)
         {
-            _serviceProvider = serviceProvider;
+            _navigationWindow = navigationWindow;
             _userController = userController;
 
             InitializeComponent();
@@ -39,14 +39,14 @@ namespace ProjectWPF
                 User user = _userController.Login(EmailTextBox.Text, PasswordBox.Password);
                 if (user is Admin admin)
                 {
-                    var adminWindow = _serviceProvider.GetRequiredService<AdminWindows.MainWindow>();
+                    var adminWindow = _navigationWindow.GetWindow<AdminWindows.MainWindow>();
                     adminWindow.SetLoggedInAdmin(admin);
                     adminWindow.Show();
                     this.Close();
                 }
                 else if (user is Seller seller)
                 {
-                    var sellerWindow = _serviceProvider.GetRequiredService<SellerWindows.MainWindow>();
+                    var sellerWindow = _navigationWindow.GetWindow<SellerWindows.MainWindow>();
                     sellerWindow.SetLoggedInSeller(seller);
                     sellerWindow.Show();
                     this.Close();

@@ -22,13 +22,13 @@ namespace ProjectWPF.AdminWindows
     /// </summary>
     public partial class SellerList : Window
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly NavigationWindow _navigationWindow;
         private readonly SellerService _sellerService;
 
-        public SellerList(IServiceProvider serviceProvider,
+        public SellerList(NavigationWindow navigationWindow,
             SellerService sellerService)
         {
-            _serviceProvider = serviceProvider;
+            _navigationWindow = navigationWindow;
             _sellerService = sellerService;
 
             InitializeComponent();
@@ -41,7 +41,7 @@ namespace ProjectWPF.AdminWindows
 
         private void AddSellerButton_Click(object sender, RoutedEventArgs e)
         {
-            _serviceProvider.GetRequiredService<SellerForm>().ShowDialog();
+            _navigationWindow.ShowDialog<SellerForm>();
 
             InitWindow();
         }
@@ -51,7 +51,7 @@ namespace ProjectWPF.AdminWindows
             var textBlock = sender as TextBlock;
             var seller = textBlock?.DataContext as Seller;
 
-            var _sellerForm = _serviceProvider.GetRequiredService<SellerForm>();
+            var _sellerForm = _navigationWindow.GetWindow<SellerForm>();
             _sellerForm.SetSellerToUpdate(seller!);
             _sellerForm.ShowDialog();
 
