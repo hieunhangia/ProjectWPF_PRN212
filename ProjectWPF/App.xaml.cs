@@ -1,5 +1,4 @@
 ﻿using Service;
-using Controller;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
@@ -74,10 +73,6 @@ namespace ProjectWPF
             services.AddSingleton<UserService>();
             services.AddSingleton<SellerService>();
             services.AddSingleton<ProductService>();
-
-            services.AddSingleton<UserController>();
-            services.AddSingleton<AdminController>();
-            services.AddSingleton<SellerController>();
 
             services.AddSingleton<NavigationWindow>();
             services.AddTransient<Login>();

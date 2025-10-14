@@ -7,10 +7,25 @@ namespace Service.user
     {
         private readonly UserRepository _userRepository = userRepository;
 
-        public User? Login(string email, string password)
+        public User Login(string email, string password)
         {
-            var users = _userRepository.GetByCondition(u => u.Email == email && u.Password == password);
-            return users.FirstOrDefault();
+            var user = _userRepository.GetByCondition(u => u.Email == email && u.Password == password).FirstOrDefault();
+
+            if (user != null)
+            {
+                if (user.IsActive)
+                {
+                    return user;
+                }
+                else
+                {
+                    throw new Exception("Tài khoản của bạn đã bị vô hiệu hóa.");
+                }
+            }
+            else
+            {
+                throw new Exception("Email hoặc mật khẩu không đúng");
+            }
         }
     }
 }

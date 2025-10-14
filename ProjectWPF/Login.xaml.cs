@@ -1,5 +1,4 @@
-﻿using Controller;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Repository.Models.user;
 using Service.user;
 using System.Text;
@@ -21,13 +20,13 @@ namespace ProjectWPF
     public partial class Login : Window
     {
         private readonly NavigationWindow _navigationWindow;
-        private readonly UserController _userController;
+        private readonly UserService _userService;
 
         public Login(NavigationWindow navigationWindow,
-            UserController userController)
+            UserService userService)
         {
             _navigationWindow = navigationWindow;
-            _userController = userController;
+            _userService = userService;
 
             InitializeComponent();
         }
@@ -36,7 +35,8 @@ namespace ProjectWPF
         {
             try
             {
-                User user = _userController.Login(EmailTextBox.Text, PasswordBox.Password);
+                User user = _userService.Login(EmailTextBox.Text, PasswordBox.Password);
+
                 if (user is Admin admin)
                 {
                     var adminWindow = _navigationWindow.GetWindow<AdminWindows.MainWindow>();
