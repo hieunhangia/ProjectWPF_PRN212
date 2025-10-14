@@ -51,14 +51,13 @@ namespace ProjectWPF.AdminWindows
             provinceCities.Insert(0, new() { Code = "default", Name = "Chọn Tỉnh/Thành Phố" });
             ProvinceCityComboBox.ItemsSource = provinceCities;
 
-            DeleteSellerButton.Visibility = Visibility.Collapsed;
-
             if (_sellerToUpdate == null)
             {
                 Title = "Thêm Mới Người Bán";
                 SaveSellerTitleTextBlock.Text = "Thêm Mới Người Bán";
                 SaveSellerButton.Content = "Thêm Mới Người Bán";
                 UpdateSellerAskButton.Visibility = Visibility.Collapsed;
+                DeleteSellerButton.Visibility = Visibility.Collapsed;
                 CommuneWardComboBox.ItemsSource = new List<CommuneWard> { new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" } };
                 ProvinceCityComboBox.SelectedIndex = 0;
                 CommuneWardComboBox.SelectedIndex = 0;
@@ -97,7 +96,7 @@ namespace ProjectWPF.AdminWindows
                 return;
             }
             var communeWards = _addressService.GetCommuneWardsByProvinceCityCode(selectedValue);
-            communeWards.Insert(0, new () { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" });
+            communeWards.Insert(0, new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" });
             CommuneWardComboBox.ItemsSource = communeWards;
             CommuneWardComboBox.SelectedIndex = 0;
         }
@@ -113,117 +112,35 @@ namespace ProjectWPF.AdminWindows
             string communneWard = (string)CommuneWardComboBox.SelectedValue;
             string specificAddress = SpecificAddressTextBox.Text;
             bool isActive = StatusCheckBox.IsChecked == true;
-
-            if (string.IsNullOrWhiteSpace(email) ||
-                string.IsNullOrWhiteSpace(password) ||
-                string.IsNullOrWhiteSpace(fullName) ||
-                birthDate == null ||
-                string.IsNullOrWhiteSpace(identify) ||
-                provinceCity == "default" ||
-                communneWard == "default" ||
-                string.IsNullOrWhiteSpace(specificAddress))
+            try
             {
-                MessageBox.Show("Hãy cung cấp đầy đủ thông tin.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            else
-            {
-                static bool IsValidEmail(string email)
-                {
-                    try
-                    {
-                        var addr = new MailAddress(email);
-                        return addr.Address == email;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                }
-                if (!IsValidEmail(email))
-                {
-                    MessageBox.Show("Email không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                static bool IsValidPassword(string password) =>
-                    password.Length >= 6
-                    && password.Length <= 50
-                    && password.Any(char.IsLower)
-                    && password.Any(char.IsUpper)
-                    && password.Any(char.IsDigit)
-                    && password.Any(ch => !char.IsLetterOrDigit(ch));
-                if (!IsValidPassword(password))
-                {
-                    MessageBox.Show("Mật khẩu phải trong khoảng 6-50 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                if (birthDate > DateOnly.FromDateTime(DateTime.Now))
-                {
-                    MessageBox.Show("Ngày sinh không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                static bool IsValidID(string identify) => (identify.Length == 9 || identify.Length == 12) && identify.All(char.IsDigit);
-                if (!IsValidID(identify))
-                {
-                    MessageBox.Show("CMND/CCCD không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
                 if (_sellerToUpdate == null)
                 {
-                    if (_sellerService.IsEmailExists(email))
-                    {
-                        MessageBox.Show("Email đã tồn tại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-                    if (_sellerService.IsIdentifyExists(identify))
-                    {
-                        MessageBox.Show("CMND/CCCD đã tồn tại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
+                    MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn thêm mới người bán?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result != MessageBoxResult.Yes) return;
 
-                    Seller seller = new()
-                    {
-                        Email = email,
-                        Password = password,
-                        IsActive = isActive,
-                        FullName = fullName,
-                        BirthDate = birthDate.Value,
-                        Cid = identify,
-                        SpecificAddress = specificAddress,
-                        CommuneWardCode = communneWard
-                    };
+                    _sellerService.AddNewSeller(email, password, fullName, birthDate, identify, provinceCity, communneWard, specificAddress, isActive);
 
-                    _sellerService.AddSeller(seller);
-                    MessageBox.Show("Thêm người bán thành công.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Thêm mới người bán thành công.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                     this.Close();
                 }
                 else
                 {
-                    if (_sellerService.IsIdentifyExists(identify, _sellerToUpdate.Id))
-                    {
-                        MessageBox.Show("CMND/CCCD đã tồn tại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
-
                     MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn cập nhật người bán?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result != MessageBoxResult.Yes) return;
 
-                    _sellerToUpdate.Password = password;
-                    _sellerToUpdate.FullName = fullName;
-                    _sellerToUpdate.BirthDate = birthDate.Value;
-                    _sellerToUpdate.Cid = identify;
-                    _sellerToUpdate.SpecificAddress = specificAddress;
-                    _sellerToUpdate.CommuneWard = _addressService.GetCommuneWardByCode(communneWard);
-                    _sellerToUpdate.IsActive = isActive;
-                    _sellerService.UpdateSeller(_sellerToUpdate);
+                    _sellerService.UpdateExistingSeller(_sellerToUpdate, password, fullName, birthDate, identify, provinceCity, communneWard, specificAddress, isActive);
+
                     InitShowDetailMode();
                     MessageBox.Show("Cập nhật người bán thành công.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
