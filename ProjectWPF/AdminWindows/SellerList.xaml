@@ -104,31 +104,36 @@
         <TextBlock Grid.Row="0" Text="Quản Lý Người Bán" FontSize="32" FontWeight="Bold" Foreground="{StaticResource ForegroundBrush}" VerticalAlignment="Center" Margin="0,0,0,20"/>
 
         <Button x:Name="AddSellerButton" Grid.Row="1" Content="Thêm Mới Người Bán" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,0,10" Click="AddSellerButton_Click"/>
-
-        <DataGrid x:Name="SellerDataGrid"
+        <ListView x:Name="SellerListView"
                   Grid.Row="2"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  ColumnWidth="*"
-                  FontSize="14">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="1*"/>
-                <DataGridTextColumn Header="Họ Và Tên" Binding="{Binding FullName}" Width="1*"/>
-                <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="0.5*"/>
-                <DataGridTemplateColumn Header="Hành Động" Width="0.5*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Cursor="Hand"
-                                       Text="Xem Chi Tiết"
-                                       Foreground="Blue"
-                                       HorizontalAlignment="Center"
-                                       MouseLeftButtonUp="ShowDetailsSellerHandler"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-
+                  FontSize="14" Loaded="SellerListView_Loaded">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn x:Name="ListViewEmailColumn" DisplayMemberBinding="{Binding Email}">
+                        <GridViewColumnHeader Click="ListViewHeader_Click">
+                            Email
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="ListViewFullNameColumn" DisplayMemberBinding="{Binding FullName}">
+                        <GridViewColumnHeader Click="ListViewHeader_Click">
+                            Họ Và Tên
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="ListViewStatusColumn" DisplayMemberBinding="{Binding Status}">
+                        <GridViewColumnHeader Click="ListViewHeader_Click">
+                            Trạng Thái
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="ListViewActionColumn" Header="Hành Động">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Cursor="Hand" Text="Xem Chi Tiết" Foreground="Blue" MouseLeftButtonUp="ShowDetailsSellerHandler"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
         <Border Grid.Row="3" BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="4" Padding="10" Margin="0,20,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -143,15 +148,13 @@
                 </Grid.RowDefinitions>
 
                 <Label Content="Email" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10"/>
-                <TextBox x:Name="EmailSearchTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10"/>
+                <TextBox x:Name="EmailSearchTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" TextChanged="EmailSearchTextBox_TextChanged"/>
 
                 <Label Content="Họ Và Tên" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10"/>
-                <TextBox x:Name="FullNameSearchTextBox" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10"/>
+                <TextBox x:Name="FullNameSearchTextBox" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" TextChanged="FullNameSearchTextBox_TextChanged"/>
 
                 <Label Content="Trạng Thái" Grid.Row="2" Grid.Column="0" Margin="0,0,10,0"/>
                 <ComboBox x:Name="StatusSearchTextBox" Grid.Row="2" Grid.Column="1" SelectionChanged="StatusSearchTextBox_SelectionChanged" />
-
-                <Button x:Name="SearchButton" Content="Tìm Kiếm" Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" Margin="20,0,0,0" Click="SearchButton_Click"/>
             </Grid>
         </Border>
     </Grid>
