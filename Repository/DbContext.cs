@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using ProjectWPF.Models;
 using Repository.Models.user;
 
 namespace Repository
@@ -20,6 +21,11 @@ namespace Repository
         // Address entities
         public DbSet<ProvinceCity> ProvinceCities { get; set; }
         public DbSet<CommuneWard> CommuneWards { get; set; }
+        public DbSet<SellerRequest> SellerRequests { get; set; }
+
+        public DbSet<SellerRequestStatus> SellerRequestStatuses { get; set; }
+
+        public  DbSet<SellerRequestType> SellerRequestTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,6 +63,68 @@ namespace Repository
                 .WithMany()
                 .HasForeignKey(s => s.CommuneWardCode)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SellerRequest>(entity =>
+            {
+                entity.HasKey(e => e.Id).HasName("PK__seller_r__3213E83FA6DC37FC");
+
+                entity.ToTable("seller_request");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Content)
+                    .HasMaxLength(4000)
+                    .HasColumnName("content");
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at");
+                entity.Property(e => e.EntityName)
+                    .HasMaxLength(255)
+                    .HasColumnName("entity_name");
+                entity.Property(e => e.OldContent)
+                    .HasMaxLength(4000)
+                    .HasColumnName("old_content");
+                entity.Property(e => e.RequestTypeId).HasColumnName("request_type_id");
+                entity.Property(e => e.SellerId).HasColumnName("seller_id");
+                entity.Property(e => e.StatusId).HasColumnName("status_id");
+
+                entity.HasOne(d => d.RequestType).WithMany(p => p.SellerRequests)
+                    .HasForeignKey(d => d.RequestTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__seller_re__reque__0697FACD");
+
+                entity.HasOne(d => d.Status).WithMany(p => p.SellerRequests)
+                    .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__seller_re__statu__0880433F");
+            });
+
+            modelBuilder.Entity<SellerRequestStatus>(entity =>
+            {
+                entity.HasKey(e => e.Id).HasName("PK__seller_r__3213E83F76BDB40B");
+
+                entity.ToTable("seller_request_status");
+
+                entity.HasIndex(e => e.Name, "UQ__seller_r__72E12F1B057E1B90").IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
+            });
+
+            modelBuilder.Entity<SellerRequestType>(entity =>
+            {
+                entity.HasKey(e => e.Id).HasName("PK__seller_r__3213E83FAFF6A146");
+
+                entity.ToTable("seller_request_type");
+
+                entity.HasIndex(e => e.Name, "UQ__seller_r__72E12F1BFF9F04FD").IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
+            });
 
             // Configure indexes for performance
             ConfigureIndexes(modelBuilder);

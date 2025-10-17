@@ -16,5 +16,10 @@ namespace Service.product
         {
             return _productRepository.GetAll();
         }
+
+        public List<ProductUnit> GetProductUnits()
+        {
+            return _productRepository.GetProductUnits();
+        }
     }
 }

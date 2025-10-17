@@ -81,5 +81,10 @@ namespace ProjectWPF.SellerWindows
         {
             _navigationWindow.ShowDialog<AiSupporter>();
         }
+
+        private void CreateProductRequestButton_Click(object sender, RoutedEventArgs e)
+        {
+            _navigationWindow.ShowWindowAndCloseCurrent<CreateProductRequest>(this);
+        }
     }
 }
