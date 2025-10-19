@@ -1,26 +1,47 @@
-﻿using Repository.Models.user;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository;
+using Repository.Models.user;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectWPF.Models;
 
+
+[Table("seller_request")]
 public partial class SellerRequest
 {
-    public int Id { get; set; }
 
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Column(TypeName = "BIGINT")]
+    public long Id { get; set; }
+
+    [Required]
+    [Column(TypeName = "DATETIME")]
     public DateTime CreatedAt { get; set; }
 
+    [Required]
+    [Column(TypeName = "BIGINT")]
     public long RequestTypeId { get; set; }
 
+
+    [Required]
+    [Column(TypeName = "BIGINT")]
     public long SellerId { get; set; }
 
+    [Required]
+    [Column(TypeName = "BIGINT")]
     public long StatusId { get; set; }
 
+    [Required]
+    [Column(TypeName = "nvarchar(max)")]
     public string Content { get; set; } = null!;
 
-    public string? EntityName { get; set; }
 
-    public string OldContent { get; set; } = null!;
+    [Column(TypeName = "BIGINT")]
+    public long? OldContentId { get; set; }
 
     public virtual SellerRequestType RequestType { get; set; } = null!;
 

@@ -24,6 +24,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label Content="Tên sản phẩm:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
             <TextBox x:Name="ProductNameTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10"/>
@@ -32,7 +33,7 @@
             <Label Content="Giá:" Grid.Row="2" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
             <TextBox x:Name="PriceTextBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10"/>
             <Label Content="Kích hoạt?" Grid.Row="3" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-            <CheckBox x:Name="IsActiveCheckBox" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" VerticalAlignment="Center"/>
+            <CheckBox x:Name="IsActiveCheckBox" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" VerticalAlignment="Center" IsThreeState="False"/>
             <Label Content="Đơn vị" Grid.Row="4" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center"/>
             <ComboBox x:Name="UnitComboBox" Grid.Row="4" Grid.Column="1" Margin="0,0,0,0" >
                 <ComboBox.ItemTemplate>
@@ -41,6 +42,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <Button x:Name="Submit" Grid.Row="5" Grid.ColumnSpan="2" Width="100" Content="Tao San Pham" Margin="0 20 0 0" Click="Submit_Click"></Button>
         </Grid>
         
     </Grid>

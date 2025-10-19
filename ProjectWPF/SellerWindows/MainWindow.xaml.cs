@@ -1,19 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Repository;
 using Repository.Models.user;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Service.product;
+using Service.user;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using TableDependency.SqlClient.Base.Enums;
 using TableDependency.SqlClient.Base.EventArgs;
 
@@ -84,7 +74,10 @@ namespace ProjectWPF.SellerWindows
 
         private void CreateProductRequestButton_Click(object sender, RoutedEventArgs e)
         {
-            _navigationWindow.ShowWindowAndCloseCurrent<CreateProductRequest>(this);
+            var createProductWindow = _navigationWindow.GetWindow<CreateProductRequest>();
+            createProductWindow.SetLoggedInSeller(_loggedInSeller!);
+            createProductWindow.Show();
+            this.Close();
         }
     }
 }

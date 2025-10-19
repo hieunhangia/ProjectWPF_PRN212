@@ -17,10 +17,5 @@ namespace Repository.Repository.product
             return [.. context.Set<Product>().Include(p => p.ProductBatches).Include(p => p.ProductUnit)];
         }
 
-        public List<ProductUnit> GetProductUnits()
-        {
-            using var context = _contextFactory.CreateDbContext();
-            return context.Set<ProductUnit>().ToList();
-        }
     }
 }
