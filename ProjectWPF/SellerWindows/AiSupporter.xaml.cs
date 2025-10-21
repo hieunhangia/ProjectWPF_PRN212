@@ -22,10 +22,12 @@ namespace ProjectWPF.SellerWindows
     public partial class AiSupporter : Window
     {
         private readonly AiService _aiService;
+        private readonly AskAiService _askAiService;
 
-        public AiSupporter(AiService aiService)
+        public AiSupporter(AiService aiService, AskAiService askAiService)
         {
             _aiService = aiService;
+            _askAiService = askAiService;
 
             InitializeComponent();
         }
@@ -42,7 +44,7 @@ namespace ProjectWPF.SellerWindows
             AskAiNotiTextBlock.Text = "Đang chờ phản hồi của AI...";
             this.IsEnabled = false;
 
-            AnswerTextBlock.Text = await _aiService.AskQuestion(question);
+            AnswerTextBlock.Text = await _askAiService.AskQuestion(question);
             
             AskAiNotiTextBlock.Text = "";
             this.IsEnabled = true;

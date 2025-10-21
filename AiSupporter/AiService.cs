@@ -79,46 +79,6 @@ namespace AiSupporter
             return sb.ToString();
         }
 
-        public async Task<string> AskQuestion(string query)
-        {
-
-            string promptTemplate = """
-                    {{#with (SearchPlugin-GetTextSearchResults query)}}  
-                        {{#each this}}  
-                        Name: {{Name}}
-                        Value: {{Value}}
-                        -----------------
-                        {{/each}}  
-                    {{/with}}  
-
-                    {{query}}
-
-                    Include citations to the relevant information where it is referenced in the response.
-                    """;
-
-            KernelArguments arguments = new() { { "query", query } };
-            HandlebarsPromptTemplateFactory promptTemplateFactory = new();
-            return (await _kernel.InvokePromptAsync(
-                promptTemplate,
-                arguments,
-                templateFormat: HandlebarsPromptTemplateFactory.HandlebarsTemplateFormat,
-                promptTemplateFactory: promptTemplateFactory
-            )).GetValue<string>()!;
-        }
-
     }
 
-    public class VectorDataModel
-    {
-        [VectorStoreKey]
-        [TextSearchResultName]
-        public required string Id { get; set; }
-
-        [VectorStoreData]
-        [TextSearchResultValue]
-        public required string Content { get; set; }
-
-        [VectorStoreVector(Dimensions: 3072, DistanceFunction = DistanceFunction.CosineSimilarity)]
-        public ReadOnlyMemory<float> EmbeddingContent { get; set; }
-    }
 }
