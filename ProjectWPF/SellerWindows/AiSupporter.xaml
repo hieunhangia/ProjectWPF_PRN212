@@ -5,14 +5,188 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.SellerWindows"
         mc:Ignorable="d"
-        Title="AiSupporter">
-    <Grid>
-        <TextBox x:Name="QuestionTextBox" HorizontalAlignment="Left" Margin="12,197,0,0" TextWrapping="Wrap" Text="Question" VerticalAlignment="Top" Width="600" Height="102" FontSize="24"/>
-        <Button x:Name="SendQuestionButton" Content="Gửi Câu Hỏi" HorizontalAlignment="Left" Margin="636,219,0,0" VerticalAlignment="Top" Height="58" Width="233" Click="SendQuestionButton_Click" FontSize="36"/>
-        <TextBlock x:Name="AnswerTextBlock" HorizontalAlignment="Left" Margin="12,371,0,0" TextWrapping="Wrap" Text="Answer" VerticalAlignment="Top" Height="251" Width="842" FontSize="24"/>
-        <Button x:Name="UpdateVectorDatabaseButton" Content="Cập nhật Cơ Sở Dữ Liệu AI" HorizontalAlignment="Center" Margin="0,86,0,0" VerticalAlignment="Top" Height="35" Width="304" FontSize="24" Click="UpdateVectorDatabaseButton_Click"/>
-        <TextBlock x:Name="UpdateVectorStoreNotiTextBlock" HorizontalAlignment="Center" Margin="0,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20"/>
-        <TextBlock x:Name="AskAiNotiTextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="206,311,0,0" Height="27" FontSize="20"/>
+        Title="Hỗ Trợ AI"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5"
+        MinWidth="900"
+        MinHeight="700"
+        Width="1000"
+        Height="750">
 
+    <Window.Resources>
+        <!-- Colors -->
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#007ACC"/>
+        <SolidColorBrush x:Key="SecondaryBrush" Color="#4CAF50"/>
+        <SolidColorBrush x:Key="DangerBrush" Color="#F44336"/>
+        <SolidColorBrush x:Key="WarningBrush" Color="#FF9800"/>
+        <SolidColorBrush x:Key="LightGrayBrush" Color="#E0E0E0"/>
+        <SolidColorBrush x:Key="DarkGrayBrush" Color="#757575"/>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#F5F5F5"/>
+        <SolidColorBrush x:Key="ForegroundBrush" Color="#212121"/>
+        <SolidColorBrush x:Key="WhiteBrush" Color="White"/>
+
+        <!-- Base Styles -->
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkGrayBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightGrayBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" CornerRadius="4" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalScrollBarVisibility="Auto"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BaseButton" TargetType="Button">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" CornerRadius="4" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Button Styles -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+        </Style>
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+        </Style>
+        <Style x:Key="WarningButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="{StaticResource WarningBrush}"/>
+        </Style>
+
+        <!-- TextBlock Styles -->
+        <Style x:Key="TitleTextBlock" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="36"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+        </Style>
+
+        <Style x:Key="NotificationTextBlock" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Foreground" Value="{StaticResource WarningBrush}"/>
+        </Style>
+
+        <Style x:Key="AnswerTextBlock" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="AI Supporter" Style="{StaticResource TitleTextBlock}" Margin="0,0,0,20"/>
+
+        <!-- Update Vector Database Section -->
+        <Border Grid.Row="1" BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="4" Padding="15" Margin="0,0,0,20" Background="{StaticResource WhiteBrush}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Cập Nhật Cơ Sở Dữ Liệu AI" FontSize="18" FontWeight="Bold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10"/>
+                <TextBlock Grid.Row="1" Text="Đồng bộ tất cả sản phẩm hiện có vào cơ sở dữ liệu AI để cải thiện khả năng tìm kiếm và gợi ý" FontSize="13" Foreground="{StaticResource DarkGrayBrush}" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="UpdateVectorDatabaseButton" Grid.Row="0" Content="Cập Nhật Cơ Sở Dữ Liệu AI" Style="{StaticResource WarningButton}" HorizontalAlignment="Left" Click="UpdateVectorDatabaseButton_Click"/>
+                    <TextBlock x:Name="UpdateVectorStoreNotiTextBlock" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource NotificationTextBlock}"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Question Section -->
+        <Border Grid.Row="3" BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="4" Padding="15" Margin="0,0,0,0" Background="{StaticResource WhiteBrush}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Đặt Câu Hỏi Cho AI" FontSize="18" FontWeight="Bold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10"/>
+                <TextBox x:Name="QuestionTextBox" Grid.Row="1" TextWrapping="Wrap" Height="69" FontSize="20" VerticalContentAlignment="Top" AcceptsReturn="True" Margin="0,0,0,10"/>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="AskAiNotiTextBlock" Grid.Column="0" Style="{StaticResource NotificationTextBlock}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <Button x:Name="SendQuestionButton" Grid.Column="1" Content="Gửi Câu Hỏi" Style="{StaticResource PrimaryButton}" Click="SendQuestionButton_Click"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Answer Section -->
+        <Border Grid.Row="4" BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="4" Padding="15" Background="{StaticResource WhiteBrush}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Phản Hồi Của AI" FontSize="18" FontWeight="Bold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10"/>
+                
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <TextBlock x:Name="AnswerTextBlock" FontSize="20" Style="{StaticResource AnswerTextBlock}" Text="Câu trả lời sẽ hiển thị ở đây..."/>
+                </ScrollViewer>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

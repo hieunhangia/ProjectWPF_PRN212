@@ -22,6 +22,7 @@ using Service.user;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Windows;
+using static Google.Protobuf.Reflection.SourceCodeInfo.Types;
 
 #pragma warning disable SKEXP0001
 namespace ProjectWPF
@@ -40,7 +41,7 @@ namespace ProjectWPF
                 .ConfigureAppConfiguration((_, configBuilder) =>
                 {
                     configBuilder.AddJsonFile("appsettings.json");
-                    //configBuilder.AddJsonFile("appsettings_secret.json");
+                    configBuilder.AddJsonFile("appsettings_secret.json");
                 })
                 .ConfigureServices(ConfigureServices).Build();
 
@@ -69,8 +70,8 @@ namespace ProjectWPF
                 options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            //services.AddSingleton(BuildKernel(context));
-            //services.AddSingleton<AiService>();
+            services.AddSingleton(BuildKernel(context));
+            services.AddSingleton<AiService>();
 
             services.AddSingleton<CommuneWardRepository>();
             services.AddSingleton<ProvinceCityRepository>();
@@ -114,7 +115,7 @@ namespace ProjectWPF
                 };
                 return value;
             });
-            //services.AddTransient<SellerWindows.AiSupporter>();
+            services.AddTransient<SellerWindows.AiSupporter>();
 
             services.AddSingleton<UserChangeListener>();
         }
@@ -122,13 +123,17 @@ namespace ProjectWPF
         private static Kernel BuildKernel(HostBuilderContext context)
         {
             var kernelBuilder = Kernel.CreateBuilder();
-            kernelBuilder.Services.AddGoogleAIGeminiChatCompletion(
+            kernelBuilder.Services.AddVertexAIGeminiChatCompletion(
+                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
+                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
                 modelId: context.Configuration["GoogleVertexAiChatModel"]!,
-                apiKey: context.Configuration["GoogleVertexAiApiKey"]!
+                location: context.Configuration["GoogleVertexAiChatLocation"]!
             );
-            kernelBuilder.Services.AddGoogleAIEmbeddingGenerator(
+            kernelBuilder.Services.AddVertexAIEmbeddingGenerator(
+                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
+                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
                 modelId: context.Configuration["GoogleVertexAiEmbeddingModel"]!,
-                apiKey: context.Configuration["GoogleVertexAiApiKey"]!
+                location: context.Configuration["GoogleVertexAiEmbeddingLocation"]!
             );
             kernelBuilder.Services.AddPineconeCollection<VectorDataModel>(context.Configuration["PineconeIndexName"]!, context.Configuration["PineconeApiKey"]!);
             Kernel kernel = kernelBuilder.Build();

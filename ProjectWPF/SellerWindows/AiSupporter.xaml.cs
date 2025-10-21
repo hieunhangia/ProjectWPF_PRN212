@@ -9,12 +9,10 @@ namespace ProjectWPF.SellerWindows
     public partial class AiSupporter : Window
     {
         private readonly AiService _aiService;
-        private readonly AskAiService _askAiService;
 
-        public AiSupporter(AiService aiService, AskAiService askAiService)
+        public AiSupporter(AiService aiService)
         {
             _aiService = aiService;
-            _askAiService = askAiService;
 
             InitializeComponent();
         }
@@ -31,22 +29,28 @@ namespace ProjectWPF.SellerWindows
             AskAiNotiTextBlock.Text = "Đang chờ phản hồi của AI...";
             this.IsEnabled = false;
 
-            AnswerTextBlock.Text = await _askAiService.AskQuestion(question);
-            
+            AnswerTextBlock.Text = await _aiService.AskQuestion(question);
+
             AskAiNotiTextBlock.Text = "";
             this.IsEnabled = true;
         }
 
         private async void UpdateVectorDatabaseButton_Click(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show("Bạn có chắc chắn muốn cập nhật cơ sở dữ liệu AI? Quá trình này có thể mất vài phút.",
+                "Xác Nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
             UpdateVectorStoreNotiTextBlock.Text = "Đang cập nhật cơ sở dữ liệu AI, vui lòng chờ...";
             this.IsEnabled = false;
 
             await _aiService.SaveAllProductsExistedToVectorStore();
-
-            this.IsEnabled = true;
-            UpdateVectorStoreNotiTextBlock.Text = "";
             MessageBox.Show("Cập nhật cơ sở dữ liệu AI thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            UpdateVectorStoreNotiTextBlock.Text = "";
+            this.IsEnabled = true;
         }
     }
 }
