@@ -9,6 +9,6 @@
     <Grid>
         <Button x:Name="LogoutButton" Content="Đăng xuất" HorizontalAlignment="Left" Margin="723,55,0,0" VerticalAlignment="Top" Height="65" Width="175" FontSize="36" Click="LogoutButton_Click"/>
         <Button x:Name="AiSupporterButton" Content="AI Supporter" HorizontalAlignment="Center" Margin="0,367,0,0" VerticalAlignment="Top" Height="83" Width="278" FontSize="36" Click="AiSupporterButton_Click"/>
-        <Button x:Name="CreateProductRequestButton" Content="Tạo Sản Phẩm" HorizontalAlignment="Center" Margin="0,136,0,0" VerticalAlignment="Top" Height="96" Width="344" FontSize="36" Click="CreateProductRequestButton_Click"/>
+        <Button x:Name="ProductListButton" Content="Xem danh sách sản phẩm" HorizontalAlignment="Center" VerticalAlignment="Top" Height="96" Width="436" FontSize="36" Click="ProductListButton_Click" Margin="0,177,0,0"/>
     </Grid>
 </Window>

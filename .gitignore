@@ -364,6 +364,6 @@ FodyWeavers.xsd
 
 ProjectWPF/appsettings.json
 ProjectWPF/appsettings_secret.json
-/ProjectWPF/App.xaml.cs
 /.gitignore
 /Test
+/ProjectWPF/all-prn.sql

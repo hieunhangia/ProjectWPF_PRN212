@@ -40,7 +40,7 @@ namespace Repository
             // Configure Product-ProductUnit relationship (many-to-one)
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.ProductUnit)
-                .WithMany(pu => pu.Products)
+                .WithMany()
                 .HasForeignKey(p => p.ProductUnitId)
                 .OnDelete(DeleteBehavior.Restrict);
 

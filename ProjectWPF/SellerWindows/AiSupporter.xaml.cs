@@ -1,18 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using AiSupporter;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using AiSupporter;
 
 namespace ProjectWPF.SellerWindows
 {
@@ -43,7 +30,7 @@ namespace ProjectWPF.SellerWindows
             this.IsEnabled = false;
 
             AnswerTextBlock.Text = await _aiService.AskQuestion(question);
-            
+
             AskAiNotiTextBlock.Text = "";
             this.IsEnabled = true;
         }

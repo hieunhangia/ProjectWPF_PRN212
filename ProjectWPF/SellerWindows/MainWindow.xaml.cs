@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ProjectWPF.AdminWindows;
 using Repository;
 using Repository.Models.user;
-using Service.product;
-using Service.user;
 using System.Windows;
 using TableDependency.SqlClient.Base.Enums;
 using TableDependency.SqlClient.Base.EventArgs;
@@ -72,12 +70,13 @@ namespace ProjectWPF.SellerWindows
             _navigationWindow.ShowDialog<AiSupporter>();
         }
 
-        private void CreateProductRequestButton_Click(object sender, RoutedEventArgs e)
+        
+
+        private void ProductListButton_Click(object sender, RoutedEventArgs e)
         {
-            var createProductWindow = _navigationWindow.GetWindow<CreateProductRequest>();
-            createProductWindow.SetLoggedInSeller(_loggedInSeller!);
-            createProductWindow.Show();
-            this.Close();
+            var win = _navigationWindow.GetWindow<ProductList>();
+            win.SetLoggedInSeller(_loggedInSeller!);
+            win.Show();
         }
     }
 }

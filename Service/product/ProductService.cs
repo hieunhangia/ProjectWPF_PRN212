@@ -1,10 +1,5 @@
 ﻿using Repository;
 using Repository.Repository.product;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.product
 {
@@ -17,5 +12,20 @@ namespace Service.product
             return _productRepository.GetAll();
         }
 
+
+        public Product? GetProductById(long id)
+        {
+            return _productRepository.GetProductById(id);
+        }
+
+        public void AddProduct(Product product)
+        {
+            _productRepository.Add(product);
+        }
+
+        public void UpdateProduct(Product product)
+        {
+            _productRepository.Update(product);
+        }
     }
 }

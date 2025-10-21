@@ -1,0 +1,89 @@
+﻿<Window x:Class="ProjectWPF.AdminWindows.SellerRequestDetail"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectWPF.AdminWindows"
+        mc:Ignorable="d"
+        Title="SellerRequestDetail" Height="600" Width="900"
+        Background="#f6f9fd">
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="30">
+
+                <!-- NEW PRODUCT -->
+                <GroupBox Header="New Product" FontWeight="Bold" Margin="0,0,0,30"
+                          Background="#e8f7e3" BorderBrush="#8bc34a" BorderThickness="2">
+                    <Grid DataContext="{Binding NewProduct}" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Tên:" FontWeight="SemiBold" FontSize="16" Grid.Row="0" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding Name}" FontSize="16" Grid.Row="0" Grid.Column="1" Margin="0,6"/>
+
+                        <TextBlock Text="Mô tả:" FontWeight="SemiBold" FontSize="16" Grid.Row="1" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding Description}" FontSize="16" Grid.Row="1" Grid.Column="1" Margin="0,6"/>
+
+                        <TextBlock Text="Giá:" FontWeight="SemiBold" FontSize="16" Grid.Row="2" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding Price}" FontSize="16" Grid.Row="2" Grid.Column="1" Margin="0,6"/>
+
+                        <TextBlock Text="Kích hoạt" FontWeight="SemiBold" FontSize="16" Grid.Row="3" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding IsActive}" FontSize="16" Grid.Row="3" Grid.Column="1" Margin="0,6"/>
+
+                        <TextBlock Text="Đơn vị" FontWeight="SemiBold" FontSize="16" Grid.Row="5" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding ProductUnit.Name}" FontSize="16" Grid.Row="5" Grid.Column="1" Margin="0,6"/>
+                    </Grid>
+                </GroupBox>
+
+                <!-- OLD PRODUCT -->
+                <GroupBox x:Name="OldProductBox" Header="Old Product" FontWeight="Bold"
+                          Background="#ffeaea" BorderBrush="#f44336" BorderThickness="2">
+                    <Grid DataContext="{Binding OldProduct}" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Tên sản phẩm:" FontWeight="SemiBold" FontSize="16" Grid.Row="0" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding Name}" FontSize="16" Grid.Row="0" Grid.Column="1" Margin="0,6"/>
+
+                        <TextBlock Text="Mô tả:" FontWeight="SemiBold" FontSize="16" Grid.Row="1" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding Description}" FontSize="16" Grid.Row="1" Grid.Column="1" Margin="0,6"/>
+
+                        <TextBlock Text="Giá:" FontWeight="SemiBold" FontSize="16" Grid.Row="2" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding Price}" FontSize="16" Grid.Row="2" Grid.Column="1" Margin="0,6"/>
+
+                        <TextBlock Text="Kích hoạt:" FontWeight="SemiBold" FontSize="16" Grid.Row="3" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding IsActive}" FontSize="16" Grid.Row="3" Grid.Column="1" Margin="0,6"/>
+
+
+                        <TextBlock Text="Unit Name:" FontWeight="SemiBold" FontSize="16" Grid.Row="5" Grid.Column="0" Margin="0,6"/>
+                        <TextBlock Text="{Binding ProductUnit.Name}" FontSize="16" Grid.Row="5" Grid.Column="1" Margin="0,6"/>
+                    </Grid>
+                </GroupBox>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
+                    <Button Content="Chấp thuận"
+                            Width="150" Height="40" Margin="10,0" FontWeight="Bold"
+                            Click="AcceptRequest_Click"/>
+                    <Button Content="Từ chối"
+                            Width="150" Height="40" Margin="10,0" FontWeight="Bold"
+                            Click="RejectRequest_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

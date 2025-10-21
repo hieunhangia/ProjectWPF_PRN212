@@ -21,7 +21,7 @@ namespace Repository.Models.user
 
         [NotMapped]
         public string Status
-        { 
+        {
             get => IsActive ? "Đang Mở Khoá" : "Đã Khoá";
         }
     }

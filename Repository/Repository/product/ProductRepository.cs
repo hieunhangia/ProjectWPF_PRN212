@@ -1,11 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Repository;
-using Repository.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.Repository.product
 {
@@ -17,5 +10,13 @@ namespace Repository.Repository.product
             return [.. context.Set<Product>().Include(p => p.ProductBatches).Include(p => p.ProductUnit)];
         }
 
+        public Product? GetProductById(long id)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return context.Set<Product>()
+                .Include(p => p.ProductBatches)
+                .Include(p => p.ProductUnit)
+                .FirstOrDefault(p => p.Id == id);
+        }
     }
 }

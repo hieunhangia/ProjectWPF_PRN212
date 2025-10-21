@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using ProjectWPF.dto;
+using Repository.dto;
 using Service.product;
 using System.Globalization;
 
@@ -13,7 +13,7 @@ namespace ProjectWPF.Validation
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Phải có tên sản phẩm.")
                 .MaximumLength(255).WithMessage("Tên sản phẩm có ĐỘ dài tối đa là 255 kí tự.")
-                .Must(newName => !productService.GetAllProducts().Any(p => ProductNameCompare(p.Name,newName) ))
+                .Must(newName => !productService.GetAllProducts().Any(p => ProductNameCompare(p.Name, newName)))
                 .WithMessage("Tên sản phẩm trùng với tên sản phẩm đã có sẵn");
 
             // Validate Description

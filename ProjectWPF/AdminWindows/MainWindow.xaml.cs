@@ -1,19 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Repository.Models.user;
-using Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Repository.Models.user;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ProjectWPF.AdminWindows
 {
@@ -54,7 +40,7 @@ namespace ProjectWPF.AdminWindows
 
         private void SellerRequestButton_Click(object sender, RoutedEventArgs e)
         {
-            _navigationWindow.ShowDialog<SellerRequest>();
+            _navigationWindow.ShowDialog<SellerRequestList>();
         }
     }
 }

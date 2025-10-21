@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Repository;
-using Repository.Models.user;
-using System;
-using System.Collections.Generic;
+﻿using Repository.Models.user;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,7 +34,9 @@ public partial class SellerRequest
     [Required]
     [Column(TypeName = "nvarchar(max)")]
     public string Content { get; set; } = null!;
-
+    [Required]
+    [Column(TypeName = "nvarchar(255)")]
+    public string EntityName { get; set; } = null!;
 
     [Column(TypeName = "BIGINT")]
     public long? OldContentId { get; set; }

@@ -1,12 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Models.user
 {
     public class Seller : User
     {
         [Column("full_name", TypeName = "nvarchar(255)")]
-        public required string FullName { get; set; } 
+        public required string FullName { get; set; }
         [Column("birth_date", TypeName = "date")]
         public DateOnly BirthDate { get; set; }
         [Column("cid", TypeName = "nvarchar(50)")]
@@ -15,7 +14,7 @@ namespace Repository.Models.user
         public required string SpecificAddress { get; set; }
 
 
-        [Column("commune_ward_code",TypeName ="nvarchar(255)")]
+        [Column("commune_ward_code", TypeName = "nvarchar(255)")]
         public required string CommuneWardCode { get; set; }
 
         [ForeignKey("CommuneWardCode")]
