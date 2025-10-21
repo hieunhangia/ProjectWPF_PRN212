@@ -367,3 +367,4 @@ ProjectWPF/appsettings_secret.json
 /.gitignore
 /Test
 /ProjectWPF/all-prn.sql
+/ProjectWPF/SeedData.cs
