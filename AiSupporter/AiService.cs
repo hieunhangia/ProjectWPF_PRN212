@@ -1,13 +1,11 @@
 ﻿using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Repository;
-using System.Text;
-using System.Threading.Tasks;
 using Service.product;
+using System.Text;
 
 namespace AiSupporter
 {
@@ -29,7 +27,7 @@ namespace AiSupporter
         {
 
             string content = GetProductContent(product);
-            
+
             await _kernel.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>().UpsertAsync(new VectorDataModel
             {
                 Id = product.Id.ToString(),

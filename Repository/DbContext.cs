@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using ProjectWPF.Models;
 using Repository.Models.user;
 
 namespace Repository
@@ -20,9 +20,16 @@ namespace Repository
         // Address entities
         public DbSet<ProvinceCity> ProvinceCities { get; set; }
         public DbSet<CommuneWard> CommuneWards { get; set; }
+        public DbSet<SellerRequest> SellerRequests { get; set; }
+
+        public DbSet<SellerRequestStatus> SellerRequestStatuses { get; set; }
+
+        public DbSet<SellerRequestType> SellerRequestTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Chen ko can N'' prefix, mac dinh dung UTF8
+            modelBuilder.UseCollation("Latin1_General_100_CI_AS_SC_UTF8");
             base.OnModelCreating(modelBuilder);
 
             // Configure User inheritance (Table-per-Type)
@@ -33,7 +40,7 @@ namespace Repository
             // Configure Product-ProductUnit relationship (many-to-one)
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.ProductUnit)
-                .WithMany(pu => pu.Products)
+                .WithMany()
                 .HasForeignKey(p => p.ProductUnitId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -57,7 +64,6 @@ namespace Repository
                 .WithMany()
                 .HasForeignKey(s => s.CommuneWardCode)
                 .OnDelete(DeleteBehavior.Restrict);
-
             // Configure indexes for performance
             ConfigureIndexes(modelBuilder);
 

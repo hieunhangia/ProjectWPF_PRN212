@@ -11,7 +11,7 @@ namespace Repository
         public required string Code { get; set; }
 
         [Column("name", TypeName = "nvarchar(255)")]
-        public required string Name { get; set; } 
+        public required string Name { get; set; }
 
         public virtual ICollection<CommuneWard> CommuneWards { get; set; } = new List<CommuneWard>();
     }

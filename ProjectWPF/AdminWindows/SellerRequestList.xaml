@@ -1,0 +1,46 @@
+﻿<Window x:Class="ProjectWPF.AdminWindows.SellerRequestList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjectWPF.AdminWindows"
+        mc:Ignorable="d"
+        Title="SellerRequestList">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Danh sách yêu cầu chỉnh sửa" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+            <DataGrid x:Name="RequestsDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" Margin="10">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID Yêu Cầu" Binding="{Binding Id}" Width="*"/>
+                    <DataGridTextColumn Header="Tên Người Bán" Binding="{Binding Seller.Email}" Width="*"/>
+                    <DataGridTextColumn Header="Tên Sản Phẩm" Binding="{Binding EntityName}" Width="*"/>
+                <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status.Name}" Width="*"/>
+                    <DataGridTextColumn Header="Ngày Tạo" Binding="{Binding CreatedAt}" Width="*"/>
+                <DataGridTemplateColumn Header="Hành động" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Xem chi tiết" Margin="4,0" Padding="8,2" 
+                                Tag="{Binding Id}" Click="Button_Click">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="IsEnabled" Value="False"/>
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Status.Name}" Value="Đang Chờ Duyệt">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

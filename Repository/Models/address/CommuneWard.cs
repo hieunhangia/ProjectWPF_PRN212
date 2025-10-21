@@ -9,8 +9,8 @@ namespace Repository
         [Key]
         [Column("code", TypeName = "nvarchar(255)")]
         public required string Code { get; set; }
-        [Column("name",TypeName ="nvarchar(100)")]
-        public required string Name { get; set; } 
+        [Column("name", TypeName = "nvarchar(100)")]
+        public required string Name { get; set; }
 
         [Column("province_city_code")]
         public required string ProvinceCityCode { get; set; }
