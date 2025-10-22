@@ -24,7 +24,7 @@ namespace AiSupporter
         private readonly VectorStoreCollection<string, VectorDataModel> _vectorStoreCollection = vectorStoreCollection;
         private readonly VectorStoreTextSearch<VectorDataModel> _vectorStoreTextSearch = vectorStoreTextSearch;
 
-        public async Task SaveAllProductsExistedToVectorStore()
+        public async Task SaveAllExistedProductsToVectorStore()
         {
             foreach (var product in _productService.GetAllProducts())
             {
@@ -45,7 +45,7 @@ namespace AiSupporter
             });
         }
 
-        public static string GetProductContent(Product product)
+        private static string GetProductContent(Product product)
         {
             var sb = new StringBuilder();
             string unitName = product.ProductUnit.Name;
@@ -83,15 +83,15 @@ namespace AiSupporter
 
         public async Task<string> AskQuestion(string query)
         {
-            StringBuilder sb = new();
+            StringBuilder searchResult = new();
             await foreach (var result in (await _vectorStoreTextSearch.GetTextSearchResultsAsync(query)).Results)
             {
-                sb.AppendLine(result.Value);
+                searchResult.AppendLine(result.Value);
             }
 
             string prompt = $"""
             Bạn nhận được thông tin về các sản phẩm trong kho hàng như sau:
-            {sb}
+            {searchResult}
 
             Dựa vào thông tin sản phẩm được cung cấp ở trên, hãy trả lời câu hỏi sau một cách chính xác:
             {query}

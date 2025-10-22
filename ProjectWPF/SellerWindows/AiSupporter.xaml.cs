@@ -46,7 +46,7 @@ namespace ProjectWPF.SellerWindows
             UpdateVectorStoreNotiTextBlock.Text = "Đang cập nhật cơ sở dữ liệu AI, vui lòng chờ...";
             this.IsEnabled = false;
 
-            await _aiService.SaveAllProductsExistedToVectorStore();
+            await _aiService.SaveAllExistedProductsToVectorStore();
             MessageBox.Show("Cập nhật cơ sở dữ liệu AI thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
 
             UpdateVectorStoreNotiTextBlock.Text = "";
