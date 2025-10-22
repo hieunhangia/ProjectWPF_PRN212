@@ -43,7 +43,7 @@ namespace ProjectWPF
                 .ConfigureAppConfiguration((_, configBuilder) =>
                 {
                     configBuilder.AddJsonFile("appsettings.json");
-                    //configBuilder.AddJsonFile("appsettings_secret.json");
+                    configBuilder.AddJsonFile("appsettings_secret.json");
                 })
                 .ConfigureServices(ConfigureServices).Build();
 
@@ -89,7 +89,6 @@ namespace ProjectWPF
                 collection.EnsureCollectionExistsAsync().Wait();
                 return new VectorStoreTextSearch<VectorDataModel>(collection, services.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>());
             });
-            services.AddKernel();
             services.AddSingleton<AiService>();
 
             services.AddSingleton<CommuneWardRepository>();
