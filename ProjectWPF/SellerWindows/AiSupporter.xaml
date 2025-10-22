@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.SellerWindows"
         mc:Ignorable="d"
-        Title="Hỗ Trợ AI"
+        Title="AI Supporter"
         WindowStartupLocation="CenterScreen"
         Background="#F5F5F5"
         MinWidth="900"
