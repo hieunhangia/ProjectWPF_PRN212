@@ -75,11 +75,12 @@ namespace ProjectWPF.SellerWindows
                     Description = p.Description,
                     Price = int.Parse(p.Price),
                     IsActive = p.IsActive,
-                    ProductUnit = p.ProductUnit!
+                    ProductUnitId = productUnit!.Id
                 };
                 _sellerRequestService.SaveAddRequest(product, _loggedInSeller);
-                _navigationWindow.ShowWindowAndCloseCurrent<MainWindow>(this);
+                this.Close();   
                 MessageBox.Show("Thêm yêu cầu tạo sản phẩm thành công");
+                
             }
         }
     }

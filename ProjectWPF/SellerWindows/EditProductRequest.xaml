@@ -6,7 +6,40 @@
         xmlns:local="clr-namespace:ProjectWPF.SellerWindows"
         mc:Ignorable="d"
         Title="EditProductRequest" Height="450" Width="800">
-    <Grid>
-        
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Yêu cầu cập nhật sản phẩm" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="Tên sản phẩm:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center" />
+            <TextBox x:Name="ProductNameTextBox" Grid.Row="0" Grid.Column="1"   Margin="0,0,0,10"/>
+            <Label Content="Mô tả:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+            <TextBox x:Name="DescriptionTextBox" Grid.Row="1" Grid.Column="1"  Margin="0,0,0,10" Height="50" AcceptsReturn="True" TextWrapping="Wrap"/>
+            <Label Content="Giá:" Grid.Row="2" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+            <TextBox x:Name="PriceTextBox" Grid.Row="2" Grid.Column="1"  Margin="0,0,0,10"/>
+            <Label Content="Kích hoạt?" Grid.Row="3" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+            <CheckBox x:Name="IsActiveCheckBox" Grid.Row="3" Grid.Column="1"  Margin="0,0,0,10" VerticalAlignment="Center" IsThreeState="False"/>
+            <Label Content="Đơn vị" Grid.Row="4" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center"/>
+            <ComboBox x:Name="UnitComboBox" Grid.Row="4" Grid.Column="1" Margin="0,0,0,0"  DisplayMemberPath="Name">
+
+            </ComboBox>
+            <Button x:Name="Submit" Grid.Row="5" Content="Cập Nhật Sản Phẩm" Margin="234,20,302,0" Click="Submit_Click" Grid.Column="1" Width="Auto"/>
+        </Grid>
+
     </Grid>
 </Window>

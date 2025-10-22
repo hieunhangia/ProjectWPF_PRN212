@@ -82,6 +82,9 @@
                     <Button Content="Từ chối"
                             Width="150" Height="40" Margin="10,0" FontWeight="Bold"
                             Click="RejectRequest_Click"/>
+                    <Button Content="Quay lại"
+                            Width="150" Height="40" Margin="10,0" FontWeight="Bold"
+                            Click="BackButton_Click"/>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

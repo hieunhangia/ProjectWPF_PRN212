@@ -1,4 +1,6 @@
-﻿using Repository;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ProjectWPF.AdminWindows;
+using Repository;
 using Repository.Models.user;
 using Service.product;
 using System.Windows;
@@ -14,14 +16,17 @@ namespace ProjectWPF.SellerWindows
         private readonly ProductService _productService;
         private readonly ProductUnitService _productUnitService;
         private readonly NavigationWindow _navigationWindow;
+        private readonly IServiceProvider _serviceProvider;
         private Seller? _loggedInSeller;
         public ProductList(ProductService productService, 
                           ProductUnitService productUnitService,
-                          NavigationWindow navigationWindow)
+                          NavigationWindow navigationWindow,
+                          IServiceProvider serviceProvider)
         {
             _productService = productService;
             _productUnitService = productUnitService;
             _navigationWindow = navigationWindow;
+            _serviceProvider = serviceProvider;
             InitializeComponent();
             LoadProducts();
         }
@@ -88,23 +93,9 @@ namespace ProjectWPF.SellerWindows
 
             try
             {
-                var product = _productService.GetProductById(productId);
-                if (product != null)
-                {
-                    MessageBox.Show($"Tính năng chỉnh sửa sản phẩm ID: {productId} sẽ được triển khai sau", 
-                                   "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                    // TODO: Implement edit product functionality
-                    // var editWindow = new ProductEdit(product, _productService, _productUnitService);
-                    // if (editWindow.ShowDialog() == true)
-                    // {
-                    //     LoadProducts(); // Refresh the list
-                    // }
-                }
-                else
-                {
-                    MessageBox.Show("Không tìm thấy sản phẩm", "Thông báo", 
-                                   MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                var sellerRequestDetailFactory = _serviceProvider.GetRequiredService<Func<long, EditProductRequest>>();
+                var editWindow = sellerRequestDetailFactory(productId);
+                editWindow.ShowDialog();
             }
             catch (Exception ex)
             {

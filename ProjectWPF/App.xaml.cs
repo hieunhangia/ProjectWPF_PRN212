@@ -51,9 +51,9 @@ namespace ProjectWPF
                 var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<Repository.DbContext>>();
                 using var context = contextFactory.CreateDbContext();
 
-                //context.Database.EnsureCreated();
+                //context.Database.EnsureDeleted();
 
-                //SeedData.CreatedDatabase(context);
+                SeedData.CreatedDatabase(context);
             }
 
             base.OnStartup(e);
@@ -111,6 +111,18 @@ namespace ProjectWPF
                     var productService = provider.GetRequiredService<ProductService>();
                     var productUnitService = provider.GetRequiredService<ProductUnitService>();
                     return new AdminWindows.SellerRequestDetail(id, sellerRequestService, productService,productUnitService);
+                };
+                return value;
+            });
+
+            services.AddTransient(provider =>
+            {
+                Func<long, SellerWindows.EditProductRequest> value = id =>
+                {
+                    var sellerRequestService = provider.GetRequiredService<SellerRequestService>();
+                    var productUnitService = provider.GetRequiredService<ProductUnitService>(); 
+                    var productService = provider.GetRequiredService<ProductService>();
+                    return new SellerWindows.EditProductRequest(id, sellerRequestService,productUnitService,productService);
                 };
                 return value;
             });

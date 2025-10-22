@@ -1,4 +1,6 @@
-﻿using Service.seller_request;
+﻿using Repository;
+using Service.product;
+using Service.seller_request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +21,54 @@ namespace ProjectWPF.SellerWindows
     /// Interaction logic for EditProductRequest.xaml
     /// </summary>
     public partial class EditProductRequest : Window
-    {
-
-        public EditProductRequest(long productId, SellerRequestService sellerRequestService)
+    {   
+        private readonly long _productId;
+        private readonly SellerRequestService _sellerRequestService;
+        private readonly ProductUnitService _productUnitService;
+        private readonly ProductService _productService;
+        private readonly Product _product;
+        public ProductUnit selectedUnit;
+        public EditProductRequest(long productId, SellerRequestService sellerRequestService, ProductUnitService productUnitService, ProductService productService)
         {
+            _productId = productId;
+            _sellerRequestService = sellerRequestService;
+            _productUnitService = productUnitService;
+            _productService = productService;
+            _product =_productService.GetProductById(_productId)!;
+            if (_product == null)
+            {
+                MessageBox.Show("Không tìm thấy sản phẩm", "Thông báo",
+                               MessageBoxButton.OK, MessageBoxImage.Information);
+                this.Close();
+                return;
+            }
             InitializeComponent();
+            InitData();
         }
+
+        private void InitData()
+        {
+            ProductNameTextBox.Text = _product.Name;
+            DescriptionTextBox.Text = _product.Description;
+            PriceTextBox.Text = _product.Price.ToString();
+            IsActiveCheckBox.IsChecked = _product.IsActive;
+            var productUnits = _productUnitService.GetAll();
+            UnitComboBox.ItemsSource = productUnits;
+            UnitComboBox.DisplayMemberPath = "Name";
+            UnitComboBox.SelectedValuePath = "Id";
+            UnitComboBox.SelectedValue = _product.ProductUnitId;
+        }
+
+        private void Submit_Click(object sender, RoutedEventArgs e)
+        {
+            if(_product.Name  == ProductNameTextBox.Text)
+            {
+                MessageBox.Show("Không có thay đổi nào được thực hiện", "Thông báo",
+                               MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+        }
+
     }
 }

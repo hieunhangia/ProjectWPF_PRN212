@@ -43,8 +43,19 @@ namespace ProjectWPF.AdminWindows
                 var sellerRequestDetailFactory = _serviceProvider.GetRequiredService<Func<long, SellerRequestDetail>>();
                 var detailWindow = sellerRequestDetailFactory(id);
                 detailWindow.Show();
-                this.Close();
             }
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            InitRequestList();
+            MessageBox.Show("Danh sách đã được làm mới", "Thông báo",
+                           MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

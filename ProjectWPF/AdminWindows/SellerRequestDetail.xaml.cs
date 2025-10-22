@@ -75,5 +75,10 @@ namespace ProjectWPF.AdminWindows
             this.Close();
             MessageBox.Show("Thành công huỷ yêu cầu thay đổi sản phẩm");
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
