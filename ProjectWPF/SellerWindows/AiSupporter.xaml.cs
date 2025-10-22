@@ -37,14 +37,20 @@ namespace ProjectWPF.SellerWindows
 
         private async void UpdateVectorDatabaseButton_Click(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show("Bạn có chắc chắn muốn cập nhật cơ sở dữ liệu AI? Quá trình này có thể mất vài phút.",
+                "Xác Nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
             UpdateVectorStoreNotiTextBlock.Text = "Đang cập nhật cơ sở dữ liệu AI, vui lòng chờ...";
             this.IsEnabled = false;
 
             await _aiService.SaveAllProductsExistedToVectorStore();
-
-            this.IsEnabled = true;
-            UpdateVectorStoreNotiTextBlock.Text = "";
             MessageBox.Show("Cập nhật cơ sở dữ liệu AI thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            UpdateVectorStoreNotiTextBlock.Text = "";
+            this.IsEnabled = true;
         }
     }
 }

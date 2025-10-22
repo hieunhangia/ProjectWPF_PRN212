@@ -6,10 +6,11 @@ using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Repository;
 using Service.product;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AiSupporter
 {
-    public class AiService(ProductService productService,
+    public partial class AiService(ProductService productService,
         Kernel kernel)
     {
         private readonly ProductService _productService = productService;
@@ -81,42 +82,52 @@ namespace AiSupporter
         {
 
             string promptTemplate = """
-                    {{#with (SearchPlugin-GetTextSearchResults query)}}  
-                        {{#each this}}  
-                        Name: {{Name}}
-                        Value: {{Value}}
-                        -----------------
-                        {{/each}}  
-                    {{/with}}  
+            {{#with (SearchPlugin-GetTextSearchResults query)}}  
+                {{#each this}}  
+                ID: {{Name}}
+                Giá Trị: {{Value}}
+                -----------------
+                {{/each}}
+            {{/with}}
 
-                    {{query}}
+            Dựa vào thông tin sản phẩm được cung cấp ở trên, hãy trả lời câu hỏi sau một cách chính xác:
+            {{query}}
 
-                    Include citations to the relevant information where it is referenced in the response.
-                    """;
 
-            KernelArguments arguments = new() { { "query", query } };
-            HandlebarsPromptTemplateFactory promptTemplateFactory = new();
-            return (await _kernel.InvokePromptAsync(
+            Về vai trò và phong cách trả lời:
+            - Bạn là một "Trợ lý AI hỗ trợ Người bán hàng", chuyên về quản lý kho.
+            - Nhiệm vụ chính của bạn là trả lời các câu hỏi của Người bán về tình trạng hàng hóa trong kho một cách chính xác, ngắn gọn và hữu ích.
+
+
+            Nguồn dữ liệu:
+            - Toàn bộ thông tin bạn có về sản phẩm được cung cấp ở phần trên.
+            - Đây là nguồn thông tin duy nhất và là sự thật tuyệt đối. Tuyệt đối không được bịa đặt, suy diễn hoặc cung cấp thông tin không có trong dữ liệu được cung cấp.
+
+
+            Nguyên tắc trả lời:
+            - Bám sát dữ liệu: Chỉ trả lời dựa trên thông tin sản phẩm đã cho. Khi trả lời về một sản phẩm, hãy bắt đầu bằng cách xác nhận lại tên sản phẩm đó.
+            - Trả lời trực tiếp và súc tích: Đi thẳng vào vấn đề người dùng hỏi. Nếu hỏi về số lượng, hãy cung cấp con số. Nếu hỏi về hạn sử dụng, hãy cung cấp ngày tháng.
+            - Tổng hợp thông tin: Khi được hỏi một câu chung về sản phẩm, hãy tóm tắt các thông tin quan trọng nhất như: tổng tồn kho (nếu có), số lượng lô hàng còn hạn, và trạng thái kinh doanh.
+            - Xử lý các trường hợp đặc biệt:
+                - Nếu sản phẩm có trạng thái "Ngừng kinh doanh", hãy nhấn mạnh điều này trong câu trả lời.
+                - Nếu sản phẩm "chưa có thông tin nhập kho (chưa có lô hàng nào)", hãy thông báo rõ ràng tình trạng này.
+                - Nếu "tất cả các lô hàng của sản phẩm đã hết tồn kho", hãy xác nhận là sản phẩm đã hết hàng.
+            - Định dạng câu trả lời: Bạn CHỈ ĐƯỢC PHÉP dùng các dạng Markdown cơ bản như : danh sách không sắp xếp (* item), và đoạn văn (\\n\\n).
+            - Tuyệt đối không nhắc đến các cụm từ như "dựa vào thông tin được cung cấp", "theo dữ liệu đã cho",...
+            """;
+
+            return UnorderedList().Replace((await _kernel.InvokePromptAsync(
                 promptTemplate,
-                arguments,
+                new() {
+                    { "query", query },
+                },
                 templateFormat: HandlebarsPromptTemplateFactory.HandlebarsTemplateFormat,
-                promptTemplateFactory: promptTemplateFactory
-            )).GetValue<string>()!;
+                promptTemplateFactory: new HandlebarsPromptTemplateFactory()
+            )).GetValue<string>()!, "• $1");
         }
 
+        [GeneratedRegex(@"^\* (.*)", RegexOptions.Multiline)]
+        private static partial Regex UnorderedList();
     }
 
-    public class VectorDataModel
-    {
-        [VectorStoreKey]
-        [TextSearchResultName]
-        public required string Id { get; set; }
-
-        [VectorStoreData]
-        [TextSearchResultValue]
-        public required string Content { get; set; }
-
-        [VectorStoreVector(Dimensions: 3072, DistanceFunction = DistanceFunction.CosineSimilarity)]
-        public ReadOnlyMemory<float> EmbeddingContent { get; set; }
-    }
 }
