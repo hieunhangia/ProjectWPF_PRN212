@@ -49,7 +49,7 @@ namespace Service.seller_request
             _sellerRequestRepository.Add(sellerRequest);
         }
 
-        public void SaveUpdateRequest<T>(T entity, long oldEntityId, Seller seller)
+        public void SaveUpdateRequest<T>(T entity, long oldEntityId,Seller seller)
         {
             var options = new JsonSerializerOptions
             {
@@ -58,9 +58,9 @@ namespace Service.seller_request
             var sellerRequest = new SellerRequest()
             {
                 Content = JsonSerializer.Serialize(entity, options),
-                Seller = seller,
-                RequestType = _sellerRequestTypeService.GetUpdateType()!,
-                Status = _sellerRequestStatusService.GetPendingStatus()!,
+                SellerId = seller.Id,
+                RequestTypeId = _sellerRequestTypeService.GetUpdateType()!.Id,
+                StatusId = _sellerRequestStatusService.GetPendingStatus()!.Id!,
                 CreatedAt = DateTime.Now,
                 OldContentId = oldEntityId,
                 EntityName = typeof(T).Name
@@ -76,7 +76,7 @@ namespace Service.seller_request
                 throw new Exception("Không tìm thây sellerRequest");
             }
             sellerRequest.Status = _sellerRequestStatusService.GetApprovedStatus()!;
-            string requestTypeName = sellerRequest.RequestType.Name;
+            sellerRequest.RequestType = _sellerRequestTypeService.GetById(sellerRequest.RequestTypeId)!;
             if (_sellerRequestTypeService.IsAddType(sellerRequest))
             {
                 T? entity = JsonSerializer.Deserialize<T>(sellerRequest.Content);

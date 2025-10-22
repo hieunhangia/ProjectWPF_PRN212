@@ -1,4 +1,5 @@
-﻿using ProjectWPF.Models;
+﻿using Microsoft.Identity.Client;
+using ProjectWPF.Models;
 using Repository.Repository.seller_request;
 
 namespace Service.seller_request
@@ -7,16 +8,20 @@ namespace Service.seller_request
     {
 
         private readonly SellerRequestTypeRepository _sellerRequestTypeRepository = sellerRequestTypeRepository;
-        public SellerRequestType? GetAddType()
-        {
-            return _sellerRequestTypeRepository.GetByCondition(s => s.Name == "Thêm mới").FirstOrDefault();
-        }
 
         public SellerRequestType? GetUpdateType()
         {
             return _sellerRequestTypeRepository.GetByCondition(s => s.Name == "Cập nhật").FirstOrDefault();
         }
 
+        public SellerRequestType? GetAddType()
+        {
+            return _sellerRequestTypeRepository.GetByCondition(s => s.Name == "Thêm mới").FirstOrDefault();
+        }
+        public SellerRequestType? GetById(long id)
+        {
+            return _sellerRequestTypeRepository.GetById(id);
+        }
         public bool IsAddType(SellerRequest request)
         {
             return request.RequestType.Name == "Thêm mới";

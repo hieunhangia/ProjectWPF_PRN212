@@ -67,7 +67,7 @@ namespace ProjectWPF.SellerWindows
                 {
                     if (product.ProductUnit == null)
                     {
-                        product.ProductUnit = _productUnitService.GetById(product.ProductUnitId);
+                        product.ProductUnit = _productUnitService.GetById(product.ProductUnitId)!;
                     }
                     
                     var detailWindow = new ProductDetail(product);
@@ -93,8 +93,8 @@ namespace ProjectWPF.SellerWindows
 
             try
             {
-                var sellerRequestDetailFactory = _serviceProvider.GetRequiredService<Func<long, EditProductRequest>>();
-                var editWindow = sellerRequestDetailFactory(productId);
+                var sellerRequestDetailFactory = _serviceProvider.GetRequiredService<Func<long,Seller, EditProductRequest>>();
+                var editWindow = sellerRequestDetailFactory(productId,_loggedInSeller!);
                 editWindow.ShowDialog();
             }
             catch (Exception ex)

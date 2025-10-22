@@ -42,7 +42,8 @@ namespace ProjectWPF.AdminWindows
             {
                 var sellerRequestDetailFactory = _serviceProvider.GetRequiredService<Func<long, SellerRequestDetail>>();
                 var detailWindow = sellerRequestDetailFactory(id);
-                detailWindow.Show();
+                detailWindow.ShowDialog();
+                InitRequestList();
             }
         }
 

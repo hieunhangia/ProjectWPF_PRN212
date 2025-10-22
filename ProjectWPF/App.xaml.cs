@@ -41,7 +41,7 @@ namespace ProjectWPF
                 .ConfigureAppConfiguration((_, configBuilder) =>
                 {
                     configBuilder.AddJsonFile("appsettings.json");
-                    configBuilder.AddJsonFile("appsettings_secret.json");
+                    //configBuilder.AddJsonFile("appsettings_secret.json");
                 })
                 .ConfigureServices(ConfigureServices).Build();
 
@@ -54,7 +54,7 @@ namespace ProjectWPF
 
                 //context.Database.EnsureDeleted();
 
-                SeedData.CreatedDatabase(context);
+                //SeedData.CreatedDatabase(context);
             }
 
             base.OnStartup(e);
@@ -70,7 +70,7 @@ namespace ProjectWPF
                 options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddSingleton(BuildKernel(context));
+            //services.AddSingleton(BuildKernel(context));
             services.AddSingleton<AiService>();
 
             services.AddSingleton<CommuneWardRepository>();
@@ -118,12 +118,13 @@ namespace ProjectWPF
 
             services.AddTransient(provider =>
             {
-                Func<long, SellerWindows.EditProductRequest> value = id =>
+                Func<long, Seller, SellerWindows.EditProductRequest> value = (id, seller) =>
                 {
                     var sellerRequestService = provider.GetRequiredService<SellerRequestService>();
-                    var productUnitService = provider.GetRequiredService<ProductUnitService>(); 
+                    var productUnitService = provider.GetRequiredService<ProductUnitService>();
                     var productService = provider.GetRequiredService<ProductService>();
-                    return new SellerWindows.EditProductRequest(id, sellerRequestService,productUnitService,productService);
+
+                    return new SellerWindows.EditProductRequest(id,sellerRequestService,productUnitService,productService,seller);
                 };
                 return value;
             });

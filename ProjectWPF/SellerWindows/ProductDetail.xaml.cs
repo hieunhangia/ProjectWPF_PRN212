@@ -21,4 +21,59 @@ namespace ProjectWPF.SellerWindows
             this.Close();
         }
     }
+
+    public class BooleanToStatusConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool isActive)
+            {
+                return isActive ? "Hoạt động" : "Không hoạt động";
+            }
+            return "Không xác định";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ExpiryStatusConverter : IValueConverter
+    {
+        public static readonly ExpiryStatusConverter Instance = new ExpiryStatusConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is DateTime expiryDate)
+            {
+                return expiryDate < DateTime.Now ? "Hết hạn" : "Còn hạn";
+            }
+            return "Không xác định";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class IsExpiredConverter : IValueConverter
+    {
+        public static readonly IsExpiredConverter Instance = new IsExpiredConverter();
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is DateTime expiryDate)
+            {
+                return expiryDate < DateTime.Now;
+            }
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

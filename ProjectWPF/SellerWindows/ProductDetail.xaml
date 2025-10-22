@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.SellerWindows"
         mc:Ignorable="d"
-        Title="Chi tiết sản phẩm" Height="500" Width="600"
+        Title="Chi tiết sản phẩm" Height="650" Width="800"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Grid Margin="20">
@@ -33,6 +33,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <TextBlock Text="ID:" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Margin="0,5"/>
@@ -54,7 +55,9 @@
                         <TextBlock Grid.Row="5" Grid.Column="1" Margin="10,5">
                             <TextBlock.Text>
                                 <Binding Path="IsActive">
-                                   
+                                    <Binding.Converter>
+                                        <local:BooleanToStatusConverter/>
+                                    </Binding.Converter>
                                 </Binding>
                             </TextBlock.Text>
                             <TextBlock.Style>
@@ -70,6 +73,59 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
+                    </Grid>
+                </Border>
+
+                <!-- Product Batches Section -->
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="15">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Lô hàng:" FontWeight="Bold" FontSize="16" 
+                                   Grid.Row="0" Margin="0,0,0,10"/>
+
+                        <ListView Grid.Row="1" ItemsSource="{Binding ProductBatches}" 
+                                  Height="200" BorderBrush="LightGray" BorderThickness="1">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="ID" Width="80" DisplayMemberBinding="{Binding Id}"/>
+                                    <GridViewColumn Header="Ngày hết hạn" Width="150" 
+                                                    DisplayMemberBinding="{Binding ExpiryDate, StringFormat={}{0:dd/MM/yyyy}}"/>
+                                    <GridViewColumn Header="Số lượng" Width="120" DisplayMemberBinding="{Binding Quantity}"/>
+                                    <GridViewColumn Header="Trạng thái" Width="120">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <Binding Path="ExpiryDate" Converter="{x:Static local:ExpiryStatusConverter.Instance}"/>
+                                                    </TextBlock.Text>
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding ExpiryDate, Converter={x:Static local:IsExpiredConverter.Instance}}" Value="True">
+                                                                    <Setter Property="Foreground" Value="Red"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding ExpiryDate, Converter={x:Static local:IsExpiredConverter.Instance}}" Value="False">
+                                                                    <Setter Property="Foreground" Value="Green"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
                     </Grid>
                 </Border>
             </StackPanel>

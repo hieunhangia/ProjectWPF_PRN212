@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.SellerWindows"
         mc:Ignorable="d"
-        Title="Product List" Height="600" Width="1000"
+        ResizeMode="NoResize"
+        Title="Product List" Height="600" Width="1010"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
