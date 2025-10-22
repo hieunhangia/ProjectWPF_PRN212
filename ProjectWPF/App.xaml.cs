@@ -7,7 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Pinecone;
 using Microsoft.SemanticKernel.Data;
+using Pinecone;
 using ProjectWPF.Models;
 using Repository;
 using Repository.Models.user;
@@ -52,9 +54,7 @@ namespace ProjectWPF
                 var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<Repository.DbContext>>();
                 using var context = contextFactory.CreateDbContext();
 
-                //context.Database.EnsureDeleted();
-
-                //SeedData.CreatedDatabase(context);
+                context.Database.EnsureCreated();
             }
 
             base.OnStartup(e);
@@ -70,7 +70,26 @@ namespace ProjectWPF
                 options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            //services.AddSingleton(BuildKernel(context));
+            services.AddVertexAIGeminiChatCompletion(
+                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
+                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
+                modelId: context.Configuration["GoogleVertexAiChatModel"]!,
+                location: context.Configuration["GoogleVertexAiChatLocation"]!
+            ); 
+            services.AddVertexAIEmbeddingGenerator(
+                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
+                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
+                modelId: context.Configuration["GoogleVertexAiEmbeddingModel"]!,
+                location: context.Configuration["GoogleVertexAiEmbeddingLocation"]!
+            );
+            services.AddPineconeCollection<VectorDataModel>(context.Configuration["PineconeIndexName"]!, context.Configuration["PineconeApiKey"]!);
+            services.AddSingleton(services =>
+            {
+                var collection = services.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>();
+                collection.EnsureCollectionExistsAsync().Wait();
+                return new VectorStoreTextSearch<VectorDataModel>(collection, services.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>());
+            });
+            services.AddKernel();
             services.AddSingleton<AiService>();
 
             services.AddSingleton<CommuneWardRepository>();
@@ -128,37 +147,9 @@ namespace ProjectWPF
                 };
                 return value;
             });
-            //services.AddTransient<SellerWindows.AiSupporter>();
+            services.AddTransient<SellerWindows.AiSupporter>();
 
             services.AddSingleton<UserChangeListener>();
-        }
-
-        private static Kernel BuildKernel(HostBuilderContext context)
-        {
-            var kernelBuilder = Kernel.CreateBuilder();
-            kernelBuilder.Services.AddVertexAIGeminiChatCompletion(
-                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
-                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
-                modelId: context.Configuration["GoogleVertexAiChatModel"]!,
-                location: context.Configuration["GoogleVertexAiChatLocation"]!
-            );
-            kernelBuilder.Services.AddVertexAIEmbeddingGenerator(
-                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
-                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
-                modelId: context.Configuration["GoogleVertexAiEmbeddingModel"]!,
-                location: context.Configuration["GoogleVertexAiEmbeddingLocation"]!
-            );
-            kernelBuilder.Services.AddPineconeCollection<VectorDataModel>(context.Configuration["PineconeIndexName"]!, context.Configuration["PineconeApiKey"]!);
-            Kernel kernel = kernelBuilder.Build();
-            var connection = kernel.Services.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>();
-            connection.EnsureCollectionExistsAsync().Wait();
-            var textSearch = new VectorStoreTextSearch<VectorDataModel>(
-                connection,
-                kernel.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>()
-            );
-            var searchPlugin = textSearch.CreateWithGetTextSearchResults("SearchPlugin");
-            kernel.Plugins.Add(searchPlugin);
-            return kernel;
         }
 
         protected override async void OnExit(ExitEventArgs e)

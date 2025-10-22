@@ -8,13 +8,16 @@ using Service.product;
 using System.Text;
 using System.Text.RegularExpressions;
 
+#pragma warning disable SKEXP0001
 namespace AiSupporter
 {
     public partial class AiService(ProductService productService,
-        Kernel kernel)
+        Kernel kernel,
+        VectorStoreTextSearch<VectorDataModel> vectorStoreTextSearch)
     {
         private readonly ProductService _productService = productService;
         private readonly Kernel _kernel = kernel;
+        private readonly VectorStoreTextSearch<VectorDataModel> _vectorStoreTextSearch = vectorStoreTextSearch;
 
         public async Task SaveAllProductsExistedToVectorStore()
         {
@@ -42,12 +45,7 @@ namespace AiSupporter
             var sb = new StringBuilder();
             string unitName = product.ProductUnit.Name;
 
-            sb.Append($"Thông tin sản phẩm cho quản lý kho. ");
-            sb.Append($"Mã sản phẩm: {product.Id}. ");
-            sb.Append($"Tên: {product.Name}. ");
-            sb.Append($"Mô tả: \"{product.Description}.\" ");
-            sb.Append($"Đơn vị tính: {unitName}. ");
-            sb.Append($"Trạng thái kinh doanh: {(product.IsActive ? "Đang kinh doanh" : "Ngừng kinh doanh")}. ");
+            sb.Append($"Tên sản phẩm: {product.Name}. Mô tả: '{product.Description}'. Đơn vị tính: {unitName}. Trạng thái kinh doanh: {(product.IsActive ? "Đang kinh doanh" : "Ngừng kinh doanh")}. ");
 
             if (product.ProductBatches != null && product.ProductBatches.Count != 0)
             {
@@ -82,13 +80,9 @@ namespace AiSupporter
         {
 
             string promptTemplate = """
-            {{#with (SearchPlugin-GetTextSearchResults query)}}  
-                {{#each this}}  
-                ID: {{Name}}
-                Giá Trị: {{Value}}
-                -----------------
-                {{/each}}
-            {{/with}}
+            Bạn nhận được thông tin về các sản phẩm trong kho hàng như sau:
+            {{context}}
+
 
             Dựa vào thông tin sản phẩm được cung cấp ở trên, hãy trả lời câu hỏi sau một cách chính xác:
             {{query}}
@@ -112,22 +106,27 @@ namespace AiSupporter
                 - Nếu sản phẩm có trạng thái "Ngừng kinh doanh", hãy nhấn mạnh điều này trong câu trả lời.
                 - Nếu sản phẩm "chưa có thông tin nhập kho (chưa có lô hàng nào)", hãy thông báo rõ ràng tình trạng này.
                 - Nếu "tất cả các lô hàng của sản phẩm đã hết tồn kho", hãy xác nhận là sản phẩm đã hết hàng.
-            - Định dạng câu trả lời: Bạn CHỈ ĐƯỢC PHÉP dùng các dạng Markdown cơ bản như : danh sách không sắp xếp (* item), và đoạn văn (\\n\\n).
+            - Bạn KHÔNG ĐƯỢC PHÉP dùng Markdown, nếu muốn xuống dòng hãy dùng ký tự xuống dòng thông thường (/n).
             - Tuyệt đối không nhắc đến các cụm từ như "dựa vào thông tin được cung cấp", "theo dữ liệu đã cho",...
             """;
 
-            return UnorderedList().Replace((await _kernel.InvokePromptAsync(
+            var textResults = await _vectorStoreTextSearch.GetTextSearchResultsAsync(query, new() { Top = 5, Skip = 0 });
+            var sb = new StringBuilder();
+            await foreach (var result in textResults.Results)
+            {
+                sb.AppendLine(result.Value);
+            }
+
+            return (await _kernel.InvokePromptAsync(
                 promptTemplate,
                 new() {
+                    { "context", sb.ToString() },
                     { "query", query },
                 },
                 templateFormat: HandlebarsPromptTemplateFactory.HandlebarsTemplateFormat,
                 promptTemplateFactory: new HandlebarsPromptTemplateFactory()
-            )).GetValue<string>()!, "• $1");
+            )).GetValue<string>()!;
         }
-
-        [GeneratedRegex(@"^\* (.*)", RegexOptions.Multiline)]
-        private static partial Regex UnorderedList();
     }
 
 }
