@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.Google;
 using Microsoft.SemanticKernel.Connectors.Pinecone;
 using Microsoft.SemanticKernel.Data;
 using Pinecone;
@@ -59,7 +61,7 @@ namespace ProjectWPF
 
             base.OnStartup(e);
 
-            _host.Services.GetRequiredService<Login>().Show();
+            _host.Services.GetRequiredService<SellerWindows.AiSupporter>().Show();
         }
 
         
@@ -70,12 +72,22 @@ namespace ProjectWPF
                 options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddVertexAIGeminiChatCompletion(
+            var gemini_2dot5_flash = new VertexAIGeminiChatCompletionService(
                 projectId: context.Configuration["GoogleVertexAiProjectId"]!,
                 bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
-                modelId: context.Configuration["GoogleVertexAiChatModel"]!,
-                location: context.Configuration["GoogleVertexAiChatLocation"]!
-            ); 
+                modelId: context.Configuration["GoogleVertexAi2Dot5FlashModel"]!,
+                location: context.Configuration["GoogleVertexAi2Dot5FlashLocation"]!
+            );
+            services.AddKeyedSingleton<IChatCompletionService>("gemini-2.5-flash", gemini_2dot5_flash);
+
+            var gemini_2dot5_pro = new VertexAIGeminiChatCompletionService(
+                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
+                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
+                modelId: context.Configuration["GoogleVertexAi2Dot5ProModel"]!,
+                location: context.Configuration["GoogleVertexAi2Dot5ProLocation"]!
+            );
+            services.AddKeyedSingleton<IChatCompletionService>("gemini-2.5-pro", gemini_2dot5_pro);
+
             services.AddVertexAIEmbeddingGenerator(
                 projectId: context.Configuration["GoogleVertexAiProjectId"]!,
                 bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
@@ -92,7 +104,8 @@ namespace ProjectWPF
                 collection.EnsureCollectionExistsAsync().Wait();
                 return new VectorStoreTextSearch<VectorDataModel>(collection, provider.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>());
             });
-            services.AddSingleton<AiService>();
+            services.AddSingleton<VectorStoreService>();
+            services.AddTransient<AskAiService>();
 
             services.AddSingleton<CommuneWardRepository>();
             services.AddSingleton<ProvinceCityRepository>();
