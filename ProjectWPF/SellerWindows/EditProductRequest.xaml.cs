@@ -1,5 +1,6 @@
 ﻿using ProjectWPF.Validation;
 using Repository;
+using Repository.dto;
 using Repository.Models.user;
 using Service.product;
 using Service.seller_request;
@@ -69,23 +70,17 @@ namespace ProjectWPF.SellerWindows
 
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
-            if(_product?.Name  == ProductNameTextBox.Text)
-            {
-                MessageBox.Show("Không có thay đổi nào được thực hiện", "Thông báo",
-                               MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-            Product newProduct = new Product
+            ProductDto product = new ProductDto
             {
                 Id = _productId,
                 Name = ProductNameTextBox.Text,
                 Description = DescriptionTextBox.Text,
-                Price = int.Parse(PriceTextBox.Text),
+                Price = PriceTextBox.Text,
                 IsActive = IsActiveCheckBox.IsChecked ?? false,
-                ProductUnitId = (long)UnitComboBox.SelectedValue
+                ProductUnit = _productUnitService.GetById((long)UnitComboBox.SelectedValue)!
             };
-            EditProductValidator validations = new EditProductValidator(_productService);
-            var result = validations.Validate(newProduct);
+            ProductValidator validations = new ProductValidator(_productService);
+            var result = validations.Validate(product);
             if (!result.IsValid)
             {
                 MessageBox.Show(result.Errors.First().ErrorMessage, "Lỗi",
@@ -94,7 +89,17 @@ namespace ProjectWPF.SellerWindows
             }
             else
             {
-                _sellerRequestService.SaveUpdateRequest(newProduct, _productId,_seller);
+               Product p = new Product
+                {
+                    Id = product.Id,
+                    Name = product.Name!,
+                    Description = product.Description!,
+                    Price = int.Parse(product.Price!),
+                    IsActive = product.IsActive,
+                    ProductUnitId = product.ProductUnit.Id,
+                    ProductUnit = product.ProductUnit
+                };
+                _sellerRequestService.SaveUpdateRequest(p, _productService.GetProductById(_productId),_seller);
                 this.Close();
                 MessageBox.Show("Thêm yêu cầu chỉnh sửa sản phẩm thành công", "Thông báo",
                                MessageBoxButton.OK, MessageBoxImage.Information);

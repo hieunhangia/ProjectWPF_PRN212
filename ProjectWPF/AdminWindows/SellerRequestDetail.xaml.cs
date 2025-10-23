@@ -1,4 +1,5 @@
-﻿using ProjectWPF.Models;
+﻿using Grpc.Core;
+using ProjectWPF.Models;
 using Repository;
 using Service.product;
 using Service.seller_request;
@@ -16,8 +17,9 @@ namespace ProjectWPF.AdminWindows
         private readonly long _sellerRequestId;
         private readonly ProductService _productService;
         private readonly ProductUnitService _productUnitService;
-        public Product? OldProduct { get; set; }
-        public Product? NewProduct { get; set; }
+        public string StatusName { get; init; }
+        public Product? OldProduct { get; init; }
+        public Product? NewProduct { get; init; }
         public SellerRequestDetail(long sellerRequestId
             , SellerRequestService sellerRequestService
             ,ProductService productService
@@ -27,20 +29,19 @@ namespace ProjectWPF.AdminWindows
             _sellerRequestId = sellerRequestId;
             _sellerRequestService = sellerRequestService;
             _productService = productService;
+            SellerRequest sellerRequest = _sellerRequestService.getSellerRequestById(_sellerRequestId)!;
+            StatusName = _sellerRequestService.getSellerRequestById(sellerRequestId)?.Status.Name!;
+            NewProduct = JsonSerializer.Deserialize<Product>(sellerRequest.Content);
+            if (sellerRequest.OldContent != null)
+            {
+                OldProduct = JsonSerializer.Deserialize<Product>(sellerRequest.OldContent);
+            }
             InitializeComponent();
             InitData();
         }
 
         private void InitData()
         {
-            SellerRequest sellerRequest = _sellerRequestService.getSellerRequestById(_sellerRequestId)!;
-            if (sellerRequest == null)
-            {
-                MessageBox.Show("Yêu cầu không tồn tại", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
-                return;
-            }
-            NewProduct = JsonSerializer.Deserialize<Product>(sellerRequest.Content)!;
 
             if (NewProduct == null)
             {
@@ -48,17 +49,10 @@ namespace ProjectWPF.AdminWindows
                 this.Close();
                 return;
             }
-            NewProduct.ProductUnit = _productUnitService.GetById(NewProduct.ProductUnitId)!;
-            long id = sellerRequest.OldContentId ?? 0;
-            OldProduct = _productService.GetProductById(id);
             DataContext = this;
             if (OldProduct == null)
             {
                 OldProductBox.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                OldProduct.ProductUnit = _productUnitService.GetById(OldProduct.ProductUnitId)!;
             }
         }
 

@@ -52,7 +52,7 @@ namespace ProjectWPF.SellerWindows
             }
 
             var productUnit = UnitComboBox.SelectedItem as ProductUnit;
-            CreateProductDto p = new CreateProductDto()
+            ProductDto p = new ProductDto()
             {
                 Name = ProductNameTextBox.Text,
                 Description = DescriptionTextBox.Text,
@@ -61,7 +61,7 @@ namespace ProjectWPF.SellerWindows
                 ProductUnit = productUnit!
             };
 
-            var validator = new CreateProductValidator(_productService);
+            var validator = new ProductValidator(_productService);
             var result = validator.Validate(p);
             if (!result.IsValid)
             {
@@ -75,7 +75,7 @@ namespace ProjectWPF.SellerWindows
                     Description = p.Description,
                     Price = int.Parse(p.Price),
                     IsActive = p.IsActive,
-                    ProductUnitId = productUnit!.Id
+                    ProductUnit = _productUnitService.GetById(p.ProductUnit.Id)!
                 };
                 _sellerRequestService.SaveAddRequest(product, _loggedInSeller);
                 this.Close();   

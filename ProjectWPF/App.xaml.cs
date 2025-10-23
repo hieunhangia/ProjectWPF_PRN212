@@ -55,8 +55,7 @@ namespace ProjectWPF
             {
                 var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<Repository.DbContext>>();
                 using var context = contextFactory.CreateDbContext();
-
-                context.Database.EnsureCreated();
+                SeedData.CreatedDatabase(context);
             }
 
             base.OnStartup(e);

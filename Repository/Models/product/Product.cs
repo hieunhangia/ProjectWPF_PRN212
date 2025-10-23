@@ -24,7 +24,7 @@ namespace Repository
         public long ProductUnitId { get; set; }
 
         [ForeignKey("ProductUnitId")]
-        public virtual ProductUnit ProductUnit { get; set; } = null!;
+        public virtual ProductUnit? ProductUnit { get; set; } = null!;
 
         // Navigation property - one-to-many relationship with ProductBatches
         public virtual ICollection<ProductBatch> ProductBatches { get; set; } = new List<ProductBatch>();

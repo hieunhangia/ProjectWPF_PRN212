@@ -5,9 +5,9 @@ using System.Globalization;
 
 namespace ProjectWPF.Validation
 {
-    public class CreateProductValidator : AbstractValidator<CreateProductDto>
+    public class ProductValidator : AbstractValidator<ProductDto>
     {
-        public CreateProductValidator(ProductService productService)
+        public ProductValidator(ProductService productService)
         {
             // Validate Name
             RuleFor(x => x.Name)
