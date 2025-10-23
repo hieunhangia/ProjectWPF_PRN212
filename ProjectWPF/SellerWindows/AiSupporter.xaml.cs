@@ -1,5 +1,10 @@
 ﻿using AiSupporter;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.VisualBasic;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using TableDependency.SqlClient.Base.Messages;
 
 namespace ProjectWPF.SellerWindows
 {
@@ -8,11 +13,14 @@ namespace ProjectWPF.SellerWindows
     /// </summary>
     public partial class AiSupporter : Window
     {
-        private readonly AiService _aiService;
+        private readonly VectorStoreService _vectorStoreService;
+        private readonly AskAiService _askAiService;
 
-        public AiSupporter(AiService aiService)
+        public AiSupporter(VectorStoreService vectorStoreService,
+            AskAiService askAiService)
         {
-            _aiService = aiService;
+            _vectorStoreService = vectorStoreService;
+            _askAiService = askAiService;
 
             InitializeComponent();
         }
@@ -29,10 +37,38 @@ namespace ProjectWPF.SellerWindows
             AskAiNotiTextBlock.Text = "Đang chờ phản hồi của AI...";
             this.IsEnabled = false;
 
-            AnswerTextBlock.Text = await _aiService.AskQuestion(question);
+            AddMessageToConversation(await _askAiService.AskQuestion(question));
 
+            QuestionTextBox.Text = "";
             AskAiNotiTextBlock.Text = "";
             this.IsEnabled = true;
+        }
+
+        private void AddMessageToConversation(ChatHistory conversation)
+        {
+            ConversationStackPanel.Children.Clear();
+            foreach (var message in conversation.Skip(1))
+            {
+                bool isUser = message.Role == AuthorRole.User;
+                var border = new Border
+                {
+                    Style = (Style)FindResource(isUser ? "UserMessageBorder" : "AiMessageBorder")
+                };
+
+                var textBlock = new TextBlock
+                {
+                    Text = message.Content!,
+                    Style = (Style)FindResource(isUser ? "UserMessageText" : "AiMessageText")
+                };
+
+                border.Child = textBlock;
+                ConversationStackPanel.Children.Add(border);
+            }
+
+            if (ConversationStackPanel.Parent is ScrollViewer scrollViewer)
+            {
+                scrollViewer.ScrollToBottom();
+            }
         }
 
         private async void UpdateVectorDatabaseButton_Click(object sender, RoutedEventArgs e)
@@ -46,7 +82,7 @@ namespace ProjectWPF.SellerWindows
             UpdateVectorStoreNotiTextBlock.Text = "Đang cập nhật cơ sở dữ liệu AI, vui lòng chờ...";
             this.IsEnabled = false;
 
-            await _aiService.SaveAllExistedProductsToVectorStore();
+            await _vectorStoreService.SaveAllExistedProductsToVectorStore();
             MessageBox.Show("Cập nhật cơ sở dữ liệu AI thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
 
             UpdateVectorStoreNotiTextBlock.Text = "";

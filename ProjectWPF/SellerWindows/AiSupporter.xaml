@@ -115,21 +115,51 @@
             <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
             <Setter Property="Padding" Value="10"/>
         </Style>
+
+        <!-- Chat Message Styles -->
+        <Style x:Key="UserMessageBorder" TargetType="Border">
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="CornerRadius" Value="15,15,0,15"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="80,5,10,5"/>
+            <Setter Property="MaxWidth" Value="500"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+
+        <Style x:Key="AiMessageBorder" TargetType="Border">
+            <Setter Property="Background" Value="#E8E8E8"/>
+            <Setter Property="CornerRadius" Value="15,15,15,0"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="10,5,80,5"/>
+            <Setter Property="MaxWidth" Value="500"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <Style x:Key="UserMessageText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style x:Key="AiMessageText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Foreground" Value="#212121"/>
+        </Style>
     </Window.Resources>
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Title -->
         <TextBlock Grid.Row="0" Text="AI Supporter" Style="{StaticResource TitleTextBlock}" Margin="0,0,0,20"/>
 
-        <!-- Update Vector Database Section -->
+        <!-- Update AI Database Section -->
         <Border Grid.Row="1" BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="4" Padding="15" Margin="0,0,0,20" Background="{StaticResource WhiteBrush}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -150,19 +180,26 @@
                 </Grid>
             </Grid>
         </Border>
-
-        <!-- Question Section -->
-        <Border Grid.Row="3" BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="4" Padding="15" Margin="0,0,0,0" Background="{StaticResource WhiteBrush}">
+        
+        <!-- Conversation Section -->
+        <Border Grid.Row="2" BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="4" Padding="15" Margin="0,0,0,0" Background="{StaticResource WhiteBrush}">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-
-                <TextBlock Grid.Row="0" Text="Đặt Câu Hỏi Cho AI" FontSize="18" FontWeight="Bold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10"/>
-                <TextBox x:Name="QuestionTextBox" Grid.Row="1" TextWrapping="Wrap" Height="69" FontSize="20" VerticalContentAlignment="Top" AcceptsReturn="True" Margin="0,0,0,10"/>
-                <Grid Grid.Row="2">
+                <TextBlock Grid.Row="0" Text="Hỏi Đáp Với AI" FontSize="18" FontWeight="Bold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10"/>
+                <Border Grid.Row="1" BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="4">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Name="ConversationStackPanel"/>
+                    </ScrollViewer>
+                </Border>
+                <TextBlock Grid.Row="2" Text="Nhập Câu Hỏi" FontSize="15" FontWeight="Bold" Foreground="{StaticResource ForegroundBrush}" Margin="10,10,0,0"/>
+                <TextBox x:Name="QuestionTextBox" Grid.Row="3" TextWrapping="Wrap" Height="69" FontSize="20" VerticalContentAlignment="Top" AcceptsReturn="True" Margin="0,5,0,10"/>
+                <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -172,21 +209,6 @@
                 </Grid>
             </Grid>
         </Border>
-
-        <!-- Answer Section -->
-        <Border Grid.Row="4" BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" CornerRadius="4" Padding="15" Background="{StaticResource WhiteBrush}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Row="0" Text="Phản Hồi Của AI" FontSize="18" FontWeight="Bold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10"/>
-                
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <TextBlock x:Name="AnswerTextBlock" FontSize="20" Style="{StaticResource AnswerTextBlock}" Text="Câu trả lời sẽ hiển thị ở đây..."/>
-                </ScrollViewer>
-            </Grid>
-        </Border>
+        
     </Grid>
 </Window>
