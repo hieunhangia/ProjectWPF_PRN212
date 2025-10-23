@@ -49,7 +49,7 @@ namespace Service.seller_request
             _sellerRequestRepository.Add(sellerRequest);
         }
 
-        public void SaveUpdateRequest<T>(T entity, long oldEntityId,Seller seller)
+        public void SaveUpdateRequest<T>(T entity,T oldEntity,Seller seller)
         {
             var options = new JsonSerializerOptions
             {
@@ -62,7 +62,7 @@ namespace Service.seller_request
                 RequestTypeId = _sellerRequestTypeService.GetUpdateType()!.Id,
                 StatusId = _sellerRequestStatusService.GetPendingStatus()!.Id!,
                 CreatedAt = DateTime.Now,
-                OldContentId = oldEntityId,
+                OldContent = JsonSerializer.Serialize(oldEntity, options),
                 EntityName = typeof(T).Name
             };
             _sellerRequestRepository.Add(sellerRequest);

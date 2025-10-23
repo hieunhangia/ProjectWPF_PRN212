@@ -78,10 +78,35 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
                     <Button Content="Chấp thuận"
                             Width="150" Height="40" Margin="10,0" FontWeight="Bold"
-                            Click="AcceptRequest_Click"/>
+                            Click="AcceptRequest_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="IsEnabled" Value="False"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding StatusName}" Value="Đang Chờ Duyệt">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                     <Button Content="Từ chối"
                             Width="150" Height="40" Margin="10,0" FontWeight="Bold"
-                            Click="RejectRequest_Click"/>
+                            Click="RejectRequest_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="IsEnabled" Value="False"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding StatusName}" Value="Đang Chờ Duyệt">
+                                        <Setter Property="IsEnabled" Value="True"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
                     <Button Content="Quay lại"
                             Width="150" Height="40" Margin="10,0" FontWeight="Bold"
                             Click="BackButton_Click"/>

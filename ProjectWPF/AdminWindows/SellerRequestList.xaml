@@ -25,17 +25,7 @@
                         <DataTemplate>
                             <Button Content="Xem chi tiết" Margin="4,0" Padding="8,2" 
                                 Tag="{Binding Id}" Click="Button_Click">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="IsEnabled" Value="False"/>
-
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Status.Name}" Value="Đang Chờ Duyệt">
-                                                <Setter Property="IsEnabled" Value="True"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
+                                
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

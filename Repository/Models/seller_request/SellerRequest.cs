@@ -38,8 +38,9 @@ public partial class SellerRequest
     [Column(TypeName = "nvarchar(255)")]
     public string EntityName { get; set; } = null!;
 
-    [Column(TypeName = "BIGINT")]
-    public long? OldContentId { get; set; }
+
+    [Column(TypeName = "nvarchar(max)")]
+    public string? OldContent { get; set; } = null!;
 
     public virtual SellerRequestType RequestType { get; set; } = null!;
 
