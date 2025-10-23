@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Repository;
@@ -12,14 +13,18 @@ using System.Text.RegularExpressions;
 namespace AiSupporter
 {
     public partial class AiService(ProductService productService,
-        Kernel kernel,
+        IChatCompletionService chatCompletionService,
+        IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator,
+        VectorStoreCollection<string, VectorDataModel> vectorStoreCollection,
         VectorStoreTextSearch<VectorDataModel> vectorStoreTextSearch)
     {
         private readonly ProductService _productService = productService;
-        private readonly Kernel _kernel = kernel;
+        private readonly IChatCompletionService _chatCompletionService = chatCompletionService;
+        private readonly IEmbeddingGenerator<string, Embedding<float>> _embeddingGenerator = embeddingGenerator;
+        private readonly VectorStoreCollection<string, VectorDataModel> _vectorStoreCollection = vectorStoreCollection;
         private readonly VectorStoreTextSearch<VectorDataModel> _vectorStoreTextSearch = vectorStoreTextSearch;
 
-        public async Task SaveAllProductsExistedToVectorStore()
+        public async Task SaveAllExistedProductsToVectorStore()
         {
             foreach (var product in _productService.GetAllProducts())
             {
@@ -32,15 +37,15 @@ namespace AiSupporter
 
             string content = GetProductContent(product);
 
-            await _kernel.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>().UpsertAsync(new VectorDataModel
+            await _vectorStoreCollection.UpsertAsync(new VectorDataModel
             {
                 Id = product.Id.ToString(),
                 Content = content,
-                EmbeddingContent = (await _kernel.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>().GenerateAsync(content)).Vector
+                EmbeddingContent = (await _embeddingGenerator.GenerateAsync(content)).Vector
             });
         }
 
-        public static string GetProductContent(Product product)
+        private static string GetProductContent(Product product)
         {
             var sb = new StringBuilder();
             string unitName = product.ProductUnit.Name;
@@ -78,14 +83,18 @@ namespace AiSupporter
 
         public async Task<string> AskQuestion(string query)
         {
+            StringBuilder searchResult = new();
+            await foreach (var result in (await _vectorStoreTextSearch.GetTextSearchResultsAsync(query)).Results)
+            {
+                searchResult.AppendLine(result.Value);
+            }
 
-            string promptTemplate = """
+            string prompt = $"""
             Bạn nhận được thông tin về các sản phẩm trong kho hàng như sau:
-            {{context}}
-
+            {searchResult}
 
             Dựa vào thông tin sản phẩm được cung cấp ở trên, hãy trả lời câu hỏi sau một cách chính xác:
-            {{query}}
+            {query}
 
 
             Về vai trò và phong cách trả lời:
@@ -110,22 +119,7 @@ namespace AiSupporter
             - Tuyệt đối không nhắc đến các cụm từ như "dựa vào thông tin được cung cấp", "theo dữ liệu đã cho",...
             """;
 
-            var textResults = await _vectorStoreTextSearch.GetTextSearchResultsAsync(query, new() { Top = 5, Skip = 0 });
-            var sb = new StringBuilder();
-            await foreach (var result in textResults.Results)
-            {
-                sb.AppendLine(result.Value);
-            }
-
-            return (await _kernel.InvokePromptAsync(
-                promptTemplate,
-                new() {
-                    { "context", sb.ToString() },
-                    { "query", query },
-                },
-                templateFormat: HandlebarsPromptTemplateFactory.HandlebarsTemplateFormat,
-                promptTemplateFactory: new HandlebarsPromptTemplateFactory()
-            )).GetValue<string>()!;
+            return (await _chatCompletionService.GetChatMessageContentAsync(prompt)).Content!;
         }
     }
 

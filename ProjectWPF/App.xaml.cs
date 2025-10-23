@@ -81,14 +81,16 @@ namespace ProjectWPF
                 modelId: context.Configuration["GoogleVertexAiEmbeddingModel"]!,
                 location: context.Configuration["GoogleVertexAiEmbeddingLocation"]!
             );
-            services.AddPineconeCollection<VectorDataModel>(context.Configuration["PineconeIndexName"]!, context.Configuration["PineconeApiKey"]!);
-            services.AddSingleton(services =>
+            services.AddPineconeCollection<VectorDataModel>(
+                context.Configuration["PineconeIndexName"]!,
+                context.Configuration["PineconeApiKey"]!
+            );
+            services.AddSingleton(provider =>
             {
-                var collection = services.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>();
+                var collection = provider.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>();
                 collection.EnsureCollectionExistsAsync().Wait();
-                return new VectorStoreTextSearch<VectorDataModel>(collection, services.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>());
+                return new VectorStoreTextSearch<VectorDataModel>(collection, provider.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>());
             });
-            services.AddKernel();
             services.AddSingleton<AiService>();
 
             services.AddSingleton<CommuneWardRepository>();
