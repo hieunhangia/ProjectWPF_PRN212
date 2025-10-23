@@ -1,6 +1,4 @@
-﻿
-using AiSupporter;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +25,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Windows;
 using static Google.Protobuf.Reflection.SourceCodeInfo.Types;
+using AiSupporter;
 
 #pragma warning disable SKEXP0001
 namespace ProjectWPF
@@ -79,14 +78,12 @@ namespace ProjectWPF
             );
             services.AddKeyedSingleton<IChatCompletionService>("gemini-2.5-flash", gemini_2dot5_flash);
 
-            var gemini_2dot5_pro = new VertexAIGeminiChatCompletionService(
+            services.AddVertexAIGeminiChatCompletion(
                 projectId: context.Configuration["GoogleVertexAiProjectId"]!,
                 bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
                 modelId: context.Configuration["GoogleVertexAi2Dot5ProModel"]!,
                 location: context.Configuration["GoogleVertexAi2Dot5ProLocation"]!
             );
-            services.AddKeyedSingleton<IChatCompletionService>("gemini-2.5-pro", gemini_2dot5_pro);
-
             services.AddVertexAIEmbeddingGenerator(
                 projectId: context.Configuration["GoogleVertexAiProjectId"]!,
                 bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
@@ -161,6 +158,7 @@ namespace ProjectWPF
                 };
                 return value;
             });
+
             services.AddTransient<SellerWindows.AiSupporter>();
 
             services.AddSingleton<UserChangeListener>();

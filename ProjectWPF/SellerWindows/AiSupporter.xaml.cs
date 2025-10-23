@@ -1,10 +1,10 @@
-﻿using AiSupporter;
-using Microsoft.SemanticKernel.ChatCompletion;
+﻿using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.VisualBasic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using TableDependency.SqlClient.Base.Messages;
+using AiSupporter;
 
 namespace ProjectWPF.SellerWindows
 {

@@ -43,7 +43,7 @@ namespace AiSupporter
         private static string GetProductContent(Product product)
         {
             var sb = new StringBuilder();
-            string unitName = product.ProductUnit.Name;
+            string unitName = product.ProductUnit!.Name;
 
             sb.Append($"Tên sản phẩm: {product.Name}. Mô tả: '{product.Description}'. Đơn vị tính: {unitName}. Trạng thái kinh doanh: {(product.IsActive ? "Đang kinh doanh" : "Ngừng kinh doanh")}. ");
 
@@ -76,6 +76,19 @@ namespace AiSupporter
             return sb.ToString();
         }
 
+    }
+    public class VectorDataModel
+    {
+        [VectorStoreKey]
+        [TextSearchResultName]
+        public required string Id { get; set; }
+
+        [VectorStoreData]
+        [TextSearchResultValue]
+        public required string Content { get; set; }
+
+        [VectorStoreVector(Dimensions: 3072, DistanceFunction = DistanceFunction.CosineSimilarity)]
+        public ReadOnlyMemory<float> EmbeddingContent { get; set; }
     }
 
 }
