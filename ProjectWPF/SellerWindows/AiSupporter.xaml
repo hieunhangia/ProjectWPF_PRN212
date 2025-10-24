@@ -122,7 +122,7 @@
             <Setter Property="CornerRadius" Value="15,15,0,15"/>
             <Setter Property="Padding" Value="12,8"/>
             <Setter Property="Margin" Value="80,5,10,5"/>
-            <Setter Property="MaxWidth" Value="500"/>
+            <Setter Property="MaxWidth" Value="690"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
 
@@ -131,7 +131,7 @@
             <Setter Property="CornerRadius" Value="15,15,15,0"/>
             <Setter Property="Padding" Value="12,8"/>
             <Setter Property="Margin" Value="10,5,80,5"/>
-            <Setter Property="MaxWidth" Value="500"/>
+            <Setter Property="MaxWidth" Value="690"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
 

@@ -94,7 +94,7 @@ namespace ProjectWPF
                 context.Configuration["PineconeIndexName"]!,
                 context.Configuration["PineconeApiKey"]!
             );
-            services.AddSingleton(provider =>
+            services.AddSingleton<ITextSearch>(provider =>
             {
                 var collection = provider.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>();
                 collection.EnsureCollectionExistsAsync().Wait();

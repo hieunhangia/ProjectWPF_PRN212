@@ -11,10 +11,9 @@ using System.Threading.Tasks;
 #pragma warning disable SKEXP0001
 namespace AiSupporter
 {
-    public class AskAiService(
-        [FromKeyedServices("gemini-2.5-flash")] IChatCompletionService gemini_2dot5_flash,
+    public class AskAiService([FromKeyedServices("gemini-2.5-flash")] IChatCompletionService gemini_2dot5_flash,
         IChatCompletionService gemini_2dot5_pro,
-        VectorStoreTextSearch<VectorDataModel> vectorStoreTextSearch)
+        ITextSearch vectorStoreTextSearch)
     {
         private readonly ChatHistory _chatHistory = new("""
             Bạn là một "Trợ lý AI hỗ trợ Người bán hàng quản lý kho hàng về hoa quả", chuyên về hỗ trợ Người bán hàng về việc quản lý kho hàng về hoa quả.
@@ -39,10 +38,11 @@ namespace AiSupporter
                 CÁC LOẠI Ý ĐỊNH:
                 - "General": Khi người dùng chỉ muốn trò chuyện thông thường. Ví dụ: "Chào bạn", "Hôm nay bạn thế nào?", "Bạn là ai?".
                 - "RAG": Khi người dùng hỏi một câu hỏi cần tìm kiếm thông tin trong tài liệu, cơ sở kiến thức. Dưới đây là các ví dụ:
+                    - "Thông tin về loại hoa quả A trong kho?"
                     - "Loại hoa quả X còn bao nhiêu trong kho?"
                     - "Khi nào loại hoa quả Y hết hạn sử dụng?"
                     - "Tình trạng kinh doanh của loại hoa quả Z hiện tại như thế nào?"
-                    * Nếu yêu cầu của người dùng thuộc loại tìm kiếm thông tin nhưng không rõ ràng hoặc không liên quan đến việc quản lý kho hàng hoa quả, hãy phân loại nó vào "CannotAnswer".
+                    * Nếu yêu cầu của người dùng thuộc loại tìm kiếm thông tin nhưng không liên quan đến việc quản lý kho hàng hoa quả, hãy phân loại nó vào "CannotAnswer".
 
 
                 Ý định của người dùng là:
@@ -50,7 +50,9 @@ namespace AiSupporter
             
             var tempChatHistory = new ChatHistory(_chatHistory);
             tempChatHistory.AddUserMessage(prompt);
-            string response = (await gemini_2dot5_flash.GetChatMessageContentAsync(tempChatHistory)).Content switch
+            string intent = (await gemini_2dot5_flash.GetChatMessageContentAsync(tempChatHistory)).Content!;
+            await Task.Delay(1036);
+            string response = intent switch
             {
                 "General" => await AskGeneralQuestion(query),
                 "RAG" => await AskRAGQuestion(query),

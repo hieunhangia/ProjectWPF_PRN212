@@ -25,6 +25,28 @@ namespace ProjectWPF.SellerWindows
             InitializeComponent();
         }
 
+        private async void UpdateVectorDatabaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Bạn có chắc chắn muốn cập nhật cơ sở dữ liệu AI? Quá trình này có thể mất vài phút.",
+                "Xác Nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            UpdateVectorStoreNotiTextBlock.Text = "Đang cập nhật cơ sở dữ liệu AI, vui lòng chờ...";
+            UpdateVectorDatabaseButton.IsEnabled = false;
+            QuestionTextBox.IsEnabled = false;
+            SendQuestionButton.IsEnabled = false;
+
+            await _vectorStoreService.SaveAllExistedProductsToVectorStore();
+            MessageBox.Show("Cập nhật cơ sở dữ liệu AI thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            UpdateVectorStoreNotiTextBlock.Text = "";
+            UpdateVectorDatabaseButton.IsEnabled = true;
+            QuestionTextBox.IsEnabled = true;
+            SendQuestionButton.IsEnabled = true;
+        }
+
         private async void SendQuestionButton_Click(object sender, RoutedEventArgs e)
         {
             string question = QuestionTextBox.Text;
@@ -35,13 +57,17 @@ namespace ProjectWPF.SellerWindows
             }
 
             AskAiNotiTextBlock.Text = "Đang chờ phản hồi của AI...";
-            this.IsEnabled = false;
+            UpdateVectorDatabaseButton.IsEnabled = false;
+            QuestionTextBox.IsEnabled = false;
+            SendQuestionButton.IsEnabled = false;
 
             AddMessageToConversation(await _askAiService.AskQuestion(question));
 
             QuestionTextBox.Text = "";
             AskAiNotiTextBlock.Text = "";
-            this.IsEnabled = true;
+            UpdateVectorDatabaseButton.IsEnabled = true;
+            QuestionTextBox.IsEnabled = true;
+            SendQuestionButton.IsEnabled = true;
         }
 
         private void AddMessageToConversation(ChatHistory conversation)
@@ -69,24 +95,6 @@ namespace ProjectWPF.SellerWindows
             {
                 scrollViewer.ScrollToBottom();
             }
-        }
-
-        private async void UpdateVectorDatabaseButton_Click(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.Show("Bạn có chắc chắn muốn cập nhật cơ sở dữ liệu AI? Quá trình này có thể mất vài phút.",
-                "Xác Nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result != MessageBoxResult.Yes)
-                return;
-
-            UpdateVectorStoreNotiTextBlock.Text = "Đang cập nhật cơ sở dữ liệu AI, vui lòng chờ...";
-            this.IsEnabled = false;
-
-            await _vectorStoreService.SaveAllExistedProductsToVectorStore();
-            MessageBox.Show("Cập nhật cơ sở dữ liệu AI thành công!", "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            UpdateVectorStoreNotiTextBlock.Text = "";
-            this.IsEnabled = true;
         }
     }
 }
