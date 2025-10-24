@@ -7,13 +7,16 @@ namespace ProjectWPF.Validation
 {
     public class ProductValidator : AbstractValidator<ProductDto>
     {
+        private readonly ProductService _productService;
+
         public ProductValidator(ProductService productService)
         {
+            _productService = productService;
             // Validate Name
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Phải có tên sản phẩm.")
                 .MaximumLength(255).WithMessage("Tên sản phẩm có ĐỘ dài tối đa là 255 kí tự.")
-                .Must(newName => !productService.GetAllProducts().Any(p => ProductNameCompare(p.Name, newName)))
+                .Must(CheckUniqueName)
                 .WithMessage("Tên sản phẩm trùng với tên sản phẩm đã có sẵn");
 
             // Validate Description
@@ -32,17 +35,17 @@ namespace ProjectWPF.Validation
             // RuleForEach(x => x.ProductBatches)
             //     .SetValidator(new ProductBatchValidator());
         }
+
+        private bool CheckUniqueName(ProductDto product, string name)
+        {
+            return !_productService
+                .GetAllProducts()
+                .Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                       && p.Id != product.Id);
+        }
         private bool BePositive(string? price)
         {
             return decimal.TryParse(price, out var value) && value >= 0;
         }
-        //So sánh bỏ qua viết hoa viết thường
-        private bool ProductNameCompare(string name, string otherName)
-        {
-            return string.Compare(name, otherName,
-                CultureInfo.GetCultureInfo("vi-VN"),
-                CompareOptions.IgnoreCase) == 0;
-        }
-
     }
 }
