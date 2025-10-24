@@ -59,7 +59,7 @@ namespace ProjectWPF
 
             base.OnStartup(e);
 
-            _host.Services.GetRequiredService<SellerWindows.AiSupporter>().Show();
+            _host.Services.GetRequiredService<Login>().Show();
         }
 
         
