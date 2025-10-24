@@ -5,13 +5,126 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF"
         mc:Ignorable="d"
-        Title="Login">
-    <Grid>
-        <TextBlock HorizontalAlignment="Center" Margin="0,65,0,0" TextWrapping="Wrap" Text="Đăng Nhập" VerticalAlignment="Top" FontSize="99"/>
-        <Label Content="Email" HorizontalAlignment="Left" Margin="42,266,0,0" VerticalAlignment="Top" FontSize="36"/>
-        <TextBox x:Name="EmailTextBox" HorizontalAlignment="Left" Margin="233,270,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="676" FontSize="36"/>
-        <Label Content="Mật Khẩu" HorizontalAlignment="Left" Margin="42,372,0,0" VerticalAlignment="Top" FontSize="36"/>
-        <Button x:Name="LoginButton" Content="Đăng Nhập" HorizontalAlignment="Center" Margin="0,489,0,0" VerticalAlignment="Top" Height="86" Width="353" FontSize="55" BorderBrush="#FFE2EFCB" Click="LoginButton_Click" IsDefault="True"/>
-        <PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" Margin="233,380,0,0" VerticalAlignment="Top" Width="676" Height="50" PasswordChar="*" FontSize="36"/>
-    </Grid>
+        Title="Đăng Nhập"
+        Background="Transparent">
+
+    <Window.Resources>
+        <!-- Gradient cho background -->
+        <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFE8F5E9" Offset="0"/>
+            <GradientStop Color="#FFF1F8E9" Offset="0.5"/>
+            <GradientStop Color="#FFFFF3E0" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Gradient cho nút đăng nhập -->
+        <LinearGradientBrush x:Key="ButtonGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#FF66BB6A" Offset="0"/>
+            <GradientStop Color="#FF4CAF50" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Style cho Button -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource ButtonGradient}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="12"
+                                Padding="20,12">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{StaticResource BackgroundGradient}">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" 
+                            Direction="315" 
+                            ShadowDepth="10" 
+                            BlurRadius="20" 
+                            Opacity="0.3"/>
+        </Border.Effect>
+
+        <Grid>
+            <Border Background="White" 
+                    CornerRadius="0,20,20,0"
+                    Padding="60,40">
+                <StackPanel VerticalAlignment="Center" 
+                           MaxWidth="400">
+
+                    <!-- Tiêu đề đăng nhập -->
+                    <TextBlock Text="ĐĂNG NHẬP" 
+                              FontSize="69"  
+                              Foreground="#FF4CAF50" 
+                              HorizontalAlignment="Center"
+                               Padding="10,10,10,10"
+                              Margin="0,0,0,10" Height="161"/>
+
+                    <!-- Email -->
+                    <TextBlock Text="Email" 
+                              FontSize="16" 
+                              FontWeight="SemiBold" 
+                              Foreground="#FF333333" 
+                              Margin="0,0,0,8"/>
+
+                    <Border Background="White" 
+                           BorderBrush="#FFBDBDBD" 
+                           BorderThickness="1"
+                           Margin="0,0,0,25">
+                        <TextBox x:Name="EmailTextBox" FontSize="22" 
+                                BorderThickness="0" Height="37"/>
+                    </Border>
+
+                    <!-- Mật khẩu -->
+                    <TextBlock Text="Mật Khẩu" 
+                              FontSize="16" 
+                              FontWeight="SemiBold" 
+                              Foreground="#FF333333" 
+                              Margin="0,0,0,8"/>
+
+                    <Border Background="White" 
+                           BorderBrush="#FFBDBDBD" 
+                           BorderThickness="1"
+                           Margin="0,0,0,35">
+                        <PasswordBox x:Name="PasswordBox" FontSize="22" 
+                                    PasswordChar="●" 
+                                    BorderThickness="0" Height="37"/>
+                    </Border>
+
+                    <!-- Nút đăng nhập -->
+                    <Button x:Name="LoginButton" 
+                           Content="ĐĂNG NHẬP" 
+                           Style="{StaticResource ModernButton}"
+                           Height="55"
+                           Margin="0,10,0,0"
+                           Click="LoginButton_Click" 
+                           IsDefault="True">
+                        <Button.Effect>
+                            <DropShadowEffect Color="#FF4CAF50" 
+                                            Direction="270" 
+                                            ShadowDepth="3" 
+                                            BlurRadius="12" 
+                                            Opacity="0.4"/>
+                        </Button.Effect>
+                    </Button>
+
+                    <!-- Footer text -->
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
 </Window>

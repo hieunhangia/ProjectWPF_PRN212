@@ -78,9 +78,19 @@ namespace ProjectWPF.SellerWindows
                     ProductUnit = _productUnitService.GetById(p.ProductUnit.Id)!
                 };
                 _sellerRequestService.SaveAddRequest(product, _loggedInSeller);
+                MessageBox.Show("Gửi yêu cầu tạo sản phẩm thành công!\nYêu cầu của bạn sẽ được xem xét bởi quản trị viên.", 
+                               "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Close();   
-                MessageBox.Show("Thêm yêu cầu tạo sản phẩm thành công");
-                
+            }
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Bạn có chắc chắn muốn hủy? Các thông tin đã nhập sẽ không được lưu.", 
+                                        "Xác Nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                this.Close();
             }
         }
     }

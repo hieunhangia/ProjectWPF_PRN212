@@ -5,11 +5,196 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.AdminWindows"
         mc:Ignorable="d"
-        Title="MainWindow">
-    <Grid>
-        <Button x:Name="LogoutButton" Content="Đăng xuất" HorizontalAlignment="Left" Margin="723,55,0,0" VerticalAlignment="Top" Height="65" Width="175" FontSize="36" Click="LogoutButton_Click"/>
-        <Button x:Name="SellerManagerButton" Content="Quản Lý Người Bán" HorizontalAlignment="Left" Margin="287,136,0,0" VerticalAlignment="Top" Height="96" Width="344" FontSize="36" Click="SellerManagerButton_Click"/>
-        <Button x:Name="SellerRequestButton" Content="Quản Lý Yêu Cầu Của Người Bán" HorizontalAlignment="Left" Margin="121,315,0,0" VerticalAlignment="Top" Height="96" Width="624" FontSize="36" Click="SellerRequestButton_Click"/>
+        Title="Quản Trị Viên - Trang Chủ"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5"
+        MinWidth="1000"
+        MinHeight="700"
+        Width="1200"
+        Height="800">
 
+    <Window.Resources>
+        <!-- Colors -->
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#007ACC"/>
+        <SolidColorBrush x:Key="SecondaryBrush" Color="#4CAF50"/>
+        <SolidColorBrush x:Key="DangerBrush" Color="#F44336"/>
+        <SolidColorBrush x:Key="WarningBrush" Color="#FF9800"/>
+        <SolidColorBrush x:Key="InfoBrush" Color="#2196F3"/>
+        <SolidColorBrush x:Key="PurpleBrush" Color="#9C27B0"/>
+        <SolidColorBrush x:Key="LightGrayBrush" Color="#E0E0E0"/>
+        <SolidColorBrush x:Key="DarkGrayBrush" Color="#757575"/>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#F5F5F5"/>
+        <SolidColorBrush x:Key="ForegroundBrush" Color="#212121"/>
+        <SolidColorBrush x:Key="WhiteBrush" Color="White"/>
+
+        <!-- Card Button Style -->
+        <Style x:Key="CardButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightGrayBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="30"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FAFAFA"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#F0F0F0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Logout Button Style -->
+        <Style x:Key="LogoutButton" TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" CornerRadius="4" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Header -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top Bar -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="30,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Trang Quản Trị" FontSize="32" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+
+                <Button x:Name="LogoutButton" Grid.Column="1" Content="🚪 Đăng Xuất" 
+                        Style="{StaticResource LogoutButton}" Click="LogoutButton_Click"
+                        VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="30">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Welcome Section -->
+                <Border Grid.Row="0" Background="{StaticResource WhiteBrush}" 
+                        BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" 
+                        CornerRadius="8" Padding="25" Margin="0,0,0,30">
+                    <StackPanel>
+                        <TextBlock Text="👋 Chào mừng quay trở lại!" FontSize="24" FontWeight="Bold" 
+                                   Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10"/>
+                        <TextBlock Text="Chọn một trong các chức năng quản lý bên dưới." 
+                                   FontSize="14" Foreground="{StaticResource DarkGrayBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Menu Cards -->
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Seller Management Card -->
+                    <Button x:Name="SellerManagerButton" Grid.Row="0" Style="{StaticResource CardButton}" 
+                            Click="SellerManagerButton_Click" Margin="0,0,0,20" MinHeight="150">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Icon -->
+                            <Border Grid.Column="0" Background="#E3F2FD" Width="80" Height="80" 
+                                    CornerRadius="40" Margin="0,0,25,0">
+                                <TextBlock Text="👥" FontSize="40" HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Content -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Quản Lý Người Bán" FontSize="24" FontWeight="Bold" 
+                                           Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
+                                <TextBlock Text="Xem, thêm, sửa, xóa thông tin người bán trong hệ thống" 
+                                           FontSize="14" Foreground="{StaticResource DarkGrayBrush}" 
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <!-- Seller Request Management Card -->
+                    <Button x:Name="SellerRequestButton" Grid.Row="1" Style="{StaticResource CardButton}" 
+                            Click="SellerRequestButton_Click" MinHeight="150">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Icon -->
+                            <Border Grid.Column="0" Background="#FFF3E0" Width="80" Height="80" 
+                                    CornerRadius="40" Margin="0,0,25,0">
+                                <TextBlock Text="📋" FontSize="40" HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Content -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Quản Lý Yêu Cầu Của Người Bán" FontSize="24" FontWeight="Bold" 
+                                           Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,8"/>
+                                <TextBlock Text="Xem xét và phê duyệt các yêu cầu tạo, cập nhật sản phẩm từ người bán" 
+                                           FontSize="14" Foreground="{StaticResource DarkGrayBrush}" 
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>

@@ -5,45 +5,213 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.SellerWindows"
         mc:Ignorable="d"
-        Title="CreateProductRequest" Height="450" Width="800">
+        Title="Yêu Cầu Tạo Sản Phẩm"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5"
+        MinWidth="800"
+        MinHeight="650"
+        Width="850"
+        Height="700">
+
+    <Window.Resources>
+        <!-- Colors -->
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#007ACC"/>
+        <SolidColorBrush x:Key="SecondaryBrush" Color="#4CAF50"/>
+        <SolidColorBrush x:Key="DangerBrush" Color="#F44336"/>
+        <SolidColorBrush x:Key="WarningBrush" Color="#FF9800"/>
+        <SolidColorBrush x:Key="LightGrayBrush" Color="#E0E0E0"/>
+        <SolidColorBrush x:Key="DarkGrayBrush" Color="#757575"/>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#F5F5F5"/>
+        <SolidColorBrush x:Key="ForegroundBrush" Color="#212121"/>
+        <SolidColorBrush x:Key="WhiteBrush" Color="White"/>
+
+        <!-- Base Styles -->
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkGrayBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightGrayBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" CornerRadius="4" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalScrollBarVisibility="Auto"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightGrayBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="LayoutTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BaseButton" TargetType="Button">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" CornerRadius="4" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Button Styles -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+        </Style>
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+        </Style>
+        <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="{StaticResource DarkGrayBrush}"/>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Yêu cầu tạo sản phẩm" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Label Content="Tên sản phẩm:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-            <TextBox x:Name="ProductNameTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10"/>
-            <Label Content="Mô tả:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-            <TextBox x:Name="DescriptionTextBox" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" Height="50" AcceptsReturn="True" TextWrapping="Wrap"/>
-            <Label Content="Giá:" Grid.Row="2" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-            <TextBox x:Name="PriceTextBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10"/>
-            <Label Content="Kích hoạt?" Grid.Row="3" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-            <CheckBox x:Name="IsActiveCheckBox" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" VerticalAlignment="Center" IsThreeState="False"/>
-            <Label Content="Đơn vị" Grid.Row="4" Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center"/>
-            <ComboBox x:Name="UnitComboBox" Grid.Row="4" Grid.Column="1" Margin="0,0,0,0" >
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            <Button x:Name="Submit" Grid.Row="5" Grid.ColumnSpan="2" Width="100" Content="Tao San Pham" Margin="0 20 0 0" Click="Submit_Click"></Button>
-        </Grid>
-        
+
+        <!-- Title -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="Yêu Cầu Tạo Sản Phẩm Mới" FontSize="32" FontWeight="Bold" 
+                       Foreground="{StaticResource ForegroundBrush}"/>
+            <TextBlock Text="Gửi yêu cầu tạo sản phẩm mới đến quản trị viên để xem xét" 
+                       FontSize="14" Foreground="{StaticResource DarkGrayBrush}" Margin="0,5,0,0"/>
+        </StackPanel>
+
+        <!-- Form Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Border BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" 
+                    CornerRadius="4" Padding="25" Background="{StaticResource WhiteBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Product Name -->
+                    <Label Content="Tên sản phẩm:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,15"/>
+                    <TextBox x:Name="ProductNameTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,15"/>
+
+                    <!-- Description -->
+                    <Label Content="Mô tả:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,15" VerticalAlignment="Top"/>
+                    <TextBox x:Name="DescriptionTextBox" Grid.Row="1" Grid.Column="1" 
+                             Margin="0,0,0,15" Height="100" 
+                             AcceptsReturn="True" TextWrapping="Wrap" 
+                             VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto"/>
+
+                    <!-- Price -->
+                    <Label Content="Giá (VND):" Grid.Row="2" Grid.Column="0" Margin="0,0,10,15"/>
+                    <TextBox x:Name="PriceTextBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,15"/>
+
+                    <!-- Unit -->
+                    <Label Content="Đơn vị:" Grid.Row="3" Grid.Column="0" Margin="0,0,10,15"/>
+                    <ComboBox x:Name="UnitComboBox" Grid.Row="3" Grid.Column="1" Margin="0,0,0,15">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <!-- Is Active -->
+                    <Label Content="Trạng thái:" Grid.Row="4" Grid.Column="0" Margin="0,0,10,15"/>
+                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,15">
+                        <CheckBox x:Name="IsActiveCheckBox" IsThreeState="False" VerticalAlignment="Center"/>
+                        <TextBlock Text="Kích hoạt sản phẩm" FontSize="15" 
+                                   Foreground="{StaticResource DarkGrayBrush}" 
+                                   VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Info Box -->
+                    <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" 
+                            Background="#E8F5E9" BorderBrush="{StaticResource SecondaryBrush}" 
+                            BorderThickness="1" CornerRadius="4" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="ℹ️ Lưu ý" FontWeight="Bold" FontSize="14" 
+                                       Foreground="{StaticResource SecondaryBrush}" Margin="0,0,0,5"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="13" 
+                                       Foreground="{StaticResource DarkGrayBrush}">
+                                <Run Text="• Yêu cầu tạo sản phẩm sẽ được gửi đến quản trị viên để xem xét"/>
+                                <LineBreak/>
+                                <Run Text="• Sản phẩm sẽ chỉ được thêm vào hệ thống sau khi yêu cầu được phê duyệt"/>
+                                <LineBreak/>
+                                <Run Text="• Bạn có thể kiểm tra trạng thái yêu cầu trong danh sách yêu cầu"/>
+                                <LineBreak/>
+                                <Run Text="• Đảm bảo thông tin sản phẩm chính xác trước khi gửi"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </ScrollViewer>
+
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <Button x:Name="CancelButton" Content="Hủy" Style="{StaticResource CloseButton}" 
+                    Margin="0,0,15,0" Click="CancelButton_Click"/>
+            <Button x:Name="Submit" Content="✨ Tạo Sản Phẩm" Style="{StaticResource SecondaryButton}" 
+                    Click="Submit_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

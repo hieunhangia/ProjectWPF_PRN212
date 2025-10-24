@@ -100,11 +100,20 @@ namespace ProjectWPF.SellerWindows
                     ProductUnit = product.ProductUnit
                 };
                 _sellerRequestService.SaveUpdateRequest(p, _productService.GetProductById(_productId),_seller);
+                MessageBox.Show("Gửi yêu cầu chỉnh sửa sản phẩm thành công!\nYêu cầu của bạn sẽ được xem xét bởi quản trị viên.", 
+                               "Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.Close();
-                MessageBox.Show("Thêm yêu cầu chỉnh sửa sản phẩm thành công", "Thông báo",
-                               MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Bạn có chắc chắn muốn hủy? Các thay đổi sẽ không được lưu.", 
+                                        "Xác Nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                this.Close();
+            }
+        }
     }
 }
