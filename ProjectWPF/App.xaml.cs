@@ -70,36 +70,36 @@ namespace ProjectWPF
                 options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            var gemini_2dot5_flash = new VertexAIGeminiChatCompletionService(
-                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
-                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
-                modelId: context.Configuration["GoogleVertexAi2Dot5FlashModel"]!,
-                location: context.Configuration["GoogleVertexAi2Dot5FlashLocation"]!
-            );
-            services.AddKeyedSingleton<IChatCompletionService>("gemini-2.5-flash", gemini_2dot5_flash);
+            //var gemini_2dot5_flash = new VertexAIGeminiChatCompletionService(
+            //    projectId: context.Configuration["GoogleVertexAiProjectId"]!,
+            //    bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
+            //    modelId: context.Configuration["GoogleVertexAi2Dot5FlashModel"]!,
+            //    location: context.Configuration["GoogleVertexAi2Dot5FlashLocation"]!
+            //);
+            //services.AddKeyedSingleton<IChatCompletionService>("gemini-2.5-flash", gemini_2dot5_flash);
 
-            services.AddVertexAIGeminiChatCompletion(
-                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
-                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
-                modelId: context.Configuration["GoogleVertexAi2Dot5ProModel"]!,
-                location: context.Configuration["GoogleVertexAi2Dot5ProLocation"]!
-            );
-            services.AddVertexAIEmbeddingGenerator(
-                projectId: context.Configuration["GoogleVertexAiProjectId"]!,
-                bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
-                modelId: context.Configuration["GoogleVertexAiEmbeddingModel"]!,
-                location: context.Configuration["GoogleVertexAiEmbeddingLocation"]!
-            );
-            services.AddPineconeCollection<VectorDataModel>(
-                context.Configuration["PineconeIndexName"]!,
-                context.Configuration["PineconeApiKey"]!
-            );
-            services.AddSingleton<ITextSearch>(provider =>
-            {
-                var collection = provider.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>();
-                collection.EnsureCollectionExistsAsync().Wait();
-                return new VectorStoreTextSearch<VectorDataModel>(collection, provider.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>());
-            });
+            //services.AddVertexAIGeminiChatCompletion(
+            //    projectId: context.Configuration["GoogleVertexAiProjectId"]!,
+            //    bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
+            //    modelId: context.Configuration["GoogleVertexAi2Dot5ProModel"]!,
+            //    location: context.Configuration["GoogleVertexAi2Dot5ProLocation"]!
+            //);
+            //services.AddVertexAIEmbeddingGenerator(
+            //    projectId: context.Configuration["GoogleVertexAiProjectId"]!,
+            //    bearerKey: context.Configuration["GoogleVertexAiBearerKey"]!,
+            //    modelId: context.Configuration["GoogleVertexAiEmbeddingModel"]!,
+            //    location: context.Configuration["GoogleVertexAiEmbeddingLocation"]!
+            //);
+            //services.AddPineconeCollection<VectorDataModel>(
+            //    context.Configuration["PineconeIndexName"]!,
+            //    context.Configuration["PineconeApiKey"]!
+            //);
+            //services.AddSingleton<ITextSearch>(provider =>
+            //{
+            //    var collection = provider.GetRequiredService<VectorStoreCollection<string, VectorDataModel>>();
+            //    collection.EnsureCollectionExistsAsync().Wait();
+            //    return new VectorStoreTextSearch<VectorDataModel>(collection, provider.GetRequiredService<IEmbeddingGenerator<string, Embedding<float>>>());
+            //});
             services.AddSingleton<VectorStoreService>();
             services.AddTransient<AskAiService>();
 
