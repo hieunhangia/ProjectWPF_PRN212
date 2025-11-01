@@ -9,9 +9,8 @@ namespace Service.user
 
         public User Login(string email, string password)
         {
-            var user = _userRepository.GetByCondition(u => u.Email == email && u.Password == password).FirstOrDefault();
-
-            if (user != null)
+            var user = _userRepository.GetByCondition(u => u.Email == email).FirstOrDefault();
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
                 if (user.IsActive)
                 {

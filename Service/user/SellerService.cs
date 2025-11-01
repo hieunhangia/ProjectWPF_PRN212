@@ -71,7 +71,7 @@ namespace Service.user
             Seller seller = new()
             {
                 Email = email,
-                Password = password,
+                Password = BCrypt.Net.BCrypt.HashPassword(password),
                 IsActive = isActive,
                 FullName = fullName,
                 BirthDate = birthDate.Value,
@@ -83,7 +83,7 @@ namespace Service.user
         }
 
         public void UpdateExistingSeller(Seller sellerToUpdate,
-            string? password,
+            string password,
             string fullName,
             DateOnly? birthDate,
             string identify,
@@ -92,8 +92,7 @@ namespace Service.user
             string specificAddress,
             bool isActive)
         {
-            if (string.IsNullOrWhiteSpace(password) ||
-                string.IsNullOrWhiteSpace(fullName) ||
+            if (string.IsNullOrWhiteSpace(fullName) ||
                 birthDate == null ||
                 string.IsNullOrWhiteSpace(identify) ||
                 provinceCity == "default" ||
@@ -103,7 +102,9 @@ namespace Service.user
                 throw new Exception("Có một hoặc nhiều thông tin chưa được nhập.");
             }
 
-            if (!IsValidPassword(password))
+            bool isUpdatePassword = !string.IsNullOrWhiteSpace(password);
+
+            if (isUpdatePassword && !IsValidPassword(password))
             {
                 throw new Exception("Mật khẩu phải trong khoảng 6-50 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
             }
@@ -123,7 +124,10 @@ namespace Service.user
                 throw new Exception("CMND/CCCD đã tồn tại.");
             }
 
-            sellerToUpdate.Password = password;
+            if (isUpdatePassword)
+            {
+                sellerToUpdate.Password = BCrypt.Net.BCrypt.HashPassword(password);
+            }
             sellerToUpdate.FullName = fullName;
             sellerToUpdate.BirthDate = birthDate.Value;
             sellerToUpdate.Cid = identify;

@@ -107,7 +107,7 @@
                     <TextBlock Text="Trang Quản Trị" FontSize="32" FontWeight="Bold" Foreground="White"/>
                 </StackPanel>
 
-                <Button x:Name="LogoutButton" Grid.Column="1" Content="🚪 Đăng Xuất" 
+                <Button x:Name="LogoutButton" Grid.Column="1" Content="Đăng Xuất" 
                         Style="{StaticResource LogoutButton}" Click="LogoutButton_Click"
                         VerticalAlignment="Center"/>
             </Grid>

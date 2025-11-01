@@ -169,7 +169,10 @@
                 <TextBox x:Name="EmailTextBox" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="10"/>
 
                 <!-- Row 1: Password -->
-                <Label Content="Mật Khẩu" Grid.Row="1" Grid.Column="0" Margin="10"/>
+                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" Margin="10">
+                    <Label x:Name="PasswordLabel" Content="Mật Khẩu"/>
+                    <Label x:Name="PasswordHintLabel" Content="*Để trống nếu không thay đổi" FontSize="11" Foreground="{StaticResource DarkGrayBrush}"/>
+                </StackPanel>
                 <TextBox x:Name="PasswordTextBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="10"/>
 
                 <!-- Row 2: Full Name -->

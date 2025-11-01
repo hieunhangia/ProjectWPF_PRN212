@@ -10,10 +10,10 @@ namespace Repository.Models.user
         [Column("id")]
         public long Id { get; set; }
 
-        [Column("email", TypeName = "nvarchar(255)")]
+        [Column("email", TypeName = "varchar(255)")]
         public string? Email { get; set; }
 
-        [Column("password", TypeName = "nvarchar(255)")]
+        [Column("password", TypeName = "varchar(255)")]
         public string? Password { get; set; }
 
         [Column("enabled")]

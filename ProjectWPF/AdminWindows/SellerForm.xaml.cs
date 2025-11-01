@@ -43,6 +43,7 @@ namespace ProjectWPF.AdminWindows
                 Title = "Thêm Mới Người Bán";
                 SaveSellerTitleTextBlock.Text = "Thêm Mới Người Bán";
                 SaveSellerButton.Content = "Thêm Mới Người Bán";
+                PasswordHintLabel.Visibility = Visibility.Collapsed;
                 UpdateSellerAskButton.Visibility = Visibility.Collapsed;
                 DeleteSellerButton.Visibility = Visibility.Collapsed;
                 CommuneWardComboBox.ItemsSource = new List<CommuneWard> { new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" } };
@@ -170,7 +171,9 @@ namespace ProjectWPF.AdminWindows
             _isInUpdateMode = false;
 
             EmailTextBox.IsHitTestVisible = false;
-            PasswordTextBox.IsHitTestVisible = false;
+            PasswordTextBox.Visibility = Visibility.Collapsed;
+            PasswordLabel.Visibility = Visibility.Collapsed;
+            PasswordHintLabel.Visibility = Visibility.Collapsed;
             FullNameTextBox.IsHitTestVisible = false;
             BirthDatePicker.IsHitTestVisible = false;
             IdentifyTextBox.IsHitTestVisible = false;
@@ -189,7 +192,9 @@ namespace ProjectWPF.AdminWindows
         {
             _isInUpdateMode = true;
 
-            PasswordTextBox.IsHitTestVisible = true;
+            PasswordTextBox.Visibility = Visibility.Visible;
+            PasswordLabel.Visibility = Visibility.Visible;
+            PasswordHintLabel.Visibility = Visibility.Visible;
             FullNameTextBox.IsHitTestVisible = true;
             BirthDatePicker.IsHitTestVisible = true;
             IdentifyTextBox.IsHitTestVisible = true;
@@ -211,9 +216,8 @@ namespace ProjectWPF.AdminWindows
             communeWards.Insert(0, new() { Code = "default", Name = "Chọn Xã/Phường", ProvinceCityCode = "0" });
             CommuneWardComboBox.ItemsSource = communeWards;
             CommuneWardComboBox.SelectedValue = _sellerToUpdate.CommuneWardCode;
-
             EmailTextBox.Text = _sellerToUpdate.Email;
-            PasswordTextBox.Text = _sellerToUpdate.Password;
+            PasswordTextBox.Text = "";
             FullNameTextBox.Text = _sellerToUpdate.FullName;
             BirthDatePicker.SelectedDate = _sellerToUpdate.BirthDate.ToDateTime(TimeOnly.MinValue);
             IdentifyTextBox.Text = _sellerToUpdate.Cid;

@@ -26,6 +26,7 @@ using System.Text.Json;
 using System.Windows;
 using static Google.Protobuf.Reflection.SourceCodeInfo.Types;
 using AiSupporter;
+using System.IO;
 
 #pragma warning disable SKEXP0001
 namespace ProjectWPF
@@ -55,6 +56,7 @@ namespace ProjectWPF
                 var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<Repository.DbContext>>();
                 using var context = contextFactory.CreateDbContext();
                 context.Database.EnsureCreated();
+                InitData(context);
             }
 
             base.OnStartup(e);
@@ -162,6 +164,58 @@ namespace ProjectWPF
             services.AddTransient<SellerWindows.AiSupporter>();
 
             services.AddSingleton<UserChangeListener>();
+        }
+
+        private static void InitData(Repository.DbContext context)
+        {
+            context.Database.ExecuteSqlRaw(File.ReadAllText("database/address.sql"));
+            context.Database.ExecuteSqlRaw(File.ReadAllText("database/product.sql"));
+            context.Database.ExecuteSqlRaw(File.ReadAllText("database/seller request.sql"));
+
+            Admin admin = new()
+            {
+                Email = "admin@shop.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+                IsActive = true
+            };
+            Seller seller1 = new()
+            {
+                Email = "s1@shop.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("Seller@123"),
+                IsActive = true,
+                FullName = "Hoá Thanh Sư",
+                BirthDate = DateOnly.FromDateTime(new DateTime(2003,06,09)),
+                Cid = "363636363636",
+                CommuneWardCode = "16279",
+                SpecificAddress = "Đường Tàu"
+            };
+            Seller seller2 = new()
+            {
+                Email = "s2@shop.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("Seller@123"),
+                IsActive = true,
+                FullName = "Trà Từ Tay",
+                BirthDate = DateOnly.FromDateTime(new DateTime(2009, 03, 06)),
+                Cid = "120120120",
+                CommuneWardCode = "08980",
+                SpecificAddress = "Ngõ 120"
+            };
+            Seller seller3 = new()
+            {
+                Email = "s3@shop.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("Seller@123"),
+                IsActive = true,
+                FullName = "Khả Se Ni",
+                BirthDate = DateOnly.FromDateTime(new DateTime(2006, 09, 03)),
+                Cid = "888888888",
+                CommuneWardCode = "11443",
+                SpecificAddress = "Bệnh Viện"
+            };
+            context.Add(admin);
+            context.Add(seller1);
+            context.Add(seller2);
+            context.Add(seller3);
+            context.SaveChanges();
         }
 
         protected override async void OnExit(ExitEventArgs e)
