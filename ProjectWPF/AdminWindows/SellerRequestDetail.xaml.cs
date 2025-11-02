@@ -1,8 +1,10 @@
-﻿using Grpc.Core;
-using ProjectWPF.Models;
+﻿using ProjectWPF.Models;
 using Repository;
+using Repository.dto;
 using Service.product;
 using Service.seller_request;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Windows;
 
@@ -20,29 +22,53 @@ namespace ProjectWPF.AdminWindows
         public string StatusName { get; init; }
         public Product? OldProduct { get; init; }
         public Product? NewProduct { get; init; }
-        public SellerRequestDetail(long sellerRequestId
-            , SellerRequestService sellerRequestService
-            ,ProductService productService
-            ,ProductUnitService productUnitService)
+        public List<ProductBatchDto> NewProductBatches { get; init; }
+        public Visibility NewProductBatchesVisibility { get; init; }
+
+        public SellerRequestDetail(long sellerRequestId,
+            SellerRequestService sellerRequestService,
+            ProductService productService,
+            ProductUnitService productUnitService)
         {
             _productUnitService = productUnitService;
             _sellerRequestId = sellerRequestId;
             _sellerRequestService = sellerRequestService;
             _productService = productService;
+            
             SellerRequest sellerRequest = _sellerRequestService.getSellerRequestById(_sellerRequestId)!;
             StatusName = _sellerRequestService.getSellerRequestById(sellerRequestId)?.Status.Name!;
+            
             NewProduct = JsonSerializer.Deserialize<Product>(sellerRequest.Content);
+            NewProductBatches = new List<ProductBatchDto>();
+            
+            // Check if Product has batches
+            if (NewProduct?.ProductBatches != null && NewProduct.ProductBatches.Any())
+            {
+                NewProductBatches = NewProduct.ProductBatches.Select(b => new ProductBatchDto
+                {
+                    Id = b.Id,
+                    ExpiryDate = b.ExpiryDate.ToString("dd/MM/yyyy"),
+                    Quantity = b.Quantity.ToString(),
+                    ProductId = b.ProductId
+                }).ToList();
+                NewProductBatchesVisibility = Visibility.Visible;
+            }
+            else
+            {
+                NewProductBatchesVisibility = Visibility.Collapsed;
+            }
+            
             if (sellerRequest.OldContent != null)
             {
                 OldProduct = JsonSerializer.Deserialize<Product>(sellerRequest.OldContent);
             }
+            
             InitializeComponent();
             InitData();
         }
 
         private void InitData()
         {
-
             if (NewProduct == null)
             {
                 MessageBox.Show("Nội dung yêu cầu không hợp lệ", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -58,16 +84,40 @@ namespace ProjectWPF.AdminWindows
 
         private void AcceptRequest_Click(object sender, RoutedEventArgs e)
         {
-            _sellerRequestService.approveRequest<Product>(_sellerRequestId, _productService.AddProduct, _productService.UpdateProduct);
-            this.Close();
-            MessageBox.Show("Thành công chấp nhận yêu cầu sản phẩm");
+            string batchInfo = NewProductBatches.Count > 0 
+                ? $"\n\nSản phẩm có {NewProductBatches.Count} lô hàng sẽ được thêm vào hệ thống." 
+                : "";
+
+            var confirmResult = MessageBox.Show(
+                $"Bạn có chắc chắn muốn chấp thuận yêu cầu này?{batchInfo}", 
+                "Xác Nhận", 
+                MessageBoxButton.YesNo, 
+                MessageBoxImage.Question);
+
+            if (confirmResult == MessageBoxResult.Yes)
+            {
+                _sellerRequestService.approveRequest<Product>(_sellerRequestId, _productService.AddProduct, _productService.UpdateProduct);
+                this.Close();
+                MessageBox.Show("Thành công chấp nhận yêu cầu sản phẩm" + batchInfo, "Thành Công", 
+                               MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
         
         private void RejectRequest_Click(object sender, RoutedEventArgs e)
         {
-            _sellerRequestService.RejectRequest(_sellerRequestId);
-            this.Close();
-            MessageBox.Show("Thành công huỷ yêu cầu thay đổi sản phẩm");
+            var confirmResult = MessageBox.Show(
+                "Bạn có chắc chắn muốn từ chối yêu cầu này?", 
+                "Xác Nhận", 
+                MessageBoxButton.YesNo, 
+                MessageBoxImage.Question);
+
+            if (confirmResult == MessageBoxResult.Yes)
+            {
+                _sellerRequestService.RejectRequest(_sellerRequestId);
+                this.Close();
+                MessageBox.Show("Thành công huỷ yêu cầu thay đổi sản phẩm", "Thành Công", 
+                               MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

@@ -8,10 +8,10 @@
         Title="Yêu Cầu Cập Nhật Sản Phẩm"
         WindowStartupLocation="CenterScreen"
         Background="#F5F5F5"
-        MinWidth="800"
-        MinHeight="650"
-        Width="850"
-        Height="700">
+        MinWidth="900"
+        MinHeight="750"
+        Width="950"
+        Height="800">
 
     <Window.Resources>
         <!-- Colors -->
@@ -79,6 +79,14 @@
             </Setter>
         </Style>
 
+        <Style TargetType="DatePicker">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightGrayBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="{StaticResource WhiteBrush}"/>
+        </Style>
+
         <Style x:Key="BaseButton" TargetType="Button">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -111,8 +119,16 @@
         <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
             <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
         </Style>
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+        </Style>
         <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
             <Setter Property="Background" Value="{StaticResource DarkGrayBrush}"/>
+        </Style>
+
+        <Style x:Key="SmallButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="12,6"/>
         </Style>
     </Window.Resources>
 
@@ -127,76 +143,174 @@
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
             <TextBlock Text="Yêu Cầu Cập Nhật Sản Phẩm" FontSize="32" FontWeight="Bold" 
                        Foreground="{StaticResource ForegroundBrush}"/>
-            <TextBlock Text="Gửi yêu cầu chỉnh sửa thông tin sản phẩm đến quản trị viên" 
+            <TextBlock Text="Gửi yêu cầu chỉnh sửa thông tin sản phẩm và thêm lô hàng đến quản trị viên" 
                        FontSize="14" Foreground="{StaticResource DarkGrayBrush}" Margin="0,5,0,0"/>
         </StackPanel>
 
         <!-- Form Content -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <Border BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" 
-                    CornerRadius="4" Padding="25" Background="{StaticResource WhiteBrush}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="180"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+            <StackPanel>
+                <!-- Product Information -->
+                <Border BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" 
+                        CornerRadius="4" Padding="25" Background="{StaticResource WhiteBrush}" Margin="0,0,0,20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <!-- Product Name -->
-                    <Label Content="Tên sản phẩm:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,15"/>
-                    <TextBox x:Name="ProductNameTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,15"/>
+                        <!-- Product Name -->
+                        <Label Content="Tên sản phẩm:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,15"/>
+                        <TextBox x:Name="ProductNameTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,15"/>
 
-                    <!-- Description -->
-                    <Label Content="Mô tả:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,15" VerticalAlignment="Top"/>
-                    <TextBox x:Name="DescriptionTextBox" Grid.Row="1" Grid.Column="1" 
-                             Margin="0,0,0,15" Height="100" 
-                             AcceptsReturn="True" TextWrapping="Wrap" 
-                             VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto"/>
+                        <!-- Description -->
+                        <Label Content="Mô tả:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,15" VerticalAlignment="Top"/>
+                        <TextBox x:Name="DescriptionTextBox" Grid.Row="1" Grid.Column="1" 
+                                 Margin="0,0,0,15" Height="100" 
+                                 AcceptsReturn="True" TextWrapping="Wrap" 
+                                 VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto"/>
 
-                    <!-- Price -->
-                    <Label Content="Giá (VND):" Grid.Row="2" Grid.Column="0" Margin="0,0,10,15"/>
-                    <TextBox x:Name="PriceTextBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,15"/>
+                        <!-- Price -->
+                        <Label Content="Giá (VND):" Grid.Row="2" Grid.Column="0" Margin="0,0,10,15"/>
+                        <TextBox x:Name="PriceTextBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,15"/>
 
-                    <!-- Unit -->
-                    <Label Content="Đơn vị:" Grid.Row="3" Grid.Column="0" Margin="0,0,10,15"/>
-                    <ComboBox x:Name="UnitComboBox" Grid.Row="3" Grid.Column="1" 
-                              Margin="0,0,0,15" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                        <!-- Unit -->
+                        <Label Content="Đơn vị:" Grid.Row="3" Grid.Column="0" Margin="0,0,10,15"/>
+                        <ComboBox x:Name="UnitComboBox" Grid.Row="3" Grid.Column="1" 
+                                  Margin="0,0,0,15" DisplayMemberPath="Name" SelectedValuePath="Id"/>
 
-                    <!-- Is Active -->
-                    <Label Content="Trạng thái:" Grid.Row="4" Grid.Column="0" Margin="0,0,10,15"/>
-                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,15">
-                        <CheckBox x:Name="IsActiveCheckBox" IsThreeState="False" VerticalAlignment="Center"/>
-                        <TextBlock Text="Kích hoạt sản phẩm" FontSize="15" 
-                                   Foreground="{StaticResource DarkGrayBrush}" 
-                                   VerticalAlignment="Center" Margin="10,0,0,0"/>
-                    </StackPanel>
-
-                    <!-- Info Box -->
-                    <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" 
-                            Background="#FFF3E0" BorderBrush="{StaticResource WarningBrush}" 
-                            BorderThickness="1" CornerRadius="4" Padding="15">
-                        <StackPanel>
-                            <TextBlock Text="ℹ️ Lưu ý" FontWeight="Bold" FontSize="14" 
-                                       Foreground="{StaticResource WarningBrush}" Margin="0,0,0,5"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="13" 
-                                       Foreground="{StaticResource DarkGrayBrush}">
-                                <Run Text="• Yêu cầu chỉnh sửa sẽ được gửi đến quản trị viên để xem xét"/>
-                                <LineBreak/>
-                                <Run Text="• Sản phẩm sẽ chỉ được cập nhật sau khi yêu cầu được phê duyệt"/>
-                                <LineBreak/>
-                                <Run Text="• Bạn có thể kiểm tra trạng thái yêu cầu trong danh sách yêu cầu"/>
-                            </TextBlock>
+                        <!-- Is Active -->
+                        <Label Content="Trạng thái:" Grid.Row="4" Grid.Column="0" Margin="0,0,10,0"/>
+                        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,0">
+                            <CheckBox x:Name="IsActiveCheckBox" IsThreeState="False" VerticalAlignment="Center"/>
+                            <TextBlock Text="Kích hoạt sản phẩm" FontSize="15" 
+                                       Foreground="{StaticResource DarkGrayBrush}" 
+                                       VerticalAlignment="Center" Margin="10,0,0,0"/>
                         </StackPanel>
-                    </Border>
-                </Grid>
-            </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Product Batches Section -->
+                <Border BorderBrush="{StaticResource LightGrayBrush}" BorderThickness="1" 
+                        CornerRadius="4" Padding="25" Background="{StaticResource WhiteBrush}" Margin="0,0,0,20">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                            <TextBlock Text="📦 Lô Hàng Sản Phẩm" FontSize="20" FontWeight="Bold" 
+                                       Foreground="{StaticResource ForegroundBrush}" VerticalAlignment="Center"/>
+                            <Button Content="➕ Thêm Lô Hàng" 
+                                    Style="{StaticResource SecondaryButton}"
+                                    Padding="12,6" FontSize="14" Margin="20,0,0,0"
+                                    Click="AddBatch_Click"/>
+                        </StackPanel>
+
+                        <!-- New Batch Input Area -->
+                        <Border x:Name="NewBatchPanel" Visibility="Collapsed" 
+                                Background="#E8F5E9" BorderBrush="{StaticResource SecondaryBrush}" 
+                                BorderThickness="2" CornerRadius="4" Padding="15" Margin="0,0,0,15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                    <Label Content="Hạn sử dụng:" Margin="0,0,0,5"/>
+                                    <DatePicker x:Name="ExpiryDatePicker" SelectedDateFormat="Short"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="10,0,10,0">
+                                    <Label Content="Số lượng:" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="QuantityTextBox"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" VerticalAlignment="Bottom">
+                                    <Button Content="✓ Lưu" 
+                                            Style="{StaticResource SecondaryButton}"
+                                            Padding="15,8" FontSize="14" Margin="0,0,5,0"
+                                            Click="SaveBatch_Click"/>
+                                </StackPanel>
+
+                                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Margin="0,10,0,0"
+                                           Text="* Nhập thông tin lô hàng mới và nhấn Lưu"
+                                           FontSize="12" FontStyle="Italic" 
+                                           Foreground="{StaticResource DarkGrayBrush}"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Batches List -->
+                        <ItemsControl x:Name="BatchesItemsControl">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#FFF3E0" BorderBrush="{StaticResource WarningBrush}" 
+                                            BorderThickness="1" CornerRadius="4" Padding="15" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Hạn sử dụng:" FontWeight="SemiBold" FontSize="13" 
+                                                           Foreground="{StaticResource DarkGrayBrush}"/>
+                                                <TextBlock Text="{Binding ExpiryDate}" FontSize="15" Margin="0,3,0,0"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                                                <TextBlock Text="Số lượng:" FontWeight="SemiBold" FontSize="13" 
+                                                           Foreground="{StaticResource DarkGrayBrush}"/>
+                                                <TextBlock Text="{Binding Quantity}" FontSize="15" Margin="0,3,0,0"/>
+                                            </StackPanel>
+
+                                            <Button Grid.Column="2" Content="🗑️ Xóa" 
+                                                    Style="{StaticResource DangerButton}"
+                                                    Padding="10,5" FontSize="13"
+                                                    Tag="{Binding}"
+                                                    Click="RemoveBatch_Click"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock x:Name="NoBatchesText" 
+                                   Text="Chưa có lô hàng nào. Nhấn 'Thêm Lô Hàng' để thêm mới."
+                                   FontStyle="Italic" Foreground="{StaticResource DarkGrayBrush}"
+                                   HorizontalAlignment="Center" Margin="0,20,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Info Box -->
+                <Border Background="#FFF3E0" BorderBrush="{StaticResource WarningBrush}" 
+                        BorderThickness="1" CornerRadius="4" Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="ℹ️ Lưu ý" FontWeight="Bold" FontSize="14" 
+                                   Foreground="{StaticResource WarningBrush}" Margin="0,0,0,5"/>
+                        <TextBlock TextWrapping="Wrap" FontSize="13" 
+                                   Foreground="{StaticResource DarkGrayBrush}">
+                            <Run Text="• Yêu cầu chỉnh sửa sẽ được gửi đến quản trị viên để xem xét"/>
+                            <LineBreak/>
+                            <Run Text="• Sản phẩm và lô hàng sẽ chỉ được cập nhật sau khi yêu cầu được phê duyệt"/>
+                            <LineBreak/>
+                            <Run Text="• Bạn có thể thêm nhiều lô hàng cho sản phẩm"/>
+                            <LineBreak/>
+                            <Run Text="• Hạn sử dụng phải là ngày trong tương lai"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </ScrollViewer>
 
         <!-- Action Buttons -->
