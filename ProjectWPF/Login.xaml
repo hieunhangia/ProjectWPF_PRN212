@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:ProjectWPF"
         mc:Ignorable="d"
         Title="Đăng Nhập"
-        Background="Transparent">
+        Background="Transparent"
+        Loaded="Window_Loaded">
 
     <Window.Resources>
         <!-- Gradient cho background -->
@@ -99,11 +100,17 @@
                     <Border Background="White" 
                            BorderBrush="#FFBDBDBD" 
                            BorderThickness="1"
-                           Margin="0,0,0,35">
+                           Margin="0,0,0,15">
                         <PasswordBox x:Name="PasswordBox" FontSize="22" 
                                     PasswordChar="●" 
                                     BorderThickness="0" Height="37"/>
                     </Border>
+
+                    <CheckBox x:Name="RememberMeCheckBox" 
+                              Content="Ghi nhớ đăng nhập" 
+                              FontSize="16" 
+                              Foreground="#FF333333"
+                              Margin="0,0,0,20"/>
 
                     <!-- Nút đăng nhập -->
                     <Button x:Name="LoginButton" 

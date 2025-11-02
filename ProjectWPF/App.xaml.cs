@@ -109,6 +109,7 @@ namespace ProjectWPF
             services.AddSingleton<ProvinceCityRepository>();
             services.AddSingleton<UserRepository>();
             services.AddSingleton<SellerRepository>();
+            services.AddSingleton<UserTokenRepository>();
             services.AddSingleton<ProductRepository>();
             services.AddSingleton<ProductUnitRepository>();
             services.AddSingleton<SellerRequestRepository>();
@@ -119,6 +120,7 @@ namespace ProjectWPF
             services.AddSingleton<AddressService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<SellerService>();
+            services.AddSingleton<UserTokenService>();
             services.AddSingleton<ProductService>();
             services.AddSingleton<ProductUnitService>();
             services.AddSingleton<SellerRequestService>();

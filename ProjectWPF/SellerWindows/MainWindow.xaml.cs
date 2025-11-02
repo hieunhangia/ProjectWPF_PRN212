@@ -1,6 +1,7 @@
 ﻿using ProjectWPF.AdminWindows;
 using Repository;
 using Repository.Models.user;
+using Service.user;
 using System.Windows;
 using TableDependency.SqlClient.Base.Enums;
 using TableDependency.SqlClient.Base.EventArgs;
@@ -13,15 +14,18 @@ namespace ProjectWPF.SellerWindows
     public partial class MainWindow : Window
     {
         private readonly NavigationWindow _navigationWindow;
+        private readonly UserTokenService _userTokenService;
 
         private Seller? _loggedInSeller;
 
         private readonly UserChangeListener _userChangeListener;
 
         public MainWindow(NavigationWindow navigationWindow,
+            UserTokenService userTokenService,
             UserChangeListener userChangeListener)
         {
             _navigationWindow = navigationWindow;
+            _userTokenService = userTokenService;
 
             _userChangeListener = userChangeListener;
             _userChangeListener.StartListening(OnUserStatusChanged);
@@ -37,6 +41,7 @@ namespace ProjectWPF.SellerWindows
                 var changedUser = e.Entity;
                 if (oldUser.IsActive && !changedUser.IsActive && oldUser.Id == _loggedInSeller!.Id)
                 {
+                    _userTokenService.DeleteUserToken(_loggedInSeller.Id);
                     Dispatcher.Invoke(() =>
                     {
                         _navigationWindow.ShowWindowAndCloseCurrent<Login>(this);
@@ -61,6 +66,7 @@ namespace ProjectWPF.SellerWindows
             MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
+                _userTokenService.DeleteUserToken(_loggedInSeller!.Id);
                 _navigationWindow.ShowWindowAndCloseCurrent<Login>(this);
             }
         }

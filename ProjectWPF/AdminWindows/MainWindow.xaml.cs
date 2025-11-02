@@ -1,4 +1,5 @@
 ﻿using Repository.Models.user;
+using Service.user;
 using System.Windows;
 
 namespace ProjectWPF.AdminWindows
@@ -10,11 +11,14 @@ namespace ProjectWPF.AdminWindows
     {
 
         private readonly NavigationWindow _navigationWindow;
+        private readonly UserTokenService _userTokenService;
         private Admin? _loggedInAdmin;
 
-        public MainWindow(NavigationWindow navigationWindow)
+        public MainWindow(NavigationWindow navigationWindow,
+            UserTokenService userTokenService)
         {
             _navigationWindow = navigationWindow;
+            _userTokenService = userTokenService;
 
             InitializeComponent();
         }
@@ -29,6 +33,7 @@ namespace ProjectWPF.AdminWindows
             MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
+                _userTokenService.DeleteUserToken(_loggedInAdmin!.Id);
                 _navigationWindow.ShowWindowAndCloseCurrent<Login>(this);
             }
         }

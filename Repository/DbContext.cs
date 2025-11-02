@@ -11,6 +11,8 @@ namespace Repository
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Seller> Sellers { get; set; }
 
+        public DbSet<UserToken> UserTokens { get; set; }
+
         // Product entities
         public DbSet<Product> Products { get; set; }
 
@@ -36,6 +38,9 @@ namespace Repository
             modelBuilder.Entity<User>().ToTable("user", u => u.HasTrigger("AnyTriggerNameWillWork"));
             modelBuilder.Entity<Admin>().ToTable("admin");
             modelBuilder.Entity<Seller>().ToTable("seller");
+
+            modelBuilder.Entity<UserToken>()
+                .HasOne(ut => ut.User).WithOne();
 
             // Configure Product-ProductUnit relationship (many-to-one)
             modelBuilder.Entity<Product>()
@@ -64,10 +69,9 @@ namespace Repository
                 .WithMany()
                 .HasForeignKey(s => s.CommuneWardCode)
                 .OnDelete(DeleteBehavior.Restrict);
+
             // Configure indexes for performance
             ConfigureIndexes(modelBuilder);
-
-
         }
 
         private void ConfigureIndexes(ModelBuilder modelBuilder)
