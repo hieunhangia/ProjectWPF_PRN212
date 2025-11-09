@@ -65,6 +65,21 @@ namespace ProjectWPF.SellerWindows
             UnitComboBox.SelectedValuePath = "Id";
             UnitComboBox.SelectedValue = _product?.ProductUnitId;
 
+            // Load existing product batches
+            if (_product?.ProductBatches != null && _product.ProductBatches.Any())
+            {
+                foreach (var batch in _product.ProductBatches)
+                {
+                    _productBatches.Add(new ProductBatchDto
+                    {
+                        Id = batch.Id,
+                        ExpiryDate = batch.ExpiryDate.ToString("dd/MM/yyyy"),
+                        Quantity = batch.Quantity.ToString(),
+                        ProductId = _productId
+                    });
+                }
+            }
+
             // Initialize batches list
             BatchesItemsControl.ItemsSource = _productBatches;
             UpdateBatchesDisplay();
@@ -75,6 +90,7 @@ namespace ProjectWPF.SellerWindows
             NewBatchPanel.Visibility = Visibility.Visible;
             ExpiryDatePicker.SelectedDate = DateTime.Now.AddMonths(6);
             QuantityTextBox.Text = "";
+            BatchIdTextBox.Tag = null; // Clear any edit state
             QuantityTextBox.Focus();
         }
 
@@ -109,24 +125,60 @@ namespace ProjectWPF.SellerWindows
                 return;
             }
 
-            // Add new batch
-            var newBatch = new ProductBatchDto
+            // Check if editing existing batch
+            if (BatchIdTextBox.Tag is ProductBatchDto existingBatch)
             {
-                ExpiryDate = ExpiryDatePicker.SelectedDate.Value.ToString("dd/MM/yyyy"),
-                Quantity = quantity.ToString(),
-                ProductId = _productId
-            };
+                // Update existing batch
+                existingBatch.ExpiryDate = ExpiryDatePicker.SelectedDate.Value.ToString("dd/MM/yyyy");
+                existingBatch.Quantity = quantity.ToString();
+                
+                // Refresh the display
+                BatchesItemsControl.Items.Refresh();
+                
+                MessageBox.Show("Đã cập nhật lô hàng thành công!", "Thành Công", 
+                               MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                // Add new batch
+                var newBatch = new ProductBatchDto
+                {
+                    ExpiryDate = ExpiryDatePicker.SelectedDate.Value.ToString("dd/MM/yyyy"),
+                    Quantity = quantity.ToString(),
+                    ProductId = _productId
+                };
 
-            _productBatches.Add(newBatch);
+                _productBatches.Add(newBatch);
+                
+                MessageBox.Show("Đã thêm lô hàng thành công!", "Thành Công", 
+                               MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
             UpdateBatchesDisplay();
 
             // Clear inputs and hide panel
             NewBatchPanel.Visibility = Visibility.Collapsed;
             ExpiryDatePicker.SelectedDate = null;
             QuantityTextBox.Text = "";
+            BatchIdTextBox.Tag = null;
+        }
 
-            MessageBox.Show("Đã thêm lô hàng thành công!", "Thành Công", 
-                           MessageBoxButton.OK, MessageBoxImage.Information);
+        private void EditBatch_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is ProductBatchDto batch)
+            {
+                // Show the edit panel
+                NewBatchPanel.Visibility = Visibility.Visible;
+                
+                // Populate fields with existing batch data
+                ExpiryDatePicker.SelectedDate = DateTime.ParseExact(batch.ExpiryDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                QuantityTextBox.Text = batch.Quantity;
+                
+                // Store reference to the batch being edited
+                BatchIdTextBox.Tag = batch;
+                
+                QuantityTextBox.Focus();
+            }
         }
 
         private void RemoveBatch_Click(object sender, RoutedEventArgs e)
@@ -141,6 +193,8 @@ namespace ProjectWPF.SellerWindows
                 {
                     _productBatches.Remove(batch);
                     UpdateBatchesDisplay();
+                    MessageBox.Show("Đã xóa lô hàng!", "Thành Công", 
+                                   MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
@@ -194,6 +248,7 @@ namespace ProjectWPF.SellerWindows
                 ProductUnit = product.ProductUnit,
                 ProductBatches = _productBatches.Select(b => new ProductBatch
                 {
+                    Id = b.Id ?? 0, // Preserve existing batch IDs
                     ExpiryDate = DateTime.ParseExact(b.ExpiryDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture),
                     Quantity = int.Parse(b.Quantity!),
                     ProductId = _productId
@@ -203,7 +258,7 @@ namespace ProjectWPF.SellerWindows
             _sellerRequestService.SaveUpdateRequest(p, _productService.GetProductById(_productId), _seller);
             
             string batchInfo = _productBatches.Count > 0 
-                ? $"\n\nĐã thêm {_productBatches.Count} lô hàng mới vào yêu cầu." 
+                ? $"\n\nĐã gửi yêu cầu với {_productBatches.Count} lô hàng." 
                 : "";
 
             MessageBox.Show($"Gửi yêu cầu chỉnh sửa sản phẩm thành công!{batchInfo}\n\nYêu cầu của bạn sẽ được xem xét bởi quản trị viên.", 
@@ -219,6 +274,14 @@ namespace ProjectWPF.SellerWindows
             {
                 this.Close();
             }
+        }
+
+        private void CancelBatchEdit_Click(object sender, RoutedEventArgs e)
+        {
+            NewBatchPanel.Visibility = Visibility.Collapsed;
+            ExpiryDatePicker.SelectedDate = null;
+            QuantityTextBox.Text = "";
+            BatchIdTextBox.Tag = null;
         }
     }
 }

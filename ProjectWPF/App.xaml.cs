@@ -172,7 +172,7 @@ namespace ProjectWPF
         {
             context.Database.ExecuteSqlRaw(File.ReadAllText("database/address.sql"));
             context.Database.ExecuteSqlRaw(File.ReadAllText("database/product.sql"));
-            context.Database.ExecuteSqlRaw(File.ReadAllText("database/seller request.sql"));
+            context.Database.ExecuteSqlRaw(File.ReadAllText("database/seller_request.sql"));
 
             Admin admin = new()
             {

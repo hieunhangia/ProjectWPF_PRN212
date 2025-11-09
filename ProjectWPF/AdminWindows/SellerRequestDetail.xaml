@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjectWPF.AdminWindows"
         mc:Ignorable="d"
-        Title="Chi Tiết Yêu Cầu Sản Phẩm" Height="700" Width="950"
+        Title="Chi Tiết Yêu Cầu Sản Phẩm" Height="750" Width="1000"
         WindowStartupLocation="CenterScreen"
         Background="#f6f9fd">
     
@@ -62,31 +62,141 @@
 
                         <!-- Product Batches for New Product -->
                         <Border Background="#fff9e6" BorderBrush="{StaticResource WarningBrush}" 
-                                BorderThickness="1" CornerRadius="4" Padding="15" Margin="0,15,0,0"
+                                BorderThickness="2" CornerRadius="6" Padding="15" Margin="0,15,0,0"
                                 Visibility="{Binding NewProductBatchesVisibility}">
                             <StackPanel>
-                                <TextBlock Text="📦 Lô Hàng Mới" FontWeight="Bold" FontSize="15" 
-                                           Foreground="{StaticResource WarningBrush}" Margin="0,0,0,10"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="📦" FontSize="18" Margin="0,0,5,0"/>
+                                    <TextBlock Text="Lô Hàng Mới" FontWeight="Bold" FontSize="16" 
+                                               Foreground="{StaticResource WarningBrush}"/>
+                                    <TextBlock Text="{Binding NewProductBatches.Count, StringFormat=' ({0} lô)'}" 
+                                               FontSize="14" FontWeight="SemiBold" 
+                                               Foreground="#666" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                </StackPanel>
                                 
                                 <ItemsControl ItemsSource="{Binding NewProductBatches}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="White" BorderBrush="#e0e0e0" 
-                                                    BorderThickness="1" CornerRadius="3" Padding="10" Margin="0,0,0,5">
+                                            <Border Background="White" BorderBrush="{StaticResource WarningBrush}" 
+                                                    BorderThickness="1" CornerRadius="4" Padding="12" Margin="0,0,0,8">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
                                                     
-                                                    <StackPanel Grid.Column="0">
-                                                        <TextBlock Text="Hạn sử dụng:" FontSize="12" Foreground="#666"/>
-                                                        <TextBlock Text="{Binding ExpiryDate}" FontSize="14" FontWeight="SemiBold"/>
+                                                    <TextBlock Text="📅" FontSize="16" Grid.Column="0" 
+                                                               VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="Hạn sử dụng" FontSize="11" Foreground="#666"/>
+                                                        <TextBlock Text="{Binding ExpiryDate}" FontSize="15" FontWeight="SemiBold"/>
                                                     </StackPanel>
                                                     
+                                                    <TextBlock Text="📊" FontSize="16" Grid.Column="2" 
+                                                               VerticalAlignment="Center" Margin="20,0,8,0"/>
+                                                    <StackPanel Grid.Column="3">
+                                                        <TextBlock Text="Số lượng" FontSize="11" Foreground="#666"/>
+                                                        <TextBlock FontSize="15" FontWeight="SemiBold">
+                                                            <Run Text="{Binding Quantity}"/>
+                                                            <Run Text=" đơn vị" FontSize="12" Foreground="#666"/>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                
+                                <!-- No batches message for new product -->
+                                <TextBlock Text="Không có lô hàng nào được thêm trong yêu cầu này" 
+                                           FontStyle="Italic" Foreground="#999" 
+                                           HorizontalAlignment="Center" Margin="0,10,0,0"
+                                           ></TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- OLD PRODUCT -->
+                <GroupBox x:Name="OldProductBox" Header="❌ Thông Tin Sản Phẩm Cũ" FontWeight="Bold" FontSize="16" Margin="0,0,0,20"
+                          Background="#ffeaea" BorderBrush="{StaticResource DangerBrush}" BorderThickness="2">
+                    <StackPanel Margin="15">
+                        <Grid DataContext="{Binding OldProduct}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Text="Tên sản phẩm:" FontWeight="SemiBold" FontSize="16" Grid.Row="0" Grid.Column="0" Margin="0,6"/>
+                            <TextBlock Text="{Binding Name}" FontSize="16" Grid.Row="0" Grid.Column="1" Margin="0,6"/>
+
+                            <TextBlock Text="Mô tả:" FontWeight="SemiBold" FontSize="16" Grid.Row="1" Grid.Column="0" Margin="0,6"/>
+                            <TextBlock Text="{Binding Description}" FontSize="16" Grid.Row="1" Grid.Column="1" Margin="0,6" TextWrapping="Wrap"/>
+
+                            <TextBlock Text="Giá:" FontWeight="SemiBold" FontSize="16" Grid.Row="2" Grid.Column="0" Margin="0,6"/>
+                            <TextBlock FontSize="16" Grid.Row="2" Grid.Column="1" Margin="0,6">
+                                <Run Text="{Binding Price}"/>
+                                <Run Text=" VND" Foreground="#666"/>
+                            </TextBlock>
+
+                            <TextBlock Text="Kích hoạt:" FontWeight="SemiBold" FontSize="16" Grid.Row="3" Grid.Column="0" Margin="0,6"/>
+                            <TextBlock Text="{Binding IsActive}" FontSize="16" Grid.Row="3" Grid.Column="1" Margin="0,6"/>
+
+                            <TextBlock Text="Đơn vị:" FontWeight="SemiBold" FontSize="16" Grid.Row="4" Grid.Column="0" Margin="0,6"/>
+                            <TextBlock Text="{Binding ProductUnit.Name}" FontSize="16" Grid.Row="4" Grid.Column="1" Margin="0,6"/>
+                        </Grid>
+
+                        <!-- Product Batches for Old Product -->
+                        <Border Background="#e3f2fd" BorderBrush="{StaticResource InfoBrush}" 
+                                BorderThickness="2" CornerRadius="6" Padding="15" Margin="0,15,0,0"
+                                Visibility="{Binding OldProductBatchesVisibility}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="📦" FontSize="18" Margin="0,0,5,0"/>
+                                    <TextBlock Text="Lô Hàng Hiện Tại" FontWeight="Bold" FontSize="16" 
+                                               Foreground="{StaticResource InfoBrush}"/>
+                                    <TextBlock Text="{Binding OldProductBatches.Count, StringFormat=' ({0} lô)'}" 
+                                               FontSize="14" FontWeight="SemiBold" 
+                                               Foreground="#666" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                </StackPanel>
+                                
+                                <ItemsControl ItemsSource="{Binding OldProductBatches}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="White" BorderBrush="{StaticResource InfoBrush}" 
+                                                    BorderThickness="1" CornerRadius="4" Padding="12" Margin="0,0,0,8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    
+                                                    <TextBlock Text="📅" FontSize="16" Grid.Column="0" 
+                                                               VerticalAlignment="Center" Margin="0,0,8,0"/>
                                                     <StackPanel Grid.Column="1">
-                                                        <TextBlock Text="Số lượng:" FontSize="12" Foreground="#666"/>
-                                                        <TextBlock Text="{Binding Quantity}" FontSize="14" FontWeight="SemiBold"/>
+                                                        <TextBlock Text="Hạn sử dụng" FontSize="11" Foreground="#666"/>
+                                                        <TextBlock Text="{Binding ExpiryDate}" FontSize="15" FontWeight="SemiBold"/>
+                                                    </StackPanel>
+                                                    
+                                                    <TextBlock Text="📊" FontSize="16" Grid.Column="2" 
+                                                               VerticalAlignment="Center" Margin="20,0,8,0"/>
+                                                    <StackPanel Grid.Column="3">
+                                                        <TextBlock Text="Số lượng" FontSize="11" Foreground="#666"/>
+                                                        <TextBlock FontSize="15" FontWeight="SemiBold">
+                                                            <Run Text="{Binding Quantity}"/>
+                                                            <Run Text=" đơn vị" FontSize="12" Foreground="#666"/>
+                                                        </TextBlock>
                                                     </StackPanel>
                                                 </Grid>
                                             </Border>
@@ -98,44 +208,21 @@
                     </StackPanel>
                 </GroupBox>
 
-                <!-- OLD PRODUCT -->
-                <GroupBox x:Name="OldProductBox" Header="❌ Thông Tin Sản Phẩm Cũ" FontWeight="Bold" FontSize="16"
-                          Background="#ffeaea" BorderBrush="{StaticResource DangerBrush}" BorderThickness="2">
-                    <Grid DataContext="{Binding OldProduct}" Margin="15">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="180"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        
-                        <TextBlock Text="Tên sản phẩm:" FontWeight="SemiBold" FontSize="16" Grid.Row="0" Grid.Column="0" Margin="0,6"/>
-                        <TextBlock Text="{Binding Name}" FontSize="16" Grid.Row="0" Grid.Column="1" Margin="0,6"/>
-
-                        <TextBlock Text="Mô tả:" FontWeight="SemiBold" FontSize="16" Grid.Row="1" Grid.Column="0" Margin="0,6"/>
-                        <TextBlock Text="{Binding Description}" FontSize="16" Grid.Row="1" Grid.Column="1" Margin="0,6" TextWrapping="Wrap"/>
-
-                        <TextBlock Text="Giá:" FontWeight="SemiBold" FontSize="16" Grid.Row="2" Grid.Column="0" Margin="0,6"/>
-                        <TextBlock FontSize="16" Grid.Row="2" Grid.Column="1" Margin="0,6">
-                            <Run Text="{Binding Price}"/>
-                            <Run Text=" VND" Foreground="#666"/>
+                <!-- Info Note -->
+                <Border Background="#e3f2fd" BorderBrush="{StaticResource InfoBrush}" 
+                        BorderThickness="1" CornerRadius="4" Padding="12" Margin="0,0,0,20">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="ℹ️" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                        <TextBlock TextWrapping="Wrap" FontSize="13" Foreground="#555">
+                            <Run Text="Khi chấp nhận yêu cầu, thông tin sản phẩm mới (bao gồm cả lô hàng) sẽ thay thế hoàn toàn thông tin cũ trong hệ thống." FontWeight="SemiBold"/>
+                            <LineBreak/>
+                            <Run Text="Các lô hàng mới sẽ được tự động cập nhật vào kho." Foreground="#666"/>
                         </TextBlock>
-
-                        <TextBlock Text="Kích hoạt:" FontWeight="SemiBold" FontSize="16" Grid.Row="3" Grid.Column="0" Margin="0,6"/>
-                        <TextBlock Text="{Binding IsActive}" FontSize="16" Grid.Row="3" Grid.Column="1" Margin="0,6"/>
-
-                        <TextBlock Text="Đơn vị:" FontWeight="SemiBold" FontSize="16" Grid.Row="4" Grid.Column="0" Margin="0,6"/>
-                        <TextBlock Text="{Binding ProductUnit.Name}" FontSize="16" Grid.Row="4" Grid.Column="1" Margin="0,6"/>
-                    </Grid>
-                </GroupBox>
+                    </StackPanel>
+                </Border>
 
                 <!-- Action Buttons -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
                     <Button Content="✓ Chấp thuận"
                             Width="160" Height="45" Margin="10,0" FontWeight="Bold" FontSize="15"
                             Background="{StaticResource SuccessBrush}" Foreground="White"

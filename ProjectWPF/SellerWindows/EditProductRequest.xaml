@@ -139,11 +139,14 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- Hidden TextBox to track batch being edited -->
+        <TextBox x:Name="BatchIdTextBox" Visibility="Collapsed"/>
+
         <!-- Title -->
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
             <TextBlock Text="Yêu Cầu Cập Nhật Sản Phẩm" FontSize="32" FontWeight="Bold" 
                        Foreground="{StaticResource ForegroundBrush}"/>
-            <TextBlock Text="Gửi yêu cầu chỉnh sửa thông tin sản phẩm và thêm lô hàng đến quản trị viên" 
+            <TextBlock Text="Gửi yêu cầu chỉnh sửa thông tin sản phẩm và điều chỉnh lô hàng đến quản trị viên" 
                        FontSize="14" Foreground="{StaticResource DarkGrayBrush}" Margin="0,5,0,0"/>
         </StackPanel>
 
@@ -235,15 +238,19 @@
                                     <TextBox x:Name="QuantityTextBox"/>
                                 </StackPanel>
 
-                                <StackPanel Grid.Column="2" VerticalAlignment="Bottom">
+                                <StackPanel Grid.Column="2" VerticalAlignment="Bottom" Orientation="Horizontal">
                                     <Button Content="✓ Lưu" 
                                             Style="{StaticResource SecondaryButton}"
                                             Padding="15,8" FontSize="14" Margin="0,0,5,0"
                                             Click="SaveBatch_Click"/>
+                                    <Button Content="✕ Hủy" 
+                                            Style="{StaticResource CloseButton}"
+                                            Padding="12,8" FontSize="14"
+                                            Click="CancelBatchEdit_Click"/>
                                 </StackPanel>
 
                                 <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Margin="0,10,0,0"
-                                           Text="* Nhập thông tin lô hàng mới và nhấn Lưu"
+                                           Text="* Nhập thông tin lô hàng và nhấn Lưu"
                                            FontSize="12" FontStyle="Italic" 
                                            Foreground="{StaticResource DarkGrayBrush}"/>
                             </Grid>
@@ -274,11 +281,18 @@
                                                 <TextBlock Text="{Binding Quantity}" FontSize="15" Margin="0,3,0,0"/>
                                             </StackPanel>
 
-                                            <Button Grid.Column="2" Content="🗑️ Xóa" 
-                                                    Style="{StaticResource DangerButton}"
-                                                    Padding="10,5" FontSize="13"
-                                                    Tag="{Binding}"
-                                                    Click="RemoveBatch_Click"/>
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                <Button Content="✏️ Sửa" 
+                                                        Style="{StaticResource PrimaryButton}"
+                                                        Padding="10,5" FontSize="13" Margin="0,0,5,0"
+                                                        Tag="{Binding}"
+                                                        Click="EditBatch_Click"/>
+                                                <Button Content="🗑️ Xóa" 
+                                                        Style="{StaticResource DangerButton}"
+                                                        Padding="10,5" FontSize="13"
+                                                        Tag="{Binding}"
+                                                        Click="RemoveBatch_Click"/>
+                                            </StackPanel>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -304,7 +318,7 @@
                             <LineBreak/>
                             <Run Text="• Sản phẩm và lô hàng sẽ chỉ được cập nhật sau khi yêu cầu được phê duyệt"/>
                             <LineBreak/>
-                            <Run Text="• Bạn có thể thêm nhiều lô hàng cho sản phẩm"/>
+                            <Run Text="• Bạn có thể thêm, chỉnh sửa hoặc xóa lô hàng của sản phẩm"/>
                             <LineBreak/>
                             <Run Text="• Hạn sử dụng phải là ngày trong tương lai"/>
                         </TextBlock>

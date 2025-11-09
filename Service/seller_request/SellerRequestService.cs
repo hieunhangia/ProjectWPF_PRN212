@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Core;
+using Microsoft.EntityFrameworkCore;
 using ProjectWPF.Models;
 using Repository.Models.user;
 using Repository.Repository.seller_request;
@@ -101,6 +102,21 @@ namespace Service.seller_request
             }
             sellerRequest.Status = _sellerRequestStatusService.GetRejectedStatus()!;
             _sellerRequestRepository.Update(sellerRequest);
+        }
+
+        public void UpdateOldHistory<T>(long sellerRequestId, T oldProduct)
+        {
+            SellerRequest? sellerRequest = _sellerRequestRepository.getSellerRequestById(sellerRequestId);
+            if (sellerRequest == null)
+            {
+                throw new Exception("Không tìm thây sellerRequest");
+            }
+            var options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+            };
+            sellerRequest.OldContent = JsonSerializer.Serialize(oldProduct, options);
         }
     }
 }

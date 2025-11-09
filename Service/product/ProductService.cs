@@ -1,9 +1,10 @@
-﻿using Repository;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository;
 using Repository.Repository.product;
 
 namespace Service.product
 {
-    public class ProductService(ProductRepository productRepository,ProductUnitService productUnitService)
+    public class ProductService(ProductRepository productRepository, ProductUnitService productUnitService)
     {
 
         public List<Product> GetAllProducts()
@@ -28,7 +29,7 @@ namespace Service.product
         {
             product.ProductUnitId = product.ProductUnit!.Id;
             product.ProductUnit = null;
-            productRepository.Update(product);
+            productRepository.UpdateWithBatches(product);
         }
     }
 }

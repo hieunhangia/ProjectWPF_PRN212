@@ -23,7 +23,9 @@ namespace ProjectWPF.AdminWindows
         public Product? OldProduct { get; init; }
         public Product? NewProduct { get; init; }
         public List<ProductBatchDto> NewProductBatches { get; init; }
+        public List<ProductBatchDto> OldProductBatches { get; init; }
         public Visibility NewProductBatchesVisibility { get; init; }
+        public Visibility OldProductBatchesVisibility { get; init; }
 
         public SellerRequestDetail(long sellerRequestId,
             SellerRequestService sellerRequestService,
@@ -40,8 +42,8 @@ namespace ProjectWPF.AdminWindows
             
             NewProduct = JsonSerializer.Deserialize<Product>(sellerRequest.Content);
             NewProductBatches = new List<ProductBatchDto>();
+            OldProductBatches = new List<ProductBatchDto>();
             
-            // Check if Product has batches
             if (NewProduct?.ProductBatches != null && NewProduct.ProductBatches.Any())
             {
                 NewProductBatches = NewProduct.ProductBatches.Select(b => new ProductBatchDto
@@ -61,6 +63,27 @@ namespace ProjectWPF.AdminWindows
             if (sellerRequest.OldContent != null)
             {
                 OldProduct = JsonSerializer.Deserialize<Product>(sellerRequest.OldContent);
+                
+                // Check if Old Product has batches
+                if (OldProduct?.ProductBatches != null && OldProduct.ProductBatches.Any())
+                {
+                    OldProductBatches = OldProduct.ProductBatches.Select(b => new ProductBatchDto
+                    {
+                        Id = b.Id,
+                        ExpiryDate = b.ExpiryDate.ToString("dd/MM/yyyy"),
+                        Quantity = b.Quantity.ToString(),
+                        ProductId = b.ProductId
+                    }).ToList();
+                    OldProductBatchesVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    OldProductBatchesVisibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                OldProductBatchesVisibility = Visibility.Collapsed;
             }
             
             InitializeComponent();
@@ -84,9 +107,11 @@ namespace ProjectWPF.AdminWindows
 
         private void AcceptRequest_Click(object sender, RoutedEventArgs e)
         {
-            string batchInfo = NewProductBatches.Count > 0 
-                ? $"\n\nSản phẩm có {NewProductBatches.Count} lô hàng sẽ được thêm vào hệ thống." 
-                : "";
+            string batchInfo = "";
+            if (NewProductBatches.Count > 0)
+            {
+                batchInfo = $"\n\n📦 Sản phẩm có {NewProductBatches.Count} lô hàng sẽ được cập nhật vào hệ thống.";
+            }
 
             var confirmResult = MessageBox.Show(
                 $"Bạn có chắc chắn muốn chấp thuận yêu cầu này?{batchInfo}", 
@@ -96,7 +121,12 @@ namespace ProjectWPF.AdminWindows
 
             if (confirmResult == MessageBoxResult.Yes)
             {
+                
                 _sellerRequestService.approveRequest<Product>(_sellerRequestId, _productService.AddProduct, _productService.UpdateProduct);
+                if(OldProduct != null)
+                {
+                    _sellerRequestService.UpdateOldHistory<Product>(_sellerRequestId, OldProduct);
+                }
                 this.Close();
                 MessageBox.Show("Thành công chấp nhận yêu cầu sản phẩm" + batchInfo, "Thành Công", 
                                MessageBoxButton.OK, MessageBoxImage.Information);
